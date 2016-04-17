@@ -22,3 +22,6 @@
 [submodule "couchbase-connector"]
 	path = couchbase-connector
 	url = https://github.com/bacta/couchbase-connector.git
+[submodule "Steerio"]
+	path = Steerio
+	url = https://github.com/ClickerMonkey/Steerio.git
