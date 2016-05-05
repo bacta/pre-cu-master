@@ -24,8 +24,6 @@
         <vecmathVersion>1.3.1</vecmathVersion>
         <commonslangVersion>2.6</commonslangVersion>
         <groovyVersion>2.4.6</groovyVersion>
-        <kryoserializesVersion>0.37</kryoserializesVersion>
-        <kryoVersion>2.24.0</kryoVersion>
         <troveVersion>3.0.3</troveVersion>
         <commonsconfigVersion>1.10</commonsconfigVersion>
         <reflectionsVersion>0.9.10</reflectionsVersion>
@@ -43,6 +41,10 @@
         <disruptorVersion>3.3.4</disruptorVersion>
         <commonsmodelerVersion>2.0.1</commonsmodelerVersion>
         <commonscodecVersion>1.10</commonscodecVersion>
+        <javapoetVersion>1.6.1</javapoetVersion>
+        <kryoserializerVersion>0.37</kryoserializerVersion>
+        <kryoVersion>3.0.3</kryoVersion>
+        <steerioVersion>1.0.0</steerioVersion>
 
         <logbackVersion>1.1.7</logbackVersion>
         <junitVersion>4.12</junitVersion>
@@ -95,13 +97,26 @@
         <maven>3.0.4</maven>
     </prerequisites>
 
+    <repositories>
+        <repository>
+            <id>bacta-repo</id>
+            <releases>
+                <enabled>true</enabled>
+                <checksumPolicy>ignore</checksumPolicy>
+            </releases>
+            <snapshots>
+                <enabled>true</enabled>
+            </snapshots>
+            <url>${project.baseUri}repo</url>
+        </repository>
+    </repositories>
+
     <modules>
         <module>engine</module>
         <module>soe</module>
         <module>iff</module>
         <module>tre</module>
         <module>couchbase-connector</module>
-        <module>kryo-serialization</module>
         <module>swg</module>
         <module>pre-cu</module>
     </modules>
@@ -143,6 +158,10 @@
                             </goals>
                         </execution>
                     </executions>
+                    <configuration>
+                        <testStubsOutputDirectory>${project.build.directory}/generated-test-sources/groovy-stubs/</testStubsOutputDirectory>
+                        <stubsOutputDirectory>${project.build.directory}/generated-sources/groovy-stubs/</stubsOutputDirectory>
+                    </configuration>
                 </plugin>
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
@@ -206,12 +225,6 @@
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-surefire-plugin</artifactId>
                     <version>2.19</version>
-                    <configuration>
-                        <includes>
-                            <include>**/*Test.class</include>
-                            <include>**/*Spec.class</include>
-                        </includes>
-                    </configuration>
                 </plugin>
             </plugins>
         </pluginManagement>
@@ -220,6 +233,7 @@
                 <groupId>org.codehaus.mojo</groupId>
                 <artifactId>versions-maven-plugin</artifactId>
             </plugin>
+
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
@@ -231,6 +245,12 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-surefire-plugin</artifactId>
+                <configuration>
+                    <includes>
+                        <include>**/*Test.class</include>
+                        <include>**/*Spec.class</include>
+                    </includes>
+                </configuration>
             </plugin>
         </plugins>
     </build>
@@ -240,11 +260,6 @@
             <dependency>
                 <groupId>com.ocdsoft.bacta</groupId>
                 <artifactId>engine</artifactId>
-                <version>${bactaVersion}</version>
-            </dependency>
-            <dependency>
-                <groupId>com.ocdsoft.bacta.engine.serialization</groupId>
-                <artifactId>kryo</artifactId>
                 <version>${bactaVersion}</version>
             </dependency>
             <dependency>
@@ -273,6 +288,21 @@
                 <version>${bactaVersion}</version>
             </dependency>
             <dependency>
+                <groupId>com.ocdsoft.bacta.swg</groupId>
+                <artifactId>netserialization-annotation-processor</artifactId>
+                <version>${bactaVersion}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.ocdsoft.bacta</groupId>
+                <artifactId>annotations</artifactId>
+                <version>${bactaVersion}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.ocdsoft.bacta.swg</groupId>
+                <artifactId>netserialize</artifactId>
+                <version>${bactaVersion}</version>
+            </dependency>
+            <dependency>
                 <groupId>ch.qos.logback</groupId>
                 <artifactId>logback-core</artifactId>
                 <version>${logbackVersion}</version>
@@ -286,16 +316,6 @@
                 <groupId>org.slf4j</groupId>
                 <artifactId>slf4j-api</artifactId>
                 <version>${slf4jVersion}</version>
-            </dependency>
-            <dependency>
-                <groupId>com.esotericsoftware.kryo</groupId>
-                <artifactId>kryo</artifactId>
-                <version>${kryoVersion}</version>
-            </dependency>
-            <dependency>
-                <groupId>de.javakaffee</groupId>
-                <artifactId>kryo-serializers</artifactId>
-                <version>${kryoserializesVersion}</version>
             </dependency>
             <dependency>
                 <groupId>com.couchbase.client</groupId>
@@ -373,6 +393,36 @@
                 <version>${quasarVersion}</version>
                 <classifier>jdk8</classifier>
             </dependency>
+            <dependency>
+                <groupId>org.spockframework</groupId>
+                <artifactId>spock-core</artifactId>
+                <version>${spockVersion}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.squareup</groupId>
+                <artifactId>javapoet</artifactId>
+                <version>${javapoetVersion}</version>
+            </dependency>
+            <dependency>
+                <groupId>io.netty</groupId>
+                <artifactId>netty-all</artifactId>
+                <version>${nettyVersion}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.esotericsoftware</groupId>
+                <artifactId>kryo</artifactId>
+                <version>${kryoVersion}</version>
+            </dependency>
+            <dependency>
+                <groupId>de.javakaffee</groupId>
+                <artifactId>kryo-serializers</artifactId>
+                <version>${kryoserializerVersion}</version>
+            </dependency>
+            <dependency>
+                <groupId>steerio</groupId>
+                <artifactId>steerio</artifactId>
+                <version>${steerioVersion}</version>
+            </dependency>
         </dependencies>
     </dependencyManagement>
 
@@ -388,11 +438,6 @@
         <dependency>
             <groupId>ch.qos.logback</groupId>
             <artifactId>logback-classic</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>io.netty</groupId>
-            <artifactId>netty-all</artifactId>
-            <version>${nettyVersion}</version>
         </dependency>
         <dependency>
             <groupId>org.projectlombok</groupId>
@@ -447,14 +492,16 @@
         <dependency>
             <groupId>org.spockframework</groupId>
             <artifactId>spock-core</artifactId>
-            <version>${spockVersion}</version>
-            <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>cglib</groupId>
             <artifactId>cglib-nodep</artifactId>
             <version>${cglibVersion}</version>
             <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>joda-time</groupId>
+            <artifactId>joda-time</artifactId>
         </dependency>
     </dependencies>
 
