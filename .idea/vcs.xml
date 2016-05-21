@@ -7,6 +7,7 @@
     <mapping directory="$PROJECT_DIR$/iff" vcs="Git" />
     <mapping directory="$PROJECT_DIR$/pre-cu" vcs="Git" />
     <mapping directory="$PROJECT_DIR$/soe" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/swg" vcs="Git" />
     <mapping directory="$PROJECT_DIR$/tre" vcs="Git" />
   </component>
 </project>
