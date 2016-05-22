@@ -45,6 +45,7 @@
         <kryoserializerVersion>0.37</kryoserializerVersion>
         <kryoVersion>3.0.3</kryoVersion>
         <steerioVersion>1.0.0</steerioVersion>
+        <sshdVersion>1.2.0</sshdVersion>
 
         <logbackVersion>1.1.7</logbackVersion>
         <junitVersion>4.12</junitVersion>
