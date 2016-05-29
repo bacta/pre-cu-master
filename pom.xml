@@ -47,7 +47,7 @@
         <steerioVersion>1.0.0</steerioVersion>
         <sshdVersion>1.2.0</sshdVersion>
 
-        <logbackVersion>1.1.7</logbackVersion>
+        <logbackVersion>1.1.5</logbackVersion>
         <junitVersion>4.12</junitVersion>
         <spockVersion>1.0-groovy-2.4</spockVersion>
         <cglibVersion>3.2.2</cglibVersion>
