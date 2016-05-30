@@ -46,6 +46,7 @@
         <kryoVersion>3.0.3</kryoVersion>
         <steerioVersion>1.0.0</steerioVersion>
         <sshdVersion>1.2.0</sshdVersion>
+        <gitcommitVersion>2.1.11</gitcommitVersion>
 
         <logbackVersion>1.1.5</logbackVersion>
         <junitVersion>4.12</junitVersion>
@@ -225,6 +226,25 @@
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-surefire-plugin</artifactId>
                     <version>2.19</version>
+                </plugin>
+                <plugin>
+                    <groupId>pl.project13.maven</groupId>
+                    <artifactId>git-commit-id-plugin</artifactId>
+                    <version>${gitcommitVersion}</version>
+                    <executions>
+                        <execution>
+                            <goals>
+                                <goal>revision</goal>
+                            </goals>
+                        </execution>
+                    </executions>
+                    <configuration>
+                        <generateGitPropertiesFile>true</generateGitPropertiesFile>
+                        <generateGitPropertiesFilename>src/main/resources/git.properties</generateGitPropertiesFilename>
+                        <gitDescribe>
+                            <tags>true</tags>
+                        </gitDescribe>
+                    </configuration>
                 </plugin>
             </plugins>
         </pluginManagement>
