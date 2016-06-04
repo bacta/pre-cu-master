@@ -7,6 +7,8 @@ import com.ocdsoft.bacta.soe.connection.SoeUdpConnection;
 import com.ocdsoft.bacta.soe.controller.ConnectionRolesAllowed;
 import com.ocdsoft.bacta.soe.controller.GameNetworkMessageController;
 import com.ocdsoft.bacta.soe.controller.MessageHandled;
+import com.ocdsoft.bacta.swg.server.game.event.PlayerOnlineEvent;
+import com.ocdsoft.bacta.soe.io.udp.PublisherService;
 import com.ocdsoft.bacta.swg.server.game.GameServerState;
 import com.ocdsoft.bacta.swg.server.game.chat.GameChatService;
 import com.ocdsoft.bacta.swg.server.game.guild.GuildService;
@@ -36,6 +38,7 @@ public class SelectCharacterController implements GameNetworkMessageController<S
     private final GuildService guildService;
     private final GameServerState serverState;
     private final GameChatService chatService;
+    private final PublisherService publisherService;
     private final ZoneMap zoneMap;
 
     @Inject
@@ -44,7 +47,8 @@ public class SelectCharacterController implements GameNetworkMessageController<S
                                      final GuildService guildService,
                                      final GameServerState serverState,
                                      final GameChatService chatService,
-                                     final ZoneMap zoneMap) {
+                                     final ZoneMap zoneMap,
+                                     final PublisherService publisherService) {
 
         this.accountSecurityService = accountSecurityService;
         this.objectService = objectService;
@@ -52,6 +56,7 @@ public class SelectCharacterController implements GameNetworkMessageController<S
         this.chatService = chatService;
         this.serverState = serverState;
         this.zoneMap = zoneMap;
+        this.publisherService = publisherService;
     }
 
     @Override
@@ -99,6 +104,8 @@ public class SelectCharacterController implements GameNetworkMessageController<S
 
                 character.sendCreateAndBaselinesTo(user);
                 zone.add(character);
+
+                publisherService.onEvent(new PlayerOnlineEvent(character));
 
             } else {
                 LOGGER.error("Unable to lookup character {} ", message.getCharacterId());

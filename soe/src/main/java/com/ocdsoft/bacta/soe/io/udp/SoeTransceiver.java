@@ -2,6 +2,7 @@ package com.ocdsoft.bacta.soe.io.udp;
 
 import com.codahale.metrics.*;
 import com.codahale.metrics.Timer;
+import com.codahale.metrics.annotation.Timed;
 import com.google.inject.Inject;
 import com.ocdsoft.bacta.engine.network.client.ConnectionState;
 import com.ocdsoft.bacta.engine.network.io.udp.UdpTransceiver;
@@ -10,6 +11,7 @@ import com.ocdsoft.bacta.soe.ServerState;
 import com.ocdsoft.bacta.soe.connection.ConnectionRole;
 import com.ocdsoft.bacta.soe.connection.SoeUdpConnection;
 import com.ocdsoft.bacta.soe.dispatch.SoeMessageDispatcher;
+import com.ocdsoft.bacta.soe.event.DisconnectEvent;
 import com.ocdsoft.bacta.soe.message.UdpPacketType;
 import com.ocdsoft.bacta.soe.protocol.SoeProtocol;
 import com.ocdsoft.bacta.soe.serialize.GameNetworkMessageSerializer;
@@ -62,7 +64,7 @@ public final class SoeTransceiver extends UdpTransceiver<SoeUdpConnection>  {
     private final ServerState serverState;
 
     private final GameNetworkMessageSerializer messageSerializer;
-    private final SubscriptionService subscriptionService;
+    private final PublisherService publisherService;
 
 
     @Inject
@@ -72,7 +74,7 @@ public final class SoeTransceiver extends UdpTransceiver<SoeUdpConnection>  {
                           final SoeMessageDispatcher soeMessageDispatcher,
                           final GameNetworkMessageSerializer messageSerializer,
                           final AccountCache accountCache,
-                          final SubscriptionService subscriptionService) {
+                          final PublisherService publisherService) {
 
         super(networkConfiguration.getBindAddress(), networkConfiguration.getUdpPort());
 
@@ -84,7 +86,7 @@ public final class SoeTransceiver extends UdpTransceiver<SoeUdpConnection>  {
         this.serverState = serverState;
         this.messageSerializer = messageSerializer;
         this.accountCache = accountCache;
-        this.subscriptionService = subscriptionService;
+        this.publisherService = publisherService;
 
         this.mBeanServer = ManagementFactory.getPlatformMBeanServer();
 
@@ -128,7 +130,7 @@ public final class SoeTransceiver extends UdpTransceiver<SoeUdpConnection>  {
             }
         }
     }
-    
+
     public long getIncomingMessageCount() {
         return incomingMessages.getCount();
     }
@@ -338,7 +340,7 @@ public final class SoeTransceiver extends UdpTransceiver<SoeUdpConnection>  {
                         for (InetSocketAddress inetSocketAddress : deadClients) {
                             final SoeUdpConnection connection = accountCache.remove(inetSocketAddress);
                             if(connection != null) {
-                                subscriptionService.onDisconnect(connection);
+                                publisherService.onEvent(new DisconnectEvent(connection));
                                 if (!networkConfiguration.isDisableInstrumentation()) {
                                     try {
                                         mBeanServer.unregisterMBean(connection.getBeanName());
