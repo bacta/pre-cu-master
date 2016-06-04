@@ -23,7 +23,7 @@ import com.ocdsoft.bacta.swg.server.game.name.NameService;
 import com.ocdsoft.bacta.swg.server.game.object.PreCuObjectTemplateList;
 import com.ocdsoft.bacta.swg.server.game.object.ServerObject;
 import com.ocdsoft.bacta.swg.server.game.object.tangible.factory.GuiceNetworkObjectFactory;
-import com.ocdsoft.bacta.swg.server.game.service.GameSubscriptionService;
+import com.ocdsoft.bacta.swg.server.game.service.subscription.GameSubscriptionService;
 import com.ocdsoft.bacta.swg.server.game.service.data.SetupSharedFile;
 import com.ocdsoft.bacta.swg.server.game.service.data.SharedFileService;
 import com.ocdsoft.bacta.swg.server.game.service.object.ServerObjectService;

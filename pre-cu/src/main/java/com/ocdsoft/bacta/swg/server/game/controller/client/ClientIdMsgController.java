@@ -7,9 +7,11 @@ import com.ocdsoft.bacta.soe.connection.SoeUdpConnection;
 import com.ocdsoft.bacta.soe.controller.ConnectionRolesAllowed;
 import com.ocdsoft.bacta.soe.controller.GameNetworkMessageController;
 import com.ocdsoft.bacta.soe.controller.MessageHandled;
+import com.ocdsoft.bacta.soe.event.ConnectionEvent;
 import com.ocdsoft.bacta.soe.io.udp.AccountCache;
 import com.ocdsoft.bacta.soe.io.udp.NetworkConfiguration;
 import com.ocdsoft.bacta.soe.io.udp.SubscriptionService;
+import com.ocdsoft.bacta.swg.server.game.service.subscription.GameEvent;
 import com.ocdsoft.bacta.swg.server.login.object.SoeAccount;
 import com.ocdsoft.bacta.swg.server.game.message.ErrorMessage;
 import com.ocdsoft.bacta.swg.server.game.message.client.ClientIdMsg;
@@ -62,8 +64,7 @@ public class ClientIdMsgController implements GameNetworkMessageController<Clien
         connection.setAccountUsername(account.getUsername());
         connection.addRole(ConnectionRole.AUTHENTICATED);
 
-        accountCache.addAccountConnection(connection);
-        subscriptionService.onConnect(connection);
+        subscriptionService.onEvent(new ConnectionEvent(connection));
 
         // TODO: Actually implement permissions
         ClientPermissionsMessage cpm = new ClientPermissionsMessage(true, true, true, false);
