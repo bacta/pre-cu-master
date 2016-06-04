@@ -14,8 +14,6 @@ import com.ocdsoft.bacta.engine.security.Pbkdf2SaltedPasswordHash;
 import com.ocdsoft.bacta.engine.service.AccountService;
 import com.ocdsoft.bacta.engine.service.scheduler.SchedulerService;
 import com.ocdsoft.bacta.engine.service.scheduler.TaskSchedulerService;
-import com.ocdsoft.bacta.soe.data.couchbase.CouchbaseAccountService;
-import com.ocdsoft.bacta.soe.data.couchbase.CouchbaseConnectionDatabaseConnector;
 import com.ocdsoft.bacta.soe.dispatch.SoeDevMessageDispatcher;
 import com.ocdsoft.bacta.soe.dispatch.SoeMessageDispatcher;
 import com.ocdsoft.bacta.soe.serialize.GameNetworkMessageSerializer;
@@ -41,10 +39,7 @@ public class PreCuModule extends AbstractModule implements Module {
         bind(SessionKeyService.class).to(SWGSessionKeyService.class);
         bind(SoeMessageDispatcher.class).to(SoeDevMessageDispatcher.class);
         bind(GameNetworkMessageSerializer.class).to(GameNetworkMessageSerializerImpl.class);
-        bind(ConnectionDatabaseConnector.class).to(CouchbaseConnectionDatabaseConnector.class);
-        bind(new TypeLiteral<AccountService<SoeAccount>>() {
-        }).to(new TypeLiteral<CouchbaseAccountService<SoeAccount>>() {
-        });
+
 
         // SWG Level Bindings
 

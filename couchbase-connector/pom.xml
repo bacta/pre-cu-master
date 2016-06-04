@@ -26,10 +26,42 @@
         <developerConnection>scm:git:git@github.com:bacta/couchbase-connector.git</developerConnection>
     </scm>
 
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-shade-plugin</artifactId>
+                <version>2.4.3</version>
+                <executions>
+                    <execution>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>shade</goal>
+                        </goals>
+                        <configuration>
+                            <artifactSet>
+                                <includes>
+                                    <include>com.couchbase.client:couchbase-client</include>
+                                    <include>io.netty:netty</include>
+                                    <include>org.codehaus.jettison:jettison</include>
+                                    <include>stax:stax-api</include>
+                                    <include>net.spy:spymemcached</include>
+                                    <include>org.apache.httpcomponents</include>
+                                    <include>com.google.code.gson</include>
+                                </includes>
+                            </artifactSet>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+    </build>
+
   <dependencies>
       <dependency>
           <groupId>com.ocdsoft.bacta</groupId>
-          <artifactId>engine</artifactId>
+          <artifactId>pre-cu</artifactId>
+          <scope>provided</scope>
       </dependency>
       <dependency>
           <groupId>com.couchbase.client</groupId>

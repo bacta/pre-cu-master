@@ -27,8 +27,6 @@ public final class CouchbaseConnectionDatabaseConnector implements ConnectionDat
 
     private static final Logger logger = LoggerFactory.getLogger(CouchbaseConnectionDatabaseConnector.class);
 
-    private final CouchbaseTranscoder transcoder;
-
     private CouchbaseClient client;
     private final Gson gson;
 
@@ -37,8 +35,7 @@ public final class CouchbaseConnectionDatabaseConnector implements ConnectionDat
     private View characterNamesView;
 
     @Inject
-    public CouchbaseConnectionDatabaseConnector(BactaConfiguration configuration, CouchbaseTranscoder transcoder) throws Exception {
-        this.transcoder = transcoder;
+    public CouchbaseConnectionDatabaseConnector(BactaConfiguration configuration) throws Exception {
 
         gson = registerSerializers();
 

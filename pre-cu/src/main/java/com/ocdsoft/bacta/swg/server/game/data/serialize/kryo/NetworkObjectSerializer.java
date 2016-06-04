@@ -1,4 +1,4 @@
-package com.ocdsoft.bacta.engine.serialize;
+package com.ocdsoft.bacta.swg.server.game.data.serialize.kryo;
 
 import com.esotericsoftware.kryo.Kryo;
 import com.esotericsoftware.kryo.Registration;
@@ -8,7 +8,7 @@ import com.esotericsoftware.kryo.io.Output;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import com.ocdsoft.bacta.engine.object.NetworkObject;
-import com.ocdsoft.bacta.engine.service.object.ObjectService;
+import com.ocdsoft.bacta.swg.shared.object.GameObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -23,43 +23,23 @@ import java.util.Map;
  * Created by kburkhardt on 8/22/14.
  */
 @Singleton
-public class NetworkObjectSerializer<T extends NetworkObject> extends Serializer<T> {
+public class NetworkObjectSerializer<T extends GameObject> extends Serializer<T> {
 
-    private final Logger logger = LoggerFactory.getLogger(this.getClass());
-    private final Map<Class<? extends NetworkObject>, List<Field>> serializableFieldsMap = new HashMap<>();
-
-    protected final ObjectService objectService;
+    private static final Logger LOGGER = LoggerFactory.getLogger(NetworkObjectSerializer.class);
+    private final Map<Class<? extends NetworkObject>, List<Field>> serializableFieldsMap;
 
     @Inject
-    public NetworkObjectSerializer(ObjectService objectService) {
-        this.objectService = objectService;
-        buildSerializationMetadata();
+    public NetworkObjectSerializer(final Class<? extends GameObject> clazz) {
+        serializableFieldsMap = new HashMap<>();
+        loadSerializableClass(clazz);
     }
 
-    // TODO: Implement this
-    private void buildSerializationMetadata() {
-//
-//        Reflections reflections = new Reflections();
-//
-//        Set<Class<? extends NetworkObject>> networkObjects = reflections.getSubTypesOf(NetworkObject.class);
-//
-//        Iterator<Class<? extends NetworkObject>> objectIter = networkObjects.iterator();
-//        while (objectIter.hasNext()) {
-//
-//            Class<? extends NetworkObject> networkObject = objectIter.next();
-//            List<Field> fields = loadSerializableClass(networkObject);
-//
-//            serializableFieldsMap.put(networkObject, fields);
-//        }
-
-    }
-
-    private List<Field> loadSerializableClass(Class<? extends NetworkObject> networkObject) {
+    private List<Field> loadSerializableClass(Class<? extends GameObject> networkObject) {
 
         List<Field> fields = null;
 
         if(networkObject.getSuperclass() != null) {
-            fields = loadSerializableClass((Class<? extends NetworkObject>) networkObject.getSuperclass());
+            fields = loadSerializableClass((Class<? extends GameObject>) networkObject.getSuperclass());
         }
 
         if(fields == null) {
@@ -68,7 +48,8 @@ public class NetworkObjectSerializer<T extends NetworkObject> extends Serializer
 
         for (Field field : networkObject.getDeclaredFields()) {
 
-            if(!Modifier.isTransient(field.getModifiers())) {
+            if(!Modifier.isTransient(field.getModifiers()) &&
+                !Modifier.isStatic(field.getModifiers())) {
                 field.setAccessible(true);
                 fields.add(field);
             }
@@ -84,12 +65,12 @@ public class NetworkObjectSerializer<T extends NetworkObject> extends Serializer
         for(Field field : fields) {
             try {
 
-                kryo.writeClassAndObject(output, field.get(object));
+                kryo.writeObject(output, field.get(object));
 
             } catch (IllegalAccessException e) {
-                logger.error("Unable to serialize", e);
+                LOGGER.error("Unable to serialize", e);
             } catch (IllegalArgumentException e) {
-                logger.error("Offending class: " + object.getClass().getName() + " Field: " + field.getName());
+                LOGGER.error("Offending class: " + object.getClass().getName() + " Field: " + field.getName());
             }
         }
     }
@@ -110,9 +91,9 @@ public class NetworkObjectSerializer<T extends NetworkObject> extends Serializer
             return newObject;
 
         } catch (IllegalAccessException e) {
-            logger.error("Unable to serialize", e);
+            LOGGER.error("Unable to serialize", e);
         } catch (InstantiationException e) {
-            logger.error("Unable to instantiate", e);
+            LOGGER.error("Unable to instantiate", e);
         }
 
         return null;

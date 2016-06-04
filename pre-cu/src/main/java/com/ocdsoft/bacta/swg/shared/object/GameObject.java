@@ -34,6 +34,9 @@ public class GameObject extends NetworkObject {
     protected final static int ROTATIONS_BETWEEN_REORTHONORMALIZE = 255;
 
     @Getter
+    private final ObjectTemplate objectTemplate;
+
+    @Getter
     private boolean inWorld;
     @Getter
     private boolean active;
@@ -48,9 +51,6 @@ public class GameObject extends NetworkObject {
     private boolean destroyed;
     @Getter
     private boolean altering;
-
-    @Getter
-    private final ObjectTemplate objectTemplate;
 
     private Appearance appearance;
     //private Controller controller;

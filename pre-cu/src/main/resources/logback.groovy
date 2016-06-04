@@ -18,7 +18,7 @@ appender("STDOUT", ConsoleAppender) {
 logger("org.reflections",  WARN)
 logger("io.netty",  WARN)
 logger("com.couchbase",  WARN)
-//logger("com.ocdsoft.bacta.soe.controller.MultiController", TRACE)
+//LOGGER("com.ocdsoft.bacta.soe.controller.MultiController", TRACE)
 
 
 root(INFO, ["STDOUT"])

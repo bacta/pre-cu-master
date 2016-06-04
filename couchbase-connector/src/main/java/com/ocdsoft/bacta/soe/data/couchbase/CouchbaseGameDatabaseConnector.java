@@ -2,7 +2,6 @@ package com.ocdsoft.bacta.soe.data.couchbase;
 
 import com.couchbase.client.CouchbaseClient;
 import com.couchbase.client.CouchbaseConnectionFactory;
-import com.google.gson.Gson;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import com.ocdsoft.bacta.engine.conf.BactaConfiguration;
@@ -24,18 +23,14 @@ import java.util.Properties;
 @Singleton
 public final class CouchbaseGameDatabaseConnector implements GameDatabaseConnector {
 
-    private static final Logger logger = LoggerFactory.getLogger(CouchbaseGameDatabaseConnector.class);
-
-    private final CouchbaseTranscoder transcoder;
+    private static final Logger LOGGER = LoggerFactory.getLogger(CouchbaseGameDatabaseConnector.class);
+    private final CouchbaseGameObjectTranscoder transcoder;
 
     private CouchbaseClient client;
-    private final Gson gson;
 
     @Inject
-    public CouchbaseGameDatabaseConnector(BactaConfiguration configuration, CouchbaseTranscoder transcoder) throws Exception {
+    public CouchbaseGameDatabaseConnector(BactaConfiguration configuration, CouchbaseGameObjectTranscoder transcoder) throws Exception {
         this.transcoder = transcoder;
-
-        gson = new Gson();
 
         Properties systemProperties = System.getProperties();
         systemProperties.put("net.spy.log.LoggerImpl", "net.spy.memcached.compat.log.SLF4JLogger");
@@ -46,10 +41,10 @@ public final class CouchbaseGameDatabaseConnector implements GameDatabaseConnect
                 configuration.getInt("Bacta/Database/Couchbase", "Port"),
                 configuration.getString("Bacta/Database/Couchbase", "GameObjectsBucket"));
 
-        init(configuration);
+        init();
     }
 
-    private void init(BactaConfiguration configuration) {
+    private void init() {
 
         try {
             if (client.get("NetworkId") == null) {
@@ -58,7 +53,7 @@ public final class CouchbaseGameDatabaseConnector implements GameDatabaseConnect
 
         } catch(Exception e) {
 
-            logger.error("Unable to initialize database", e);
+            LOGGER.error("Unable to initialize database", e);
             System.exit(1);
         }
     }
@@ -84,12 +79,12 @@ public final class CouchbaseGameDatabaseConnector implements GameDatabaseConnect
         client.addObserver(new ConnectionObserver() {
 
             public void connectionLost(SocketAddress sa) {
-                logger.debug("Connection lost to " + sa.toString() + " '" + bucket + "'");
+                LOGGER.debug("Connection lost to " + sa.toString() + " '" + bucket + "'");
             }
 
             public void connectionEstablished(SocketAddress sa, int reconnectCount) {
-                logger.debug("Connection established with " + sa.toString() + " '" + bucket + "'");
-                logger.debug("Reconnected count: " + reconnectCount);
+                LOGGER.debug("Connection established with " + sa.toString() + " '" + bucket + "'");
+                LOGGER.debug("Reconnected count: " + reconnectCount);
             }
         });
 

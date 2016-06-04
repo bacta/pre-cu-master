@@ -69,7 +69,6 @@ public final class ServerObjectService implements ObjectService<ServerObject> {
         final Class<T> objectClass = objectTemplateService.getClassForTemplate(template);
         final T newObject = (T) networkObjectFactory.createNetworkObject(objectClass, template);
 
-        newObject.setOnDirtyCallback(new ServerObjectServiceOnDirtyCallback(newObject));
 
         internalMap.put(newObject.getNetworkId(), newObject);
        // databaseConnector.createNetworkObject(newObject);
@@ -90,18 +89,27 @@ public final class ServerObjectService implements ObjectService<ServerObject> {
         T object = (T) internalMap.get(key);
 
         if(object == null) {
-            object = databaseConnector.getNetworkObject(key);
-            if(object != null) {
-                //ObjectTemplate template = objectTemplateService.getObjectTemplate(object.getTemplatePath());
-                //object.setTemplate(template); //TODO: Fix this!!!!!!
-                internalMap.put(key, object);
-            }
+            object = loadFromDatabase(key);
         }
 
         return object;
     }
 
-    @Override
+    private <T extends ServerObject> T loadFromDatabase(final long key) {
+        T object = databaseConnector.getNetworkObject(key);
+        assert object != null : String.format("Requested object %d is not in the database");
+
+        //ServerObjectTemplate template = objectTemplateService.getObjectTemplate(object.getObjectTemplateName());
+        //object.setobject(template); //TODO: Fix this!!!!!!
+        internalMap.put(key, object);
+
+        object.setOnDirtyCallback(new ServerObjectServiceOnDirtyCallback(object));
+
+        return object;
+    }
+
+
+        @Override
     public <T extends ServerObject> T get(ServerObject requester, long key) {
         //TODO: Reimplement permissions.
         return get(key);

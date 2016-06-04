@@ -16,9 +16,9 @@ import com.ocdsoft.bacta.swg.shared.template.ObjectTemplateList;
 import com.ocdsoft.bacta.swg.shared.template.definition.TemplateDefinition;
 import gnu.trove.map.TIntObjectMap;
 import gnu.trove.map.hash.TIntObjectHashMap;
-import net.spy.memcached.compat.log.Logger;
-import net.spy.memcached.compat.log.LoggerFactory;
 import org.reflections.Reflections;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.lang.reflect.Method;
 import java.util.Iterator;
