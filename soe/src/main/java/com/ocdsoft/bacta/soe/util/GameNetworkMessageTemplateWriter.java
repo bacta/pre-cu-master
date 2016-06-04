@@ -66,13 +66,13 @@ public final class GameNetworkMessageTemplateWriter {
         controllerClassPath = configuration.getBasePackage() + "." + serverEnv.name().toLowerCase() + ".controller";
         String fs = System.getProperty("file.separator");
 
-        controllerFilePath = System.getProperty("user.dir") + fs + System.getProperty("bacta.serverPath") + "src"
+        controllerFilePath = System.getProperty("user.dir") + fs  + "src"
                 + fs + "main" + fs + "java" + fs +
                 configuration.getBasePackage().replace(".", fs) + fs  +
                 serverEnv.name().toLowerCase() + fs + "controller" + fs;
         
         messageClassPath = configuration.getBasePackage() + "." + serverEnv.name().toLowerCase() + ".message";
-        messageFilePath = System.getProperty("user.dir") + fs + System.getProperty("bacta.serverPath") + "src"
+        messageFilePath = System.getProperty("user.dir") + fs  + "src"
                 + fs + "main" + fs + "java" + fs +
                 configuration.getBasePackage().replace(".", fs) + fs +
                 serverEnv.name().toLowerCase() + fs +  "message" + fs;

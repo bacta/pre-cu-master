@@ -7,8 +7,8 @@
     <packaging>jar</packaging>
 
     <parent>
-        <groupId>com.ocdsoft.bacta.swg</groupId>
-        <artifactId>pre-cu-master</artifactId>
+        <groupId>com.ocdsoft.bacta</groupId>
+        <artifactId>swg</artifactId>
         <version>1.0.0-SNAPSHOT</version>
     </parent>
 
