@@ -14,3 +14,6 @@
 hs_err_pid*
 
 # Created by .ignore support plugin (hsz.mobi)
+
+#Ignore the generated git*.properties files.
+git*.properties
