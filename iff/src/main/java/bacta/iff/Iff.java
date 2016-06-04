@@ -698,12 +698,10 @@ public final class Iff {
 
         final Stack chunk = this.stack.get(this.stackDepth);
 
-        int depth = 0;
-        int offset = 0;
-
-        if (chunk.used < chunk.length) {
-            while (offset + chunk.used < chunk.length)
-                offset += getLength(this.stackDepth, offset) + CHUNK_HEADER_SIZE;
+        int depth = 0, offset = 0;
+        while (chunk.used + offset < chunk.length) {
+            offset += (getLength(stackDepth, offset) + CHUNK_HEADER_SIZE);
+            ++depth;
         }
 
         return depth;
