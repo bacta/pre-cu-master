@@ -5,7 +5,8 @@ import com.ocdsoft.bacta.soe.connection.SoeUdpConnection;
 import com.ocdsoft.bacta.soe.controller.ConnectionRolesAllowed;
 import com.ocdsoft.bacta.soe.controller.GameNetworkMessageController;
 import com.ocdsoft.bacta.soe.controller.MessageHandled;
-import com.ocdsoft.bacta.swg.server.game.message.RequestGalaxyLoopTimes;
+import com.ocdsoft.bacta.swg.server.game.message.client.GalaxyLoopTimesResponse;
+import com.ocdsoft.bacta.swg.server.game.message.client.RequestGalaxyLoopTimes;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -17,7 +18,8 @@ public class RequestGalaxyLoopTimesController implements GameNetworkMessageContr
 
     @Override
     public void handleIncoming(SoeUdpConnection connection, RequestGalaxyLoopTimes message) {
-        LOGGER.warn("This controller is not implemented");
+        // TODO: Frame millis, if possible
+        connection.sendMessage(new GalaxyLoopTimesResponse(0, 0));
     }
 }
 

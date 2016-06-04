@@ -1,9 +1,6 @@
 package com.ocdsoft.bacta.swg.server.game.object;
 
 import com.google.inject.Inject;
-import com.ocdsoft.bacta.engine.lang.ObservableEventRegistry;
-import com.ocdsoft.bacta.engine.lang.Observer;
-import com.ocdsoft.bacta.engine.lang.Subject;
 import com.ocdsoft.bacta.engine.object.NetworkObject;
 import com.ocdsoft.bacta.soe.connection.SoeUdpConnection;
 import com.ocdsoft.bacta.soe.message.GameNetworkMessage;
@@ -12,7 +9,6 @@ import com.ocdsoft.bacta.swg.archive.OnDirtyCallbackBase;
 import com.ocdsoft.bacta.swg.archive.delta.*;
 import com.ocdsoft.bacta.swg.server.game.container.IntangibleVolumeContainer;
 import com.ocdsoft.bacta.swg.server.game.container.TangibleVolumeContainer;
-import com.ocdsoft.bacta.swg.server.game.event.ObservableGameEvent;
 import com.ocdsoft.bacta.swg.server.game.message.object.ObjControllerMessage;
 import com.ocdsoft.bacta.swg.server.game.message.scene.*;
 import com.ocdsoft.bacta.swg.server.game.object.cell.CellObject;
@@ -40,7 +36,7 @@ import java.util.Iterator;
 import java.util.Set;
 
 
-public abstract class ServerObject extends GameObject implements Subject<ObservableGameEvent> {
+public abstract class ServerObject extends GameObject {
     private static final transient Logger LOGGER = LoggerFactory.getLogger(ServerObject.class);
 
     private static SharedObjectTemplate DEFAULT_SHARED_TEMPLATE; //Gets set by a startup service.
@@ -108,7 +104,6 @@ public abstract class ServerObject extends GameObject implements Subject<Observa
         authServerProcessId = new AutoDeltaInt();
 
         listeners = Collections.synchronizedSet(new HashSet<>());
-        eventRegistry = new ObservableEventRegistry<>();
 
         setLocalFlag(ServerObject.LocalObjectFlags.HYPERSPACE_ON_CREATE, hyperspaceOnCreate);
         setLocalFlag(ServerObject.LocalObjectFlags.HYPERSPACE_ON_DESTRUCT, false);
@@ -356,8 +351,6 @@ public abstract class ServerObject extends GameObject implements Subject<Observa
         setDirty(true);
     }
 
-    protected final transient ObservableEventRegistry<ObservableGameEvent> eventRegistry;
-
     private final void flushCreateMessages() {
         //Check and log invalid transform
 
@@ -534,26 +527,6 @@ public abstract class ServerObject extends GameObject implements Subject<Observa
             LOGGER.debug("Broadcasting obj controller to {}", theirConnection.getCurrentCharName());
             System.out.println(SoeMessageUtil.bytesToHex(message));
         }
-    }
-
-    @Override
-    public final void register(Observer obj, ObservableGameEvent event) {
-        eventRegistry.register(obj, event);
-    }
-
-    @Override
-    public final void unregister(Observer obj, ObservableGameEvent event) {
-        eventRegistry.unregister(obj, event);
-    }
-
-    @Override
-    public void notifyObservers(ObservableGameEvent event) {
-        eventRegistry.notifyObservers(event);
-    }
-
-    @Override
-    public Object getUpdate(Observer obj) {
-        return null;
     }
 
     /**

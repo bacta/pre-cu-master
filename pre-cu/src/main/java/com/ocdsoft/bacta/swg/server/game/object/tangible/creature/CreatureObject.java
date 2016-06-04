@@ -13,7 +13,6 @@ import com.ocdsoft.bacta.swg.archive.delta.vector.AutoDeltaIntVector;
 import com.ocdsoft.bacta.swg.archive.delta.vector.AutoDeltaObjectVector;
 import com.ocdsoft.bacta.swg.server.game.command.CommandQueue;
 import com.ocdsoft.bacta.swg.server.game.controller.object.GameControllerMessageFlags;
-import com.ocdsoft.bacta.swg.server.game.event.ObservableGameEvent;
 import com.ocdsoft.bacta.swg.server.game.message.UpdatePostureMessage;
 import com.ocdsoft.bacta.swg.server.game.message.object.GameControllerMessageType;
 import com.ocdsoft.bacta.swg.server.game.message.object.MessageQueuePosture;
@@ -288,7 +287,7 @@ public class CreatureObject extends TangibleObject {
                 0,
                 postureMessage));
 
-        notifyObservers(ObservableGameEvent.POSTURE_CHANGE);
+
     }
 
     public final byte getPosture() {
