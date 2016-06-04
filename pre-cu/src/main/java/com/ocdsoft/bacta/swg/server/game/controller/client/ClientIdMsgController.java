@@ -7,11 +7,10 @@ import com.ocdsoft.bacta.soe.connection.SoeUdpConnection;
 import com.ocdsoft.bacta.soe.controller.ConnectionRolesAllowed;
 import com.ocdsoft.bacta.soe.controller.GameNetworkMessageController;
 import com.ocdsoft.bacta.soe.controller.MessageHandled;
-import com.ocdsoft.bacta.soe.event.ConnectionEvent;
+import com.ocdsoft.bacta.soe.event.ConnectEvent;
 import com.ocdsoft.bacta.soe.io.udp.AccountCache;
 import com.ocdsoft.bacta.soe.io.udp.NetworkConfiguration;
-import com.ocdsoft.bacta.soe.io.udp.SubscriptionService;
-import com.ocdsoft.bacta.swg.server.game.service.subscription.GameEvent;
+import com.ocdsoft.bacta.soe.io.udp.PublisherService;
 import com.ocdsoft.bacta.swg.server.login.object.SoeAccount;
 import com.ocdsoft.bacta.swg.server.game.message.ErrorMessage;
 import com.ocdsoft.bacta.swg.server.game.message.client.ClientIdMsg;
@@ -28,18 +27,18 @@ public class ClientIdMsgController implements GameNetworkMessageController<Clien
     private final AccountService<SoeAccount> accountService;
     private final AccountCache accountCache;
     private final NetworkConfiguration configuration;
-    private final SubscriptionService subscriptionService;
+    private final PublisherService publisherService;
 
     @Inject
     public ClientIdMsgController(final AccountService<SoeAccount> accountService,
                                  final AccountCache accountCache,
                                  final NetworkConfiguration configuration,
-                                 final SubscriptionService subscriptionService) {
+                                 final PublisherService publisherService) {
 
         this.accountService = accountService;
         this.accountCache = accountCache;
         this.configuration = configuration;
-        this.subscriptionService = subscriptionService;
+        this.publisherService = publisherService;
     }
 
     @Override
@@ -64,7 +63,7 @@ public class ClientIdMsgController implements GameNetworkMessageController<Clien
         connection.setAccountUsername(account.getUsername());
         connection.addRole(ConnectionRole.AUTHENTICATED);
 
-        subscriptionService.onEvent(new ConnectionEvent(connection));
+        publisherService.onEvent(new ConnectEvent(connection));
 
         // TODO: Actually implement permissions
         ClientPermissionsMessage cpm = new ClientPermissionsMessage(true, true, true, false);

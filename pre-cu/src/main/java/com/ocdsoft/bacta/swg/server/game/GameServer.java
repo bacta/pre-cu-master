@@ -5,7 +5,11 @@ import com.google.inject.Singleton;
 import com.ocdsoft.bacta.engine.network.client.ServerStatus;
 import com.ocdsoft.bacta.engine.network.io.tcp.TcpServer;
 import com.ocdsoft.bacta.soe.connection.SoeUdpConnection;
+import com.ocdsoft.bacta.soe.event.ConnectEvent;
+import com.ocdsoft.bacta.soe.event.DisconnectEvent;
+import com.ocdsoft.bacta.swg.server.game.event.PlayerOnlineEvent;
 import com.ocdsoft.bacta.soe.io.udp.GameNetworkConfiguration;
+import com.ocdsoft.bacta.soe.io.udp.PublisherService;
 import com.ocdsoft.bacta.soe.io.udp.SoeTransceiver;
 import com.ocdsoft.bacta.soe.service.OutgoingConnectionService;
 import com.ocdsoft.bacta.swg.server.game.message.GameServerOnline;
@@ -59,6 +63,7 @@ public final class GameServer implements Runnable, Observer {
     public GameServer(final GameServerState serverState,
                       final SoeTransceiver transceiver,
                       final PingServer pingServer,
+                      final PublisherService publisherService,
                       final OutgoingConnectionService outgoingConnectionService,
                       final GameNetworkConfiguration networkConfiguration) throws UnknownHostException {
 
@@ -69,8 +74,31 @@ public final class GameServer implements Runnable, Observer {
         this.networkConfiguration = networkConfiguration;
         timer = new Timer();
 
+        publisherService.subscribe(PlayerOnlineEvent.class, this::handlePlayerOnline);
+        publisherService.subscribe(ConnectEvent.class, this::handleConnect);
+        publisherService.subscribe(DisconnectEvent.class, this::handleDisconnect);
+
         // One might consider this a hack, but it allows us to use scope in referencing the method desired without making it public
         ((GameOutgoingConnectionService) outgoingConnectionService).createConnection = transceiver::createOutgoingConnection;
+    }
+
+    private void handlePlayerOnline(final PlayerOnlineEvent playerOnlineEvent) {
+        LOGGER.info("Character '{}' has joined the server", playerOnlineEvent.getCharacter().getAssignedObjectName() );
+    }
+
+    private void handleConnect(final ConnectEvent connectEvent) {
+        LOGGER.info("Account {} ({}) has connected to the server",
+                connectEvent.getConnection().getAccountUsername(),
+                connectEvent.getConnection().getId()
+        );
+    }
+
+    private void handleDisconnect(final DisconnectEvent disconnectEvent) {
+        LOGGER.info("Account '{}' Character '{}' ({}) has disconnected from the server",
+                disconnectEvent.getConnection().getAccountUsername(),
+                disconnectEvent.getConnection().getCurrentCharName(),
+                disconnectEvent.getConnection().getId()
+        );
     }
 
     /**
@@ -179,7 +207,6 @@ public final class GameServer implements Runnable, Observer {
     public void stop() {
         transceiver.stop();
     }
-
 
     /**
      * GameOutgoingConnectionService uses a function reference to the {@link SoeTransceiver#createOutgoingConnection(InetSocketAddress, Consumer)}
