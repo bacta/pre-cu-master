@@ -26,8 +26,6 @@ public final class PreCuServer {
             argSet.add(arg.toLowerCase());
         }
 
-        System.setProperty("bacta.serverPath", "pre-cu" + System.getProperty("file.separator"));
-
         if(argSet.contains("login")) {
             LOGGER.info("Starting LoginServer");
             Injector injector = Guice.createInjector(new PreCuModule(), new LoginModule());

@@ -2,8 +2,8 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>com.ocdsoft.bacta.swg</groupId>
-    <artifactId>pre-cu-master</artifactId>
+    <groupId>com.ocdsoft.bacta</groupId>
+    <artifactId>swg</artifactId>
     <version>1.0.0-SNAPSHOT</version>
     <packaging>pom</packaging>
 
@@ -13,7 +13,7 @@
         <version>7</version>
     </parent>
 
-    <name>pre-cu-master</name>
+    <name>swg</name>
     <url>https://github.com/bacta/pre-cu</url>
 
     <properties>
