@@ -74,6 +74,7 @@ public final class ServerObjectService implements ObjectService<ServerObject> {
         internalMap.put(newObject.getNetworkId(), newObject);
        // databaseConnector.createNetworkObject(newObject);
 
+        // TODO: Reload from database for other initialization
         if (parent != null) {
             final ContainerResult containerResult = new ContainerResult();
             if (!containerTransferService.transferItemToGeneralContainer(parent, newObject, null, containerResult)) {

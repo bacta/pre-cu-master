@@ -8,8 +8,9 @@ import com.ocdsoft.bacta.soe.connection.SoeUdpConnection;
 import com.ocdsoft.bacta.soe.controller.ConnectionRolesAllowed;
 import com.ocdsoft.bacta.soe.controller.GameNetworkMessageController;
 import com.ocdsoft.bacta.soe.controller.MessageHandled;
+import com.ocdsoft.bacta.soe.event.ConnectEvent;
 import com.ocdsoft.bacta.soe.io.udp.NetworkConfiguration;
-import com.ocdsoft.bacta.soe.io.udp.SubscriptionService;
+import com.ocdsoft.bacta.soe.io.udp.PublisherService;
 import com.ocdsoft.bacta.swg.server.login.object.SoeAccount;
 import com.ocdsoft.bacta.swg.server.login.message.*;
 import com.ocdsoft.bacta.swg.server.login.service.ClusterService;
@@ -28,18 +29,18 @@ public class LoginClientIdController implements GameNetworkMessageController<Log
     private final ClusterService clusterService;
     private final AccountService<SoeAccount> accountService;
     private final NetworkConfiguration configuration;
-    private final SubscriptionService subscriptionService;
+    private final PublisherService publisherService;
 
     @Inject
     public LoginClientIdController(final NetworkConfiguration configuration,
                                    final ClusterService clusterService,
                                    final AccountService<SoeAccount> accountService,
-                                   final SubscriptionService subscriptionService) {
+                                   final PublisherService publisherService) {
 
         this.clusterService = clusterService;
         this.accountService = accountService;
         this.configuration = configuration;
-        this.subscriptionService = subscriptionService;
+        this.publisherService = publisherService;
 
         timezone = DateTimeZone.getDefault().getOffset(null) / 1000;
     }
@@ -103,8 +104,8 @@ public class LoginClientIdController implements GameNetworkMessageController<Log
         EnumerateCharacterId characters = new EnumerateCharacterId(account);
         connection.sendMessage(characters);
 
-        subscriptionService.onConnect(connection);
         connection.addRole(ConnectionRole.AUTHENTICATED);
+        publisherService.onEvent(new ConnectEvent(connection));
     }
 
     private boolean isRequiredVersion(String clientVersion) {

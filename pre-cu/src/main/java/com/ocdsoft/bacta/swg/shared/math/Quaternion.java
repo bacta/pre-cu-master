@@ -1,5 +1,7 @@
 package com.ocdsoft.bacta.swg.shared.math;
 
+import bacta.iff.Iff;
+import bacta.iff.IffWritable;
 import com.ocdsoft.bacta.engine.buffer.ByteBufferWritable;
 
 import javax.vecmath.Quat4f;
@@ -8,7 +10,7 @@ import java.nio.ByteBuffer;
 /**
  * Created by crush on 5/5/2016.
  */
-public class Quaternion implements ByteBufferWritable {
+public class Quaternion implements ByteBufferWritable, IffWritable {
     public static final float EPSILON = 1.19209e-007f;
     public static final float EQUALITY_EPSILON = 1e-027f;
 
@@ -98,6 +100,13 @@ public class Quaternion implements ByteBufferWritable {
         y = buffer.getFloat();
         z = buffer.getFloat();
         w = buffer.getFloat();
+    }
+
+    public Quaternion(final Iff iff) {
+        w = iff.readFloat();
+        x = iff.readFloat();
+        y = iff.readFloat();
+        z = iff.readFloat();
     }
 
     @Override
@@ -278,5 +287,13 @@ public class Quaternion implements ByteBufferWritable {
                 w * rhs.x + rhs.w * x + (y * rhs.z - z * rhs.y),
                 w * rhs.y + rhs.w * y + (z * rhs.x - x * rhs.z),
                 w * rhs.z + rhs.w * z + (x * rhs.y - y * rhs.x));
+    }
+
+    @Override
+    public void writeToIff(final Iff iff) {
+        iff.insertChunkData(w);
+        iff.insertChunkData(x);
+        iff.insertChunkData(y);
+        iff.insertChunkData(z);
     }
 }
