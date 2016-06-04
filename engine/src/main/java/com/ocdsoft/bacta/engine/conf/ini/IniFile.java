@@ -688,20 +688,20 @@ public class IniFile implements IniReader {
 
     private void parseProperty(final String line) {
         if (currentSection != null) {
-            String[] parts = line.split(":|=", 2);
+            final String[] parts = line.split(":|=", 2);
 
             if (parts.length == 2) { //Success, otherwise ignore it...it's malformed. Should print error mesage?
-                parts[0] = parts[0].trim();
-                parts[1] = parts[1].trim();
+                final String key = parts[0].trim();
+                final String value = parts[1].trim();
 
-                LinkedList<String> list = currentSection.properties.get(parts[0]);
+                final LinkedList<String> list = currentSection.properties.get(key);
 
                 if (list == null) {
                     currentSection.properties.put(
-                            parts[0], //key
-                            new LinkedList<String>(Arrays.asList(parts[1]))); //value
+                            key, //key
+                            new LinkedList<>(Collections.singletonList(value))); //value
                 } else {
-                    list.addLast(parts[1]);
+                    list.addLast(value);
                 }
             }
         }
@@ -749,7 +749,7 @@ public class IniFile implements IniReader {
     }
 
     private final class Section {
-        protected final Map<String, LinkedList<String>> properties = new HashMap<>();
+        protected final Map<String, LinkedList<String>> properties = new TreeMap<>(String.CASE_INSENSITIVE_ORDER);
         protected final String sectionName;
 
         public Section(final String sectionName) {
