@@ -1,4 +1,4 @@
-package com.ocdsoft.bacta.soe.data.couchbase;
+package com.ocdsoft.bacta.soe.data.couchbase.serializer;
 
 import com.google.gson.*;
 import org.slf4j.Logger;

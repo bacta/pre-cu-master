@@ -5,7 +5,6 @@ import com.ocdsoft.bacta.engine.buffer.ByteBufferWritable;
 import com.ocdsoft.bacta.engine.utils.BufferUtil;
 import com.ocdsoft.bacta.soe.message.GameNetworkMessage;
 import com.ocdsoft.bacta.soe.message.Priority;
-import com.ocdsoft.bacta.swg.server.login.object.ClusterServer;
 import lombok.Getter;
 import org.joda.time.DateTimeZone;
 
@@ -27,17 +26,17 @@ public class LoginEnumCluster extends GameNetworkMessage {
         clusterDataSet = new TreeSet<>();
     }
 
-	public LoginEnumCluster(final Collection<ClusterServer> clusterServerSet, final int maxCharactersPerAccount) {
+	public LoginEnumCluster(final Collection<com.ocdsoft.bacta.swg.shared.object.ClusterData> clusterServerSet, final int maxCharactersPerAccount) {
         this();
         clusterDataSet.addAll(clusterServerSet.stream()
-                .map(ClusterServer::getClusterData)
+                .map(com.ocdsoft.bacta.swg.shared.object.ClusterData::getClusterData)
                 .collect(Collectors.toList())
         );
         this.maxCharactersPerAccount = maxCharactersPerAccount;
 	}
 
     public LoginEnumCluster(final ByteBuffer buffer) {
-        clusterDataSet = BufferUtil.getTreeSet(buffer, ClusterData::new);
+        clusterDataSet = BufferUtil.getTreeSet(buffer, LoginEnumCluster.ClusterData::new);
         maxCharactersPerAccount = buffer.getInt();
     }
 

@@ -1,15 +1,9 @@
 package com.ocdsoft.bacta.swg.server.login;
 
-import com.google.inject.AbstractModule;
-import com.google.inject.Module;
 import com.ocdsoft.bacta.soe.ServerState;
-import com.ocdsoft.bacta.soe.io.udp.PublisherService;
+import com.ocdsoft.bacta.soe.service.PublisherService;
 import com.ocdsoft.bacta.soe.io.udp.NetworkConfiguration;
 import com.ocdsoft.bacta.soe.service.OutgoingConnectionService;
-import com.ocdsoft.bacta.swg.server.login.LoginNetworkConfiguration;
-import com.ocdsoft.bacta.swg.server.login.LoginServer;
-import com.ocdsoft.bacta.swg.server.login.LoginServerState;
-import com.ocdsoft.bacta.swg.server.login.service.LoginPublisherService;
 
 public class BaseLoginModule extends LoginModule {
 
@@ -19,7 +13,6 @@ public class BaseLoginModule extends LoginModule {
 		bind(ServerState.class).to(LoginServerState.class);
 		bind(NetworkConfiguration.class).to(LoginNetworkConfiguration.class);
 		bind(OutgoingConnectionService.class).to(LoginServer.LoginOutgoingConnectionService.class);
-		bind(PublisherService.class).to(LoginPublisherService.class);
 
 	}
 

@@ -6,7 +6,7 @@ import com.ocdsoft.bacta.engine.service.objectfactory.NetworkObjectFactory;
 import com.ocdsoft.bacta.soe.ServerState;
 import com.ocdsoft.bacta.soe.io.udp.GameNetworkConfiguration;
 import com.ocdsoft.bacta.soe.io.udp.NetworkConfiguration;
-import com.ocdsoft.bacta.soe.io.udp.PublisherService;
+import com.ocdsoft.bacta.soe.service.PublisherService;
 import com.ocdsoft.bacta.soe.service.OutgoingConnectionService;
 import com.ocdsoft.bacta.swg.server.game.GameModule;
 import com.ocdsoft.bacta.swg.server.game.GameServer;
@@ -16,7 +16,6 @@ import com.ocdsoft.bacta.swg.server.game.name.NameService;
 import com.ocdsoft.bacta.swg.server.game.object.PreCuObjectTemplateList;
 import com.ocdsoft.bacta.swg.server.game.object.ServerObject;
 import com.ocdsoft.bacta.swg.server.game.object.tangible.factory.GuiceNetworkObjectFactory;
-import com.ocdsoft.bacta.swg.server.game.service.subscription.GamePublisherService;
 import com.ocdsoft.bacta.swg.server.game.service.data.SetupSharedFile;
 import com.ocdsoft.bacta.swg.server.game.service.data.SharedFileService;
 import com.ocdsoft.bacta.swg.server.game.service.object.ServerObjectService;
@@ -47,7 +46,6 @@ class BaseGameModule extends GameModule {
         bind(GameServerState.class).to(PreCuGameServerState.class);
         bind(ServerState.class).to(PreCuGameServerState.class);
         bind(NameService.class).to(DefaultNameService.class);
-        bind(PublisherService.class).to(GamePublisherService.class);
 
         bind(ObjectTemplateList.class).to(PreCuObjectTemplateList.class);
     }

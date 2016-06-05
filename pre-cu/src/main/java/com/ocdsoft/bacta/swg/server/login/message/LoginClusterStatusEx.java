@@ -3,12 +3,11 @@ package com.ocdsoft.bacta.swg.server.login.message;
 import com.ocdsoft.bacta.engine.utils.BufferUtil;
 import com.ocdsoft.bacta.soe.message.GameNetworkMessage;
 import com.ocdsoft.bacta.soe.message.Priority;
-import com.ocdsoft.bacta.swg.server.login.object.ClusterServer;
+import com.ocdsoft.bacta.swg.shared.object.ExtendedClusterData;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
 import java.nio.ByteBuffer;
-import java.util.Collection;
 import java.util.Set;
 
 /**
@@ -19,10 +18,10 @@ import java.util.Set;
 @AllArgsConstructor
 public class LoginClusterStatusEx extends GameNetworkMessage {
 
-    private final Set<ClusterServer.ExtendedClusterData> extendedClusterDataSet;
+    private final Set<ExtendedClusterData> extendedClusterDataSet;
 
     public LoginClusterStatusEx(final ByteBuffer buffer) {
-        extendedClusterDataSet = BufferUtil.getTreeSet(buffer, ClusterServer.ExtendedClusterData::new);
+        extendedClusterDataSet = BufferUtil.getTreeSet(buffer, ExtendedClusterData::new);
     }
 
     @Override

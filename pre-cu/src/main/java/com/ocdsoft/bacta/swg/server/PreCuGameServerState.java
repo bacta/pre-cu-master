@@ -7,7 +7,7 @@ import com.ocdsoft.bacta.engine.network.client.ServerStatus;
 import com.ocdsoft.bacta.soe.ServerType;
 import com.ocdsoft.bacta.soe.io.udp.GameNetworkConfiguration;
 import com.ocdsoft.bacta.swg.server.game.GameServerState;
-import com.ocdsoft.bacta.swg.server.login.object.ClusterServer;
+import com.ocdsoft.bacta.swg.shared.object.ClusterData;
 import lombok.Getter;
 
 import java.util.ResourceBundle;
@@ -21,7 +21,7 @@ public final class PreCuGameServerState implements GameServerState {
     private final int clusterId;
     private final ServerType serverType;
     private ServerStatus serverStatus;
-    private final ClusterServer clusterServer;
+    private final ClusterData clusterServer;
     private final String branch;
     private final int version;
     private final String networkVersion;
@@ -40,7 +40,7 @@ public final class PreCuGameServerState implements GameServerState {
         version = Integer.parseInt(swgBundle.getString("git.commit.id.abbrev"), 16);
         networkVersion = swgBundle.getString("git.commit.id");
 
-        clusterServer = new ClusterServer(configuration, networkConfiguration, this);
+        clusterServer = new ClusterData(configuration, networkConfiguration, this);
     }
 
     public void setServerStatus(ServerStatus serverStatus) {

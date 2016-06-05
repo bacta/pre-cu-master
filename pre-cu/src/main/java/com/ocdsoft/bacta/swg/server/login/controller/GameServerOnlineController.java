@@ -5,9 +5,10 @@ import com.ocdsoft.bacta.soe.ServerType;
 import com.ocdsoft.bacta.soe.connection.ConnectionRole;
 import com.ocdsoft.bacta.soe.connection.SoeUdpConnection;
 import com.ocdsoft.bacta.soe.controller.ConnectionRolesAllowed;
+import com.ocdsoft.bacta.soe.controller.GameNetworkMessageController;
 import com.ocdsoft.bacta.soe.controller.MessageHandled;
-import com.ocdsoft.bacta.soe.controller.SubscriptionHandlerController;
-import com.ocdsoft.bacta.swg.server.login.service.ClusterService;
+import com.ocdsoft.bacta.soe.service.PublisherService;
+import com.ocdsoft.bacta.swg.server.login.event.GameServerOnlineEvent;
 import com.ocdsoft.bacta.swg.server.game.message.GameServerOnline;
 
 import java.util.Set;
@@ -17,23 +18,17 @@ import java.util.Set;
  */
 @ConnectionRolesAllowed({ConnectionRole.WHITELISTED})
 @MessageHandled(handles = GameServerOnline.class, type = ServerType.LOGIN)
-public class GameServerOnlineController extends SubscriptionHandlerController<GameServerOnline> {
+public class GameServerOnlineController implements GameNetworkMessageController<GameServerOnline> {
 
-    private final ClusterService clusterService;
+    private final PublisherService publisherService;
 
     @Inject
-    public GameServerOnlineController(final ClusterService clusterService) {
-        this.clusterService = clusterService;
+    public GameServerOnlineController(final PublisherService publisherService) {
+        this.publisherService = publisherService;
     }
 
     @Override
-    public void handleIncomingInternal(SoeUdpConnection connection, GameServerOnline message) throws Exception {
-        clusterService.notifyGameServerOnline(message.getClusterServer());
+    public void handleIncoming(SoeUdpConnection connection, GameServerOnline message) throws Exception {
+        publisherService.onEvent(new GameServerOnlineEvent(message.getClusterServer()));
     }
-
-    @Override
-    protected void notifySubscribers(Set<SoeUdpConnection> subscribers, GameServerOnline message) {
-
-    }
-
 }

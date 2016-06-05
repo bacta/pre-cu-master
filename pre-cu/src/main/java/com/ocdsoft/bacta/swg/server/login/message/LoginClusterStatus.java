@@ -7,11 +7,9 @@ import com.ocdsoft.bacta.engine.network.client.ServerStatus;
 import com.ocdsoft.bacta.engine.utils.BufferUtil;
 import com.ocdsoft.bacta.engine.utils.UnsignedUtil;
 import com.ocdsoft.bacta.soe.io.udp.GameNetworkConfiguration;
-import com.ocdsoft.bacta.soe.io.udp.NetworkConfiguration;
 import com.ocdsoft.bacta.soe.message.GameNetworkMessage;
 import com.ocdsoft.bacta.soe.message.Priority;
 import com.ocdsoft.bacta.soe.util.SoeMessageUtil;
-import com.ocdsoft.bacta.swg.server.login.object.ClusterServer;
 import com.ocdsoft.bacta.swg.server.login.object.PopulationStatus;
 import lombok.Getter;
 import lombok.Setter;
@@ -32,9 +30,9 @@ public class LoginClusterStatus extends GameNetworkMessage {
         clusterDataSet = new TreeSet<>();
     }
 
-	public LoginClusterStatus(Collection<ClusterServer> clusterServerSet) {
+	public LoginClusterStatus(Collection<com.ocdsoft.bacta.swg.shared.object.ClusterData> clusterServerSet) {
         this();
-        clusterDataSet.addAll(clusterServerSet.stream().map(ClusterServer::getStatusClusterData).collect(Collectors.toList()));
+        clusterDataSet.addAll(clusterServerSet.stream().map(com.ocdsoft.bacta.swg.shared.object.ClusterData::getStatusClusterData).collect(Collectors.toList()));
 	}
 
     public LoginClusterStatus(ByteBuffer buffer) {
@@ -114,6 +112,21 @@ public class LoginClusterStatus extends GameNetworkMessage {
             onlineFreeTrialLimit = buffer.getInt();
         }
 
+        public ClusterData(final int id) {
+            this.id = id;
+            connectionServerAddress = "";
+            connectionServerPort = 0;
+            connectionServerPingPort = 0;
+            populationOnline = 0;
+            populationOnlineStatus = PopulationStatus.PS_very_light;
+            maxCharactersPerAccount = 0;
+            timeZone = 0;
+            status = ServerStatus.DOWN;
+            dontRecommend = true;
+            onlinePlayerLimit = 0;
+            onlineFreeTrialLimit = 0;
+        }
+
         public ClusterData(final BactaConfiguration configuration, final GameNetworkConfiguration networkConfiguration) {
             id = networkConfiguration.getClusterId();
             connectionServerAddress = networkConfiguration.getPublicAddress().getHostAddress();
@@ -127,21 +140,6 @@ public class LoginClusterStatus extends GameNetworkMessage {
             dontRecommend = configuration.getBoolean("Bacta/GameServer", "DontRecommended");
             onlinePlayerLimit = configuration.getInt("Bacta/GameServer", "OnlinePlayerLimit");
             onlineFreeTrialLimit = configuration.getInt("Bacta/GameServer", "OnlineFreeTrialLimit");
-        }
-
-        public ClusterData(Map<String, Object> clusterInfo) {
-            id = (int) clusterInfo.get("id");
-            connectionServerAddress = (String) clusterInfo.get("connectionServerAddress");
-            connectionServerPort = ((Double)clusterInfo.get("connectionServerPort")).shortValue();
-            connectionServerPingPort = ((Double)clusterInfo.get("connectionServerPingPort")).shortValue();
-            populationOnline = ((Double)clusterInfo.get("populationOnline")).intValue();
-            populationOnlineStatus = PopulationStatus.PS_very_light;
-            maxCharactersPerAccount = ((Double)clusterInfo.get("maxCharactersPerAccount")).intValue();
-            timeZone = ((Double)clusterInfo.get("timeZone")).intValue();
-            status = ServerStatus.DOWN;
-            dontRecommend = (boolean) clusterInfo.get("dontRecommend");
-            onlinePlayerLimit = ((Double)clusterInfo.get("onlinePlayerLimit")).intValue();
-            onlineFreeTrialLimit = ((Double)clusterInfo.get("onlineFreeTrialLimit")).intValue();
         }
 
         @Override

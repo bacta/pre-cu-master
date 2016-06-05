@@ -8,7 +8,7 @@ import com.ocdsoft.bacta.soe.controller.ConnectionRolesAllowed;
 import com.ocdsoft.bacta.soe.controller.GameNetworkMessageController;
 import com.ocdsoft.bacta.soe.controller.MessageHandled;
 import com.ocdsoft.bacta.swg.server.game.event.PlayerOnlineEvent;
-import com.ocdsoft.bacta.soe.io.udp.PublisherService;
+import com.ocdsoft.bacta.soe.service.PublisherService;
 import com.ocdsoft.bacta.swg.server.game.GameServerState;
 import com.ocdsoft.bacta.swg.server.game.chat.GameChatService;
 import com.ocdsoft.bacta.swg.server.game.guild.GuildService;

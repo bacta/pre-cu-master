@@ -12,7 +12,7 @@ import com.ocdsoft.bacta.swg.server.login.message.EnumerateCharacterId
 import com.ocdsoft.bacta.swg.server.login.message.LoginClientToken
 import com.ocdsoft.bacta.swg.server.login.message.LoginClusterStatus
 import com.ocdsoft.bacta.swg.server.login.message.LoginEnumCluster
-import com.ocdsoft.bacta.swg.server.login.object.ClusterServer
+import com.ocdsoft.bacta.swg.shared.object.ClusterData
 import com.ocdsoft.bacta.swg.server.login.object.SoeAccount
 import com.ocdsoft.bacta.swg.shared.serialize.GameNetworkMessageSerializerImpl
 import spock.lang.Specification
@@ -29,9 +29,9 @@ class MultiGameMessageSpec extends Specification {
         def networkConfiguration = new GameNetworkConfiguration(bactaConfig)
         def gameServerState = new PreCuGameServerState(bactaConfig, networkConfiguration)
 
-        def clusterEntry = new ClusterServer(bactaConfig, networkConfiguration, gameServerState)
+        def clusterEntry = new ClusterData(bactaConfig, networkConfiguration, gameServerState)
         def loginClientToken = new LoginClientToken("Test", 0, "kyle")
-        Set<ClusterServer> clusterEntries = new HashSet<>()
+        Set<ClusterData> clusterEntries = new HashSet<>()
         clusterEntries.add(clusterEntry)
         def loginEnumCluster = new LoginEnumCluster(clusterEntries, 2)
         def loginClusterStatus = new LoginClusterStatus(clusterEntries)
