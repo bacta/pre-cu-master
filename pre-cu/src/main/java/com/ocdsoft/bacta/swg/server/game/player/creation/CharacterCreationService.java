@@ -20,6 +20,7 @@ import com.ocdsoft.bacta.swg.server.game.name.NameService;
 import com.ocdsoft.bacta.swg.server.game.object.ServerObject;
 import com.ocdsoft.bacta.swg.server.game.object.intangible.player.PlayerObject;
 import com.ocdsoft.bacta.swg.server.game.object.tangible.TangibleObject;
+import com.ocdsoft.bacta.swg.server.game.object.tangible.creature.Attribute;
 import com.ocdsoft.bacta.swg.server.game.object.tangible.creature.CreatureObject;
 import com.ocdsoft.bacta.swg.server.game.object.template.server.ServerCreatureObjectTemplate;
 import com.ocdsoft.bacta.swg.server.game.object.template.shared.SharedObjectTemplate;
@@ -34,6 +35,7 @@ import com.ocdsoft.bacta.swg.shared.container.ContainerResult;
 import com.ocdsoft.bacta.swg.shared.foundation.ConstCharCrcLowerString;
 import com.ocdsoft.bacta.swg.shared.math.Transform;
 import com.ocdsoft.bacta.swg.shared.math.Vector;
+import gnu.trove.list.TIntList;
 import org.joda.time.DateTime;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -76,6 +78,9 @@ public final class CharacterCreationService {
     private final AllowBaldService allowBaldService;
     private final HairStylesService hairStylesService;
     private final ContainerTransferService containerTransferService;
+    private final AttributeLimitsService attributeLimitsService;
+    private final ProfessionModsService professionModsService;
+    private final RacialModsService racialModsService;
 
     private final Cache<String, Integer> pendingCreations;
     private final String defaultProfession;
@@ -94,6 +99,9 @@ public final class CharacterCreationService {
                                     final BiographyService biographyService,
                                     final GameServerState gameServerState,
                                     final ContainerTransferService containerTransferService,
+                                    final AttributeLimitsService attributeLimitsService,
+                                    final ProfessionModsService professionModsService,
+                                    final RacialModsService racialModsService,
                                     final BactaConfiguration bactaConfiguration) {
 
         this.serverObjectService = serverObjectService;
@@ -107,6 +115,9 @@ public final class CharacterCreationService {
         this.gameServerState = gameServerState;
         this.nameService = nameService;
         this.containerTransferService = containerTransferService;
+        this.attributeLimitsService = attributeLimitsService;
+        this.professionModsService = professionModsService;
+        this.racialModsService = racialModsService;
         this.hairStylesService = hairStylesService;
 
         this.disabledProfessions = new HashSet<>(bactaConfiguration.getStringCollection(
@@ -130,6 +141,14 @@ public final class CharacterCreationService {
         final String speciesGender = Files.getNameWithoutExtension(serverTemplateName);
         final Gender gender = Gender.fromSpeciesGender(speciesGender);
         final Race race = Race.fromSpeciesGender(speciesGender);
+
+        final String profession;
+
+        if (createMessage.getProfession().isEmpty() || this.disabledProfessions.contains(createMessage.getProfession())) {
+            profession = this.defaultProfession;
+        } else {
+            profession = createMessage.getProfession();
+        }
 
         final String firstName = StringUtil.getFirstWord(createMessage.getCharacterName()).toLowerCase();
 
@@ -177,6 +196,8 @@ public final class CharacterCreationService {
             return null;
         }
 
+        applyScaleLimits(newCharacterObject, createMessage.getScaleFactor());
+
         newCharacterObject.setObjectName(createMessage.getCharacterName());
         newCharacterObject.setOwnerId(newCharacterObject.getNetworkId());
         newCharacterObject.setPlayerControlled(true);
@@ -204,23 +225,9 @@ public final class CharacterCreationService {
         newCharacterObject.setTransformObjectToParent(transform);
 
         final CollisionProperty collision = newCharacterObject.getCollisionProperty();
-        if (collision != null) {
+
+        if (collision != null)
             collision.setPlayerControlled(true);
-        }
-
-        float scaleFactor = createMessage.getScaleFactor();
-        final SharedObjectTemplate tmpl = newCharacterObject.getSharedTemplate();
-
-        if (tmpl != null) {
-            final float scaleMax = tmpl.getScaleMax();
-            final float scaleMin = tmpl.getScaleMin();
-
-            scaleFactor = Math.min(scaleFactor, scaleMax);
-            scaleFactor = Math.max(scaleFactor, scaleMin);
-        }
-
-        newCharacterObject.setScaleFactor(scaleFactor);
-        newCharacterObject.setScale(Vector.XYZ111.multiply(scaleFactor));
 
         final TangibleObject tangibleObject = TangibleObject.asTangibleObject(newCharacterObject);
 
@@ -251,13 +258,10 @@ public final class CharacterCreationService {
             tangibleHair.setAppearanceData(createMessage.getHairAppearanceData());
         }
 
-        if (!createMessage.getProfession().isEmpty()) {
-            setupPlayer(newCharacterObject, createMessage.getProfession(), createMessage.isJedi());
-        }
+        setupPlayer(newCharacterObject, speciesGender, profession, createMessage.isJedi());
 
-        if (!createMessage.getBiography().isEmpty()) {
+        if (!createMessage.getBiography().isEmpty())
             biographyService.setBiography(newCharacterObject.getNetworkId(), createMessage.getBiography());
-        }
 
         final PlayerObject play = serverObjectService.createObject("object/player/player.iff", newCharacterObject);
 
@@ -267,24 +271,6 @@ public final class CharacterCreationService {
         play.setBornDate((int) DateTime.now().getMillis());
         play.setSkillTemplate(createMessage.getSkillTemplate(), true);
         play.setWorkingSkill(createMessage.getWorkingSkill(), true);
-
-        //TODO: Appearance inventory
-        // Setup initial A-Tab inventory.
-//        SlottedContainer container = newCharacterObject.getSlottedContainerProperty();
-//        if(container != null) {
-//            int slot = slotIdManager.findSlotId(SlotNames.appearance);
-//            //Container::ContainerErrorCode tmp;
-//            if(slot != SlotId.INVALID) {
-//                Container itemId = container.getObjectInSlot(slot, tmp);
-//                Object appearanceInventory = itemId.getObject();
-//
-//                if(appearanceInventory == null)  {
-//                    appearanceInventory = objectService.createObject(s_appearanceTemplate, newCharacterObject);
-//                    assert appearanceInventory != null : "Could not create an appearance inventory for the player who lost theirs";
-//                }
-//            }
-//        }
-
 
         newCharacterObject.setSceneIdOnThisAndContents(startingLocationInfo.getPlanet());
 
@@ -312,19 +298,14 @@ public final class CharacterCreationService {
         return info;
     }
 
-    public void setupPlayer(final CreatureObject newCharacterObject, String profession, final boolean jedi) {
-        if (this.disabledProfessions.contains(profession))
-            profession = this.defaultProfession;
-
-        final String sharedTemplateName = newCharacterObject.getSharedTemplate().getResourceName();
+    public void setupPlayer(final CreatureObject creatureObject, final String speciesGender, final String profession, final boolean jedi) {
+        final String sharedTemplateName = creatureObject.getSharedTemplate().getResourceName();
         final ProfessionInfo professionInfo = professionDefaultsService.getDefaults(profession);
 
-        createStartingEquipment(newCharacterObject, sharedTemplateName, professionInfo);
-        createRequiredSlots(newCharacterObject);
+        createStartingEquipment(creatureObject, sharedTemplateName, professionInfo);
+        createRequiredSlots(creatureObject);
 
-        //Apply Profession Mods
-        //Apply Racial Mods
-        //Validate scale factor based on template
+        applyAttributeMods(creatureObject, speciesGender, profession);
     }
 
     /**
@@ -343,16 +324,42 @@ public final class CharacterCreationService {
         return hairStylesService.isValidForPlayerTemplate(speciesGender, hairStyleTemplate);
     }
 
-    private boolean validateScale(final String sharedObjectTemplate, final CreatureObject creatureObject) {
-        return false;
+    private void applyScaleLimits(final CreatureObject creatureObject, float scaleFactor) {
+        final SharedObjectTemplate sharedObjectTemplate = creatureObject.getSharedTemplate();
+
+        if (sharedObjectTemplate != null) {
+            final float scaleMax = sharedObjectTemplate.getScaleMax();
+            final float scaleMin = sharedObjectTemplate.getScaleMin();
+
+            scaleFactor = Math.min(scaleFactor, scaleMax);
+            scaleFactor = Math.max(scaleFactor, scaleMin);
+        }
+
+        creatureObject.setScaleFactor(scaleFactor);
+        creatureObject.setScale(Vector.XYZ111.multiply(scaleFactor));
     }
 
-    private void applyProfessionMods(final CreatureObject creatureObject) {
+    private void applyAttributeMods(final CreatureObject creatureObject, final String speciesGender, final String profession) {
+        final ProfessionModsService.ProfessionModInfo professionModInfo = professionModsService.getProfessionModInfo(profession);
+        final RacialModsService.RacialModInfo racialModInfo = racialModsService.getRacialModInfo(speciesGender);
 
-    }
+        if (professionModInfo == null) {
+            LOGGER.warn("Could not find profession mod info for profession {}", profession);
+            return;
+        }
 
-    private void applyRacialMods(final CreatureObject creatureObject) {
+        if (racialModInfo == null) {
+            LOGGER.warn("Could not find racial mod info for species/gender {}", speciesGender);
+            return;
+        }
 
+        final TIntList profList = professionModInfo.getAttributes();
+        final TIntList raceList = racialModInfo.getAttributes();
+
+        for (int i = 0; i < Attribute.SIZE; ++i) {
+            final int value = profList.get(i) + raceList.get(i);
+            creatureObject.initializeAttribute(i, value);
+        }
     }
 
     /**

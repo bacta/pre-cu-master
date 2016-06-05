@@ -7,11 +7,7 @@ import com.ocdsoft.bacta.soe.message.Priority;
 
 import java.nio.ByteBuffer;
 
-/**
-      DE 00 00 00 01 00 00 00 
 
-  SOECRC32.hashCode(SelectCharacter.class.getSimpleName()); // 0xb5098d76
-  */
 @Getter
 @Priority(0x2)
 @AllArgsConstructor
