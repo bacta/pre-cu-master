@@ -28,6 +28,7 @@ import com.ocdsoft.bacta.swg.server.game.object.universe.group.GroupInviter;
 import com.ocdsoft.bacta.swg.server.game.object.universe.group.GroupMissionCriticalObject;
 import com.ocdsoft.bacta.swg.shared.collision.CollisionProperty;
 import com.ocdsoft.bacta.swg.shared.container.SlotIdManager;
+import com.ocdsoft.bacta.swg.shared.foundation.ConstCharCrcLowerString;
 import com.ocdsoft.bacta.swg.shared.math.Vector;
 import com.ocdsoft.bacta.swg.shared.object.GameObject;
 import com.ocdsoft.bacta.swg.shared.template.ObjectTemplateList;
@@ -287,8 +288,6 @@ public class CreatureObject extends TangibleObject {
                 getNetworkId(),
                 0,
                 postureMessage));
-
-
     }
 
     public final byte getPosture() {

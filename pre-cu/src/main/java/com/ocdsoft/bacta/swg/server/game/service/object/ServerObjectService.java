@@ -12,6 +12,8 @@ import com.ocdsoft.bacta.swg.server.game.object.template.server.ServerObjectTemp
 import com.ocdsoft.bacta.swg.server.game.service.container.ContainerTransferService;
 import com.ocdsoft.bacta.swg.server.game.service.data.ObjectTemplateService;
 import com.ocdsoft.bacta.swg.shared.container.ContainerResult;
+import com.ocdsoft.bacta.swg.shared.container.SlotIdManager;
+import com.ocdsoft.bacta.swg.shared.foundation.CrcString;
 import gnu.trove.map.TLongObjectMap;
 import gnu.trove.map.hash.TLongObjectHashMap;
 import org.slf4j.Logger;
@@ -38,6 +40,7 @@ public final class ServerObjectService implements ObjectService<ServerObject> {
     private final GameDatabaseConnector databaseConnector;
     private final ObjectTemplateService objectTemplateService;
     private final ContainerTransferService containerTransferService;
+    private final SlotIdManager slotIdManager;
     private final int deltaUpdateInterval;
 
     @Inject
@@ -45,12 +48,14 @@ public final class ServerObjectService implements ObjectService<ServerObject> {
                                final NetworkObjectFactory networkObjectFactory,
                                final GameDatabaseConnector databaseConnector,
                                final ObjectTemplateService objectTemplateService,
+                               final SlotIdManager slotIdManager,
                                final ContainerTransferService containerTransferService) {
 
         this.networkObjectFactory = networkObjectFactory;
         this.deltaUpdateInterval = configuration.getIntWithDefault("Bacta/GameServer", "DeltaUpdateInterval", 50);
         this.databaseConnector = databaseConnector;
         this.objectTemplateService = objectTemplateService;
+        this.slotIdManager = slotIdManager;
         this.deltaDispatcher = new DeltaNetworkDispatcher();
         this.containerTransferService = containerTransferService;
 
@@ -83,20 +88,6 @@ public final class ServerObjectService implements ObjectService<ServerObject> {
         }
 
         return newObject;
-    }
-
-    public <T extends ServerObject> T createObject(final String templatePath, final ServerObject parent, final int arrangementIndex) {
-        final T createdObject = createObject(templatePath, null);
-
-        if (createdObject != null && parent != null) {
-            final ContainerResult containerResult = new ContainerResult();
-
-            if (!containerTransferService.transferItemToSlottedContainer(parent, createdObject, null, arrangementIndex, containerResult)) {
-                LOGGER.warn("Failed to transfer item to slotted container because {}", containerResult.getError());
-            }
-        }
-
-        return createdObject;
     }
 
     @Override

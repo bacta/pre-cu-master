@@ -23,14 +23,15 @@ import com.ocdsoft.bacta.swg.server.game.object.tangible.TangibleObject;
 import com.ocdsoft.bacta.swg.server.game.object.tangible.creature.CreatureObject;
 import com.ocdsoft.bacta.swg.server.game.object.template.server.ServerCreatureObjectTemplate;
 import com.ocdsoft.bacta.swg.server.game.object.template.shared.SharedObjectTemplate;
+import com.ocdsoft.bacta.swg.server.game.service.container.ContainerTransferService;
 import com.ocdsoft.bacta.swg.server.game.service.data.ObjectTemplateService;
 import com.ocdsoft.bacta.swg.server.game.service.object.ServerObjectService;
 import com.ocdsoft.bacta.swg.server.game.util.Gender;
 import com.ocdsoft.bacta.swg.server.game.util.Race;
 import com.ocdsoft.bacta.swg.server.login.object.CharacterInfo;
 import com.ocdsoft.bacta.swg.shared.collision.CollisionProperty;
+import com.ocdsoft.bacta.swg.shared.container.ContainerResult;
 import com.ocdsoft.bacta.swg.shared.foundation.ConstCharCrcLowerString;
-import com.ocdsoft.bacta.swg.shared.foundation.CrcString;
 import com.ocdsoft.bacta.swg.shared.math.Transform;
 import com.ocdsoft.bacta.swg.shared.math.Vector;
 import org.joda.time.DateTime;
@@ -50,7 +51,18 @@ public final class CharacterCreationService {
     private static final Logger LOGGER = LoggerFactory.getLogger(CharacterCreationService.class);
 
     public static final String CONFIG_SECTION = "Bacta/GameServer/CharacterCreation";
-    public static final CrcString APPEARANCE_SLOT_NAME = new ConstCharCrcLowerString("appearance_inventory");
+
+    private static final ConstCharCrcLowerString INVENTORY_SLOT_NAME = new ConstCharCrcLowerString("inventory");
+    private static final ConstCharCrcLowerString DATAPAD_SLOT_NAME = new ConstCharCrcLowerString("datapad");
+    private static final ConstCharCrcLowerString BANK_SLOT_NAME = new ConstCharCrcLowerString("bank");
+    private static final ConstCharCrcLowerString MISSION_BAG_SLOT_NAME = new ConstCharCrcLowerString("mission_bag");
+    private static final ConstCharCrcLowerString APPEARANCE_SLOT_NAME = new ConstCharCrcLowerString("appearance_inventory");
+
+    private static final String INVENTORY_TEMPLATE = "object/tangible/inventory/character_inventory.iff";
+    private static final String DATAPAD_TEMPLATE = "object/tangible/datapad/character_datapad.iff";
+    private static final String MISSION_BAG_TEMPLATE = "object/tangible/mission_bag/mission_bag.iff";
+    private static final String BANK_TEMPLATE = "object/tangible/bank/character_bank.iff";
+    private static final String APPEARANCE_TEMPLATE = "object/tangible/inventory/appearance_inventory.iff";
 
     private final ServerObjectService serverObjectService;
     private final ProfessionDefaultsService professionDefaultsService;
@@ -63,6 +75,7 @@ public final class CharacterCreationService {
     private final GameServerState gameServerState;
     private final AllowBaldService allowBaldService;
     private final HairStylesService hairStylesService;
+    private final ContainerTransferService containerTransferService;
 
     private final Cache<String, Integer> pendingCreations;
     private final String defaultProfession;
@@ -80,6 +93,7 @@ public final class CharacterCreationService {
                                     final GameChatService chatService,
                                     final BiographyService biographyService,
                                     final GameServerState gameServerState,
+                                    final ContainerTransferService containerTransferService,
                                     final BactaConfiguration bactaConfiguration) {
 
         this.serverObjectService = serverObjectService;
@@ -92,6 +106,7 @@ public final class CharacterCreationService {
         this.biographyService = biographyService;
         this.gameServerState = gameServerState;
         this.nameService = nameService;
+        this.containerTransferService = containerTransferService;
         this.hairStylesService = hairStylesService;
 
         this.disabledProfessions = new HashSet<>(bactaConfiguration.getStringCollection(
@@ -305,16 +320,11 @@ public final class CharacterCreationService {
         final ProfessionInfo professionInfo = professionDefaultsService.getDefaults(profession);
 
         createStartingEquipment(newCharacterObject, sharedTemplateName, professionInfo);
+        createRequiredSlots(newCharacterObject);
 
         //Apply Profession Mods
         //Apply Racial Mods
         //Validate scale factor based on template
-        //Create ghost
-        //Create bank
-        //Create datapad
-        //Create missionBag
-        //Create inventory
-        //Create appearanceInventory
     }
 
     /**
@@ -364,6 +374,45 @@ public final class CharacterCreationService {
                         equipmentInfo.getServerTemplateName(),
                         creatureObject);
             }
+        }
+    }
+
+    private void createRequiredSlots(final CreatureObject creatureObject) {
+        final ContainerResult containerResult = new ContainerResult();
+
+        final ServerObject inventory = serverObjectService.createObject(INVENTORY_TEMPLATE);
+        if (!containerTransferService.transferItemToSlottedContainerSlotId(creatureObject, inventory, null, INVENTORY_SLOT_NAME, containerResult)) {
+            LOGGER.error("Could not slot inventory on creature {} because {}",
+                    creatureObject.getDebugInformation(),
+                    containerResult.getError());
+        }
+
+        final ServerObject datapad = serverObjectService.createObject(DATAPAD_TEMPLATE);
+        if (!containerTransferService.transferItemToSlottedContainerSlotId(creatureObject, datapad, null, DATAPAD_SLOT_NAME, containerResult)) {
+            LOGGER.error("Could not slot datapad on creature {} because {}",
+                    creatureObject.getDebugInformation(),
+                    containerResult.getError());
+        }
+
+        final ServerObject bank = serverObjectService.createObject(BANK_TEMPLATE);
+        if (!containerTransferService.transferItemToSlottedContainerSlotId(creatureObject, bank, null, BANK_SLOT_NAME, containerResult)) {
+            LOGGER.error("Could not slot bank on creature {} because {}",
+                    creatureObject.getDebugInformation(),
+                    containerResult.getError());
+        }
+
+        final ServerObject missionBag = serverObjectService.createObject(MISSION_BAG_TEMPLATE);
+        if (!containerTransferService.transferItemToSlottedContainerSlotId(creatureObject, missionBag, null, MISSION_BAG_SLOT_NAME, containerResult)) {
+            LOGGER.error("Could not slot mission bag on creature {} because {}",
+                    creatureObject.getDebugInformation(),
+                    containerResult.getError());
+        }
+
+        final ServerObject appearanceInventory = serverObjectService.createObject(APPEARANCE_TEMPLATE);
+        if (!containerTransferService.transferItemToSlottedContainerSlotId(creatureObject, appearanceInventory, null, APPEARANCE_SLOT_NAME, containerResult)) {
+            LOGGER.error("Could not slot appearance inventory on creature {} because {}",
+                    creatureObject.getDebugInformation(),
+                    containerResult.getError());
         }
     }
 }

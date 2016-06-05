@@ -41,7 +41,7 @@ public final class HairStyleInfo {
 
             //Default hair style
             if (iff.enterChunk(TAG_DEFA, true)) {
-                defaultHairStyle = iff.readString();
+                defaultHairStyle = iff.readString().replace("shared_", "");
                 iff.exitChunk(TAG_DEFA);
             } else {
                 defaultHairStyle = "";
@@ -53,7 +53,7 @@ public final class HairStyleInfo {
                 final Set<String> localHairStyles = new HashSet<>(30);
 
                 while (iff.getChunkLengthLeft() > 0)
-                    localHairStyles.add(iff.readString());
+                    localHairStyles.add(iff.readString().replace("shared_", ""));
 
                 hairStyles = ImmutableSet.copyOf(localHairStyles);
 

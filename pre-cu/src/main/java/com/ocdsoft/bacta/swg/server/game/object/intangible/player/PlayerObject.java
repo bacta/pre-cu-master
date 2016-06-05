@@ -261,6 +261,13 @@ public final class PlayerObject extends IntangibleObject {
         sharedPackageNp.addVariable(defaultAttackOverride);
     }
 
+    public final int getRoleIconChoice() {
+        return roleIconChoice.get();
+    }
+
+    public final void setRoleIconChoice(final int roleIconChoice) {
+        this.roleIconChoice.set(roleIconChoice);
+    }
 
     public final String getBiography() {
         return biography;
