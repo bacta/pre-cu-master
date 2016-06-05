@@ -7,11 +7,13 @@ import java.nio.ByteBuffer;
 
 /**
  * Created by kyle on 5/19/2016.
+ *
+ * Configures parameters on the client. Currently only configures how often the client should check for weather updates.
  */
 @AllArgsConstructor
 public class ParametersMessage extends GameNetworkMessage {
 
-    private final int weatherUpdateInterval;
+    private final int weatherUpdateInterval; //in seconds
 
     public ParametersMessage(final ByteBuffer buffer) {
         weatherUpdateInterval = buffer.getInt();
@@ -19,7 +21,7 @@ public class ParametersMessage extends GameNetworkMessage {
 
 
     @Override
-    public void writeToBuffer(ByteBuffer buffer) {
+    public void writeToBuffer(final ByteBuffer buffer) {
         buffer.putInt(weatherUpdateInterval);
     }
 }

@@ -10,6 +10,7 @@ import co.paralleluniverse.fibers.FiberScheduler;
 import co.paralleluniverse.fibers.SuspendExecution;
 import co.paralleluniverse.strands.Strand;
 import co.paralleluniverse.strands.channels.Channels;
+import com.ocdsoft.bacta.soe.util.SOECRC32;
 import org.junit.Test;
 
 /**
@@ -23,6 +24,7 @@ public class ActorTest {
     public ActorTest() {
         scheduler = new FiberForkJoinScheduler("test", 4, null, false);
     }
+
 
     @Test
     public void actorTest() {

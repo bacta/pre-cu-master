@@ -7,6 +7,7 @@ import com.ocdsoft.bacta.swg.server.game.chat.GameChatService;
 import com.ocdsoft.bacta.swg.server.game.object.ServerObject;
 import com.ocdsoft.bacta.swg.server.game.service.rewards.VeteranRewardService;
 import com.ocdsoft.bacta.swg.shared.container.*;
+import com.ocdsoft.bacta.swg.shared.foundation.CrcString;
 import com.ocdsoft.bacta.swg.shared.localization.StringId;
 import com.ocdsoft.bacta.swg.shared.math.Transform;
 import com.ocdsoft.bacta.swg.shared.object.GameObject;
@@ -186,6 +187,18 @@ public final class ContainerTransferService {
         item.onContainerTransferComplete(sourceObject, destination);
         //TODO: Post transfer script hook
         return true;
+    }
+
+    public boolean transferItemToSlottedContainerSlotId(final ServerObject destination, final ServerObject item, final ServerObject transferer, final CrcString slotName, final ContainerResult containerResult) {
+        final int slotId = slotIdManager.findSlotId(slotName);
+
+        if (slotId == SlotId.INVALID) {
+            LOGGER.warn("Invalid slot {}", slotName.getString());
+            containerResult.setError(ContainerErrorCode.NO_SLOT);
+            return false;
+        }
+
+        return transferItemToSlottedContainerSlotId(destination, item, transferer, slotId, containerResult);
     }
 
     public boolean transferItemToSlottedContainerSlotId(final ServerObject destination, final ServerObject item, final ServerObject transferer, final int slotId, final ContainerResult containerResult) {

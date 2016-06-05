@@ -18,7 +18,8 @@ appender("STDOUT", ConsoleAppender) {
 logger("org.reflections",  WARN)
 logger("io.netty",  WARN)
 logger("com.couchbase",  WARN)
-//LOGGER("com.ocdsoft.bacta.soe.controller.MultiController", TRACE)
+//logger("com.ocdsoft.bacta.soe.controller.MultiController", TRACE)
+logger("com.ocdsoft.bacta.swg.server.game.player.creation", DEBUG)
 
 
 root(INFO, ["STDOUT"])

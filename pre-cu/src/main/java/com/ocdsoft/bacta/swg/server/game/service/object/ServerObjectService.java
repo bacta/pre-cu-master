@@ -12,6 +12,8 @@ import com.ocdsoft.bacta.swg.server.game.object.template.server.ServerObjectTemp
 import com.ocdsoft.bacta.swg.server.game.service.container.ContainerTransferService;
 import com.ocdsoft.bacta.swg.server.game.service.data.ObjectTemplateService;
 import com.ocdsoft.bacta.swg.shared.container.ContainerResult;
+import com.ocdsoft.bacta.swg.shared.container.SlotIdManager;
+import com.ocdsoft.bacta.swg.shared.foundation.CrcString;
 import gnu.trove.map.TLongObjectMap;
 import gnu.trove.map.hash.TLongObjectHashMap;
 import org.slf4j.Logger;
@@ -38,6 +40,7 @@ public final class ServerObjectService implements ObjectService<ServerObject> {
     private final GameDatabaseConnector databaseConnector;
     private final ObjectTemplateService objectTemplateService;
     private final ContainerTransferService containerTransferService;
+    private final SlotIdManager slotIdManager;
     private final int deltaUpdateInterval;
 
     @Inject
@@ -45,12 +48,14 @@ public final class ServerObjectService implements ObjectService<ServerObject> {
                                final NetworkObjectFactory networkObjectFactory,
                                final GameDatabaseConnector databaseConnector,
                                final ObjectTemplateService objectTemplateService,
+                               final SlotIdManager slotIdManager,
                                final ContainerTransferService containerTransferService) {
 
         this.networkObjectFactory = networkObjectFactory;
         this.deltaUpdateInterval = configuration.getIntWithDefault("Bacta/GameServer", "DeltaUpdateInterval", 50);
         this.databaseConnector = databaseConnector;
         this.objectTemplateService = objectTemplateService;
+        this.slotIdManager = slotIdManager;
         this.deltaDispatcher = new DeltaNetworkDispatcher();
         this.containerTransferService = containerTransferService;
 

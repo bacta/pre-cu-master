@@ -52,6 +52,15 @@ public class RelationshipMap<T> {
     }
 
     /**
+     * Removes all the forward lookup entries for the given avatar. Any reverse lookups for the avatar will remain.
+     *
+     * @param avatarId The avatar whos forward relationships will be removed.
+     */
+    public synchronized void removeAll(final T avatarId) {
+        this.forwardLookup.removeAll(avatarId);
+    }
+
+    /**
      * Checks to see if a mutual relationship exists between two avatars. Avatar A must have a relationship to Avatar B,
      * and Avatar B must have a relationship to Avatar A.
      *
