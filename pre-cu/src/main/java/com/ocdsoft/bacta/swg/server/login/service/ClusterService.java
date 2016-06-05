@@ -53,7 +53,8 @@ public class ClusterService implements Observer {
         this.allowDynamicRegistration = bactaConfiguration.getBooleanWithDefault("Bacta/LoginServer", "AllowDynamicRegistration", false);
         this.publisherService = publisherService;
         this.connectedClients = new HashSet<>();
-        this.clusterServerSet = dbConnector.getObject("ClusterServerSet", CopyOnWriteArraySet.class);
+        final Set<ClusterData> savedData = dbConnector.getObject("ClusterServerSet", CopyOnWriteArraySet.class);
+        this.clusterServerSet = (savedData == null ? new CopyOnWriteArraySet<>() : savedData);
 
         this.publisherService.subscribe(ConnectEvent.class, this::addConnection);
         this.publisherService.subscribe(DisconnectEvent.class, this::removeConnection);
