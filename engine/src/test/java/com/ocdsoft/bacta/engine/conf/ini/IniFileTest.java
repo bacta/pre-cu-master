@@ -1,5 +1,6 @@
 package com.ocdsoft.bacta.engine.conf.ini;
 
+import com.google.common.io.Files;
 import org.junit.Test;
 
 import static org.junit.Assert.*;

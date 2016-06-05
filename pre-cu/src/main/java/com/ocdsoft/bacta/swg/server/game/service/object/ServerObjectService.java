@@ -85,6 +85,20 @@ public final class ServerObjectService implements ObjectService<ServerObject> {
         return newObject;
     }
 
+    public <T extends ServerObject> T createObject(final String templatePath, final ServerObject parent, final int arrangementIndex) {
+        final T createdObject = createObject(templatePath, null);
+
+        if (createdObject != null && parent != null) {
+            final ContainerResult containerResult = new ContainerResult();
+
+            if (!containerTransferService.transferItemToSlottedContainer(parent, createdObject, null, arrangementIndex, containerResult)) {
+                LOGGER.warn("Failed to transfer item to slotted container because {}", containerResult.getError());
+            }
+        }
+
+        return createdObject;
+    }
+
     @Override
     public <T extends ServerObject> T get(long key) {
         T object = (T) internalMap.get(key);

@@ -13,6 +13,7 @@ import com.ocdsoft.bacta.swg.archive.delta.vector.AutoDeltaIntVector;
 import com.ocdsoft.bacta.swg.archive.delta.vector.AutoDeltaObjectVector;
 import com.ocdsoft.bacta.swg.server.game.command.CommandQueue;
 import com.ocdsoft.bacta.swg.server.game.controller.object.GameControllerMessageFlags;
+import com.ocdsoft.bacta.swg.server.game.creature.HologramType;
 import com.ocdsoft.bacta.swg.server.game.message.UpdatePostureMessage;
 import com.ocdsoft.bacta.swg.server.game.message.object.GameControllerMessageType;
 import com.ocdsoft.bacta.swg.server.game.message.object.MessageQueuePosture;
@@ -146,7 +147,7 @@ public class CreatureObject extends TangibleObject {
         totalAttributes = new AutoDeltaIntVector();
         totalMaxAttributes = new AutoDeltaIntVector();
         buffs = new AutoDeltaIntObjectMap<>(Buff.PackedBuff::new);
-        hologramType = new AutoDeltaInt();
+        hologramType = new AutoDeltaInt(HologramType.NONE.value);
         clientUsesAnimationLocomotion = new AutoDeltaBoolean();
         difficulty = new AutoDeltaByte();
         visibleOnMapAndRadar = new AutoDeltaBoolean();

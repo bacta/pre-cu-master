@@ -3,6 +3,7 @@ package com.ocdsoft.bacta.swg.server.chat;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import com.ocdsoft.bacta.engine.collect.RelationshipMap;
+import com.ocdsoft.bacta.engine.utils.StringUtil;
 import com.ocdsoft.bacta.soe.connection.SoeUdpConnection;
 import com.ocdsoft.bacta.soe.message.GameClientMessage;
 import com.ocdsoft.bacta.soe.message.GameNetworkMessage;
@@ -71,7 +72,6 @@ public final class SwgChatServer implements Observer {
         this.connectedPlayers = TCollections.synchronizedSet(new TLongHashSet());
         this.chatRoomMap = new ConcurrentHashMap<>();
 
-        //TODO: Should system avatar go through connect like soe did?
         this.systemAvatarId = configuration.getSystemAvatarId();
         this.networkIdToAvatarIdMap.put(NetworkIdUtil.INVALID, systemAvatarId);
         this.avatarIdToNetworkIdMap.put(systemAvatarId, NetworkIdUtil.INVALID);
@@ -98,6 +98,30 @@ public final class SwgChatServer implements Observer {
 
     public long getNetworkIdByAvatarId(final ChatAvatarId avatarId) {
         return avatarIdToNetworkIdMap.get(avatarId);
+    }
+
+    public void destroyAvatar(final String characterName) {
+        final ChatAvatarId avatarId = makeChatAvatarId(characterName);
+
+        final long networkId = avatarIdToNetworkIdMap.get(avatarId);
+
+        //Avatar doesn't exist to be destroyed.
+        if (networkId == NetworkIdUtil.INVALID)
+            return;
+
+        //Disconnect them from the chat server if they are connected.
+        //This will also remove them from any rooms they are in.
+        disconnectAvatar(avatarId);
+
+        //delete the friend and ignore lists for the avatar.
+        friendRelationships.removeAll(avatarId);
+        ignoreRelationships.removeAll(avatarId);
+
+        //Delete them out of our lookup maps.
+        avatarIdToNetworkIdMap.remove(avatarId);
+        networkIdToAvatarIdMap.remove(networkId);
+
+        LOGGER.info("Destroyed avatar {} connected to NetworkId {}.", avatarId.getFullName(), networkId);
     }
 
     /**
@@ -146,8 +170,18 @@ public final class SwgChatServer implements Observer {
 
     public void disconnectPlayer(final long networkId) {
         final ChatAvatarId avatarId = networkIdToAvatarIdMap.get(networkId);
+        internalDisconnect(networkId, avatarId);
+    }
 
+    public void disconnectAvatar(final ChatAvatarId avatarId) {
+        final long networkId = avatarIdToNetworkIdMap.get(avatarId);
+        internalDisconnect(networkId, avatarId);
+    }
+
+    private void internalDisconnect(final long networkId, final ChatAvatarId avatarId) {
         LOGGER.debug("Avatar [{}] disconnecting from chat server.", avatarId.getFullName());
+
+        //notify chat rooms that the avatar was in that they disconnected?
 
         connectedPlayers.remove(networkId);
         notifyFriendsOfLogout(avatarId);
