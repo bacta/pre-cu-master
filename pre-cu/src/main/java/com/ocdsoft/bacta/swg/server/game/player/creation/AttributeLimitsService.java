@@ -1,8 +1,8 @@
 package com.ocdsoft.bacta.swg.server.game.player.creation;
 
+import com.google.common.collect.ImmutableMap;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
-import com.ocdsoft.bacta.swg.server.game.service.data.SharedFileLoader;
 import com.ocdsoft.bacta.swg.shared.datatable.DataTable;
 import com.ocdsoft.bacta.swg.shared.datatable.DataTableManager;
 import lombok.Getter;
@@ -16,31 +16,32 @@ import java.util.Map;
  * Created by crush on 3/28/14.
  */
 @Singleton
-public final class AttributeLimits implements SharedFileLoader {
+public final class AttributeLimitsService {
     private static final String dataTableName = "datatables/creation/attribute_limits.iff";
-    private static final Logger logger = LoggerFactory.getLogger(AttributeLimits.class);
+    private static final Logger logger = LoggerFactory.getLogger(AttributeLimitsService.class);
 
-    private final Map<String, AttributeLimitInfo> attributeLimits = new HashMap<>();
+    private Map<String, AttributeLimitInfo> attributeLimits;
 
     private final DataTableManager dataTableManager;
 
     @Inject
-    public AttributeLimits(final DataTableManager dataTableManager) {
+    public AttributeLimitsService(final DataTableManager dataTableManager) {
         this.dataTableManager = dataTableManager;
         load();
     }
+
     /**
      * Gets an {@link AttributeLimitInfo} object for
      * the specified player template. <i>The player template should only be the file name, and not the fullpath.</i>
      * <p/>
      * i.e. bothan_female.
      *
-     * @param playerTemplate The player template to use as a key. This should be the filename, not the full path. i.e. bothan_female
+     * @param speciesGender A string like human_male.
      * @return Returns an {@link AttributeLimitInfo} object
      * if a record corresponding to the key is found. Otherwise, null.
      */
-    public AttributeLimitInfo getAttributeLimits(final String playerTemplate) {
-        return attributeLimits.get(playerTemplate);
+    public AttributeLimitInfo getAttributeLimits(final String speciesGender) {
+        return attributeLimits != null ? attributeLimits.get(speciesGender) : null;
     }
 
     private void load() {
@@ -48,67 +49,46 @@ public final class AttributeLimits implements SharedFileLoader {
 
         final DataTable dataTable = dataTableManager.getTable(dataTableName);
 
-        for (int row = 0; row < dataTable.getNumRows(); ++row) {
-            final AttributeLimitInfo limitInfo = new AttributeLimitInfo(dataTable, row);
-            attributeLimits.put(limitInfo.maleTemplate, limitInfo);
-            attributeLimits.put(limitInfo.femaleTemplate, limitInfo);
+        if (dataTable != null) {
+            final Map<String, AttributeLimitInfo> map = new HashMap<>(dataTable.getNumRows() * 2);
+
+            for (int row = 0; row < dataTable.getNumRows(); ++row) {
+                final AttributeLimitInfo limitInfo = new AttributeLimitInfo(dataTable, row);
+                map.put(limitInfo.maleTemplate, limitInfo);
+                map.put(limitInfo.femaleTemplate, limitInfo);
+            }
+
+            attributeLimits = ImmutableMap.copyOf(map);
+
+            dataTableManager.close(dataTableName);
         }
 
-        dataTableManager.close(dataTableName);
-
-        logger.debug(String.format("Loaded %d profession mods.", attributeLimits.size()));
+        logger.debug(String.format("Loaded %d profession mods.", attributeLimits != null ? attributeLimits.size() : 0));
     }
 
-    @Override
-    public void reload() {
-        synchronized (this) {
-            attributeLimits.clear();
-            load();
-        }
-    }
 
+    @Getter
     public static final class AttributeLimitInfo {
-        @Getter
         private final String maleTemplate;
-        @Getter
         private final String femaleTemplate;
-        @Getter
         private final int minHealth;
-        @Getter
         private final int maxHealth;
-        @Getter
         private final int minStrength;
-        @Getter
         private final int maxStrength;
-        @Getter
         private final int minConstitution;
-        @Getter
         private final int maxConstitution;
-        @Getter
         private final int minAction;
-        @Getter
         private final int maxAction;
-        @Getter
         private final int minQuickness;
-        @Getter
         private final int maxQuickness;
-        @Getter
         private final int minStamina;
-        @Getter
         private final int maxStamina;
-        @Getter
         private final int minMind;
-        @Getter
         private final int maxMind;
-        @Getter
         private final int minFocus;
-        @Getter
         private final int maxFocus;
-        @Getter
         private final int minWillpower;
-        @Getter
         private final int maxWillpower;
-        @Getter
         private final int total;
 
         public AttributeLimitInfo(final DataTable dataTable, final int row) {

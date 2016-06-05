@@ -37,6 +37,8 @@ public final class AllowBaldService {
 
             LOGGER.debug(String.format("Loaded %d allow bald player template settings.", allowBald.size()));
         }
+
+        dataTableManager.close(DATATABLE_NAME);
     }
 
     /**

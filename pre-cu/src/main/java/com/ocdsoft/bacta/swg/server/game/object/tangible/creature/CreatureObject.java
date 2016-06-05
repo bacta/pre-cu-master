@@ -441,6 +441,11 @@ public class CreatureObject extends TangibleObject {
         setDirty(true);
     }
 
+    public final void initializeAttribute(final int attribute, final int value) {
+        attributes.set(attribute, value);
+        maxAttributes.set(attribute, value);
+    }
+
     //hamEncumbrance
     public final int getHealthEncumbrance() {
         return attribBonus.get(Attribute.HEALTH);
