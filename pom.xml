@@ -52,6 +52,8 @@
         <junitVersion>4.12</junitVersion>
         <spockVersion>1.0-groovy-2.4</spockVersion>
         <cglibVersion>3.2.2</cglibVersion>
+
+	<mainClass>com.ocdsoft.bacta.swg.server.PreCuServer</mainClass>
     </properties>
 
     <issueManagement>
