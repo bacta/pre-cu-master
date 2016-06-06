@@ -91,10 +91,10 @@
     </developers>
 
     <!--<distributionManagement>-->
-        <!--<snapshotRepository>-->
-            <!--<id>ossrh</id>-->
-            <!--<url>https://oss.sonatype.org/content/repositories/snapshots</url>-->
-        <!--</snapshotRepository>-->
+    <!--<snapshotRepository>-->
+    <!--<id>ossrh</id>-->
+    <!--<url>https://oss.sonatype.org/content/repositories/snapshots</url>-->
+    <!--</snapshotRepository>-->
     <!--</distributionManagement>-->
 
     <prerequisites>
@@ -248,6 +248,20 @@
                         </gitDescribe>
                     </configuration>
                 </plugin>
+		<plugin>
+		    <groupId>com.theoryinpractise</groupId>
+		    <artifactId>clojure-maven-plugin</artifactId>
+		    <version>1.8.1</version>
+		    <extensions>true</extensions>
+		    <configuration>
+			<sourceDirectories>
+			    <sourceDirectory>scripts/main/clojure</sourceDirectory>
+			</sourceDirectories>
+			<testSourceDirectories>
+			    <testSourceDirectory>scripts/test/clojure</testSourceDirectory>
+			</testSourceDirectories>
+		    </configuration>
+		</plugin>
             </plugins>
         </pluginManagement>
         <plugins>
@@ -274,6 +288,11 @@
 
     <dependencyManagement>
         <dependencies>
+	    <dependency>
+	        <groupId>org.clojure</groupId>
+		<artifactId>clojure</artifactId>
+		<version>1.8.0</version>
+	    </dependency>
             <dependency>
                 <groupId>com.ocdsoft.bacta</groupId>
                 <artifactId>engine</artifactId>
