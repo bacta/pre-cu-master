@@ -288,11 +288,6 @@
 
     <dependencyManagement>
         <dependencies>
-	    <dependency>
-	        <groupId>org.clojure</groupId>
-		<artifactId>clojure</artifactId>
-		<version>1.8.0</version>
-	    </dependency>
             <dependency>
                 <groupId>com.ocdsoft.bacta</groupId>
                 <artifactId>engine</artifactId>
@@ -463,6 +458,11 @@
     </dependencyManagement>
 
     <dependencies>
+	<dependency>
+	    <groupId>org.clojure</groupId>
+	    <artifactId>clojure</artifactId>
+	    <version>1.8.0</version>
+	</dependency>
         <dependency>
             <groupId>org.slf4j</groupId>
             <artifactId>slf4j-api</artifactId>
