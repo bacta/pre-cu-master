@@ -11,7 +11,7 @@ import com.ocdsoft.bacta.soe.service.OutgoingConnectionService;
 import com.ocdsoft.bacta.swg.server.game.GameModule;
 import com.ocdsoft.bacta.swg.server.game.GameServer;
 import com.ocdsoft.bacta.swg.server.game.GameServerState;
-import com.ocdsoft.bacta.swg.server.game.data.serialize.kryo.GameObjectSerializer;
+import com.ocdsoft.bacta.swg.server.game.data.serialize.GameObjectByteSerializer;
 import com.ocdsoft.bacta.swg.server.game.data.serialize.kryo.KryoSerializer;
 import com.ocdsoft.bacta.swg.server.game.name.DefaultNameService;
 import com.ocdsoft.bacta.swg.server.game.name.NameService;
@@ -43,7 +43,7 @@ class BaseGameModule extends GameModule {
         bind(new TypeLiteral<ObjectService<ServerObject>>() {}).to(ServerObjectService.class);
         bind(ObjectService.class).to(ServerObjectService.class);
         bind(NetworkObjectFactory.class).to(GuiceNetworkObjectFactory.class);
-        bind(GameObjectSerializer.class).to(KryoSerializer.class);
+        bind(GameObjectByteSerializer.class).to(KryoSerializer.class);
 
         bind(NameService.class).to(DefaultNameService.class);
         bind(ZoneMap.class).to(PlanetMap.class);

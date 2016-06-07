@@ -66,7 +66,7 @@ public class TangibleObject extends ServerObject implements SteerSubject<Vec3> {
     @Setter
     private transient boolean inert = true;
 
-    private String customAppearnce;
+    private String customAppearance;
     //private LocationData locationTargets
 
     @Getter

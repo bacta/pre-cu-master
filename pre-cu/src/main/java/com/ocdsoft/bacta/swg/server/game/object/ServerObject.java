@@ -50,7 +50,7 @@ public abstract class ServerObject extends GameObject {
     private final AutoDeltaInt authServerProcessId;
     private final AutoDeltaVariable<StringId> descriptionStringId;
 
-    private ServerSynchronizedUi synchornizedUi;
+    private transient ServerSynchronizedUi synchornizedUi;
 
     @Getter
     @Setter
@@ -102,6 +102,7 @@ public abstract class ServerObject extends GameObject {
         volume = new AutoDeltaInt(template.getVolume());
         descriptionStringId = new AutoDeltaVariable<>(StringId.INVALID, StringId::new);
         authServerProcessId = new AutoDeltaInt();
+        sceneId = "tatooine";
 
         listeners = Collections.synchronizedSet(new HashSet<>());
 

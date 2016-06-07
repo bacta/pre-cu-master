@@ -34,7 +34,7 @@ public class GameObject extends NetworkObject {
     protected final static int ROTATIONS_BETWEEN_REORTHONORMALIZE = 255;
 
     @Getter
-    private final ObjectTemplate objectTemplate;
+    private transient final ObjectTemplate objectTemplate;
 
     @Getter
     private boolean inWorld;
@@ -52,7 +52,7 @@ public class GameObject extends NetworkObject {
     @Getter
     private boolean altering;
 
-    private Appearance appearance;
+    private transient Appearance appearance;
     //private Controller controller;
     //private Dynamics dynamics;
 
@@ -113,6 +113,7 @@ public class GameObject extends NetworkObject {
         //this.watchedByList = new WatchedByList();
         this.useAlterScheduler = true;
         this.shouldBakeIntoMesh = true;
+        this.attachedObjects = new ArrayList<>();
 
         if(objectTemplate != null)
             objectTemplate.addReference();

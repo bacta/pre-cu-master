@@ -5,6 +5,7 @@ import com.google.inject.Singleton;
 import com.ocdsoft.bacta.engine.object.NetworkObject;
 import com.ocdsoft.bacta.swg.server.game.object.template.server.ServerObjectTemplate;
 import com.ocdsoft.bacta.swg.shared.container.SlotIdManager;
+import com.ocdsoft.bacta.swg.shared.object.GameObject;
 import com.ocdsoft.bacta.swg.shared.template.ObjectTemplateList;
 
 import java.lang.reflect.Constructor;
@@ -15,16 +16,16 @@ import java.util.concurrent.ConcurrentHashMap;
  * Created by kyle on 6/5/2016.
  */
 @Singleton
-public final class ServerObjectConstructorMap {
+public final class GameObjectConstructorMap {
 
     private final Map<Class, Constructor> constructorMap;
 
     @Inject
-    public ServerObjectConstructorMap() {
+    public GameObjectConstructorMap() {
         constructorMap = new ConcurrentHashMap<>();
     }
 
-    public <T extends NetworkObject> Constructor<T> get(final Class<T> clazz) {
+    public <T extends GameObject> Constructor<T> get(final Class<T> clazz) {
 
         Constructor<T> constructor = constructorMap.get(clazz);
         if(constructor == null) {
@@ -38,9 +39,5 @@ public final class ServerObjectConstructorMap {
         }
 
         return constructor;
-    }
-
-    public <T extends NetworkObject> void put(final Class<T> clazz, final Constructor<T> constructor) {
-
     }
 }
