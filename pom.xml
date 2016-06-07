@@ -16,7 +16,7 @@
     <name>swg</name>
     <url>https://github.com/bacta/pre-cu</url>
 
-    <properties>
+    <properties>	
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <javaVersion>1.8</javaVersion>
         <bactaVersion>1.0.0-SNAPSHOT</bactaVersion>
