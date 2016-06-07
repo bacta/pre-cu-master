@@ -1,4 +1,4 @@
-(ns bacta.player.base
+(ns bacta.player.base.base-player
   (:use bacta.core))
 
 (defn on-login

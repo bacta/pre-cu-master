@@ -22,3 +22,8 @@ conf/
 target/
 
 *.DS_Store
+
+# GNU Global
+GPATH
+GRTAGS
+GTAGS
