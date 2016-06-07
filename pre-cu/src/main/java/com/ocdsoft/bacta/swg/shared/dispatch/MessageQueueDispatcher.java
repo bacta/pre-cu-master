@@ -3,6 +3,7 @@ package com.ocdsoft.bacta.swg.shared.dispatch;
 import com.google.inject.Inject;
 import com.google.inject.Injector;
 import com.google.inject.Singleton;
+import com.ocdsoft.bacta.engine.service.object.ObjectService;
 import com.ocdsoft.bacta.soe.connection.SoeUdpConnection;
 import com.ocdsoft.bacta.swg.server.game.controller.object.GameControllerMessage;
 import com.ocdsoft.bacta.swg.server.game.controller.object.MessageQueueController;
@@ -26,12 +27,12 @@ public final class MessageQueueDispatcher {
     private static final Logger LOGGER = LoggerFactory.getLogger(MessageQueueDispatcher.class);
 
     private final Injector injector;
-    private final ServerObjectService serverObjectService;
+    private final ObjectService<ServerObject> serverObjectService;
     private final Map<GameControllerMessageType, MessageQueueController> controllers;
 
     @Inject
     public MessageQueueDispatcher(final Injector injector,
-                                  final ServerObjectService serverObjectService) {
+                                  final ObjectService<ServerObject> serverObjectService) {
         this.injector = injector;
         this.serverObjectService = serverObjectService;
         this.controllers = new HashMap<>();

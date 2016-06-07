@@ -2,6 +2,7 @@ package com.ocdsoft.bacta.swg.server.game.group;
 
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
+import com.ocdsoft.bacta.engine.service.object.ObjectService;
 import com.ocdsoft.bacta.swg.server.game.object.ServerObject;
 import com.ocdsoft.bacta.swg.server.game.object.universe.group.GroupObject;
 import com.ocdsoft.bacta.swg.server.game.service.object.ServerObjectService;
@@ -19,10 +20,10 @@ public class GroupService {
 
     private final TLongLongMap leaderMap;
 
-    private final ServerObjectService serverObjectService;
+    private final ObjectService<ServerObject> serverObjectService;
 
     @Inject
-    public GroupService(final ServerObjectService serverObjectService) {
+    public GroupService(final ObjectService<ServerObject> serverObjectService) {
         this.serverObjectService = serverObjectService;
         this.leaderMap = TCollections.synchronizedMap(new TLongLongHashMap());
     }

@@ -1,6 +1,7 @@
 package com.ocdsoft.bacta.swg.server.game.controller.chat;
 
 import com.google.inject.Inject;
+import com.ocdsoft.bacta.engine.service.object.ObjectService;
 import com.ocdsoft.bacta.soe.ServerType;
 import com.ocdsoft.bacta.soe.connection.ConnectionRole;
 import com.ocdsoft.bacta.soe.connection.SoeUdpConnection;
@@ -34,12 +35,12 @@ public final class ChatOnChangeFriendStatusController implements GameClientMessa
     private static final ProsePackageBuilder FRIEND_NOT_FOUND = ProsePackageBuilder.with(ChatStringIds.FRIEND_NOT_FOUND);
 
     private final PlayerObjectService playerObjectService;
-    private final ServerObjectService serverObjectService;
+    private final ObjectService<ServerObject> serverObjectService;
     private final GameChatService chatService;
 
     @Inject
     public ChatOnChangeFriendStatusController(final PlayerObjectService playerObjectService,
-                                              final ServerObjectService serverObjectService,
+                                              final ObjectService<ServerObject> serverObjectService,
                                               final GameChatService chatService) {
         this.playerObjectService = playerObjectService;
         this.serverObjectService = serverObjectService;

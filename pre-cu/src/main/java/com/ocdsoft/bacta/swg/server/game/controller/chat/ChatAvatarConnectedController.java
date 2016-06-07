@@ -1,6 +1,7 @@
 package com.ocdsoft.bacta.swg.server.game.controller.chat;
 
 import com.google.inject.Inject;
+import com.ocdsoft.bacta.engine.service.object.ObjectService;
 import com.ocdsoft.bacta.soe.connection.ConnectionRole;
 import com.ocdsoft.bacta.soe.connection.SoeUdpConnection;
 import com.ocdsoft.bacta.soe.controller.ConnectionRolesAllowed;
@@ -28,12 +29,12 @@ import org.slf4j.LoggerFactory;
 public class ChatAvatarConnectedController implements GameNetworkMessageController<ChatAvatarConnected> {
     private static final Logger LOGGER = LoggerFactory.getLogger(ChatAvatarConnectedController.class);
 
-    private final ServerObjectService serverObjectService;
+    private final ObjectService<ServerObject> serverObjectService;
     private final GuildService guildService;
     private final CityService cityService;
 
     @Inject
-    public ChatAvatarConnectedController(final ServerObjectService serverObjectService,
+    public ChatAvatarConnectedController(final ObjectService<ServerObject> serverObjectService,
                                          final GuildService guildService,
                                          final CityService cityService) {
         this.serverObjectService = serverObjectService;

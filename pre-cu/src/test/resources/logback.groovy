@@ -9,7 +9,7 @@ import ch.qos.logback.core.ConsoleAppender
 
 appender("STDOUT", ConsoleAppender) {
     encoder(PatternLayoutEncoder) {
-        pattern = "%d{ISO8601} %LOGGER{4} [%-4level][%thread] %msg%n"
+        pattern = "%d{ISO8601} %logger{4} [%-4level][%thread] %msg%n"
     }
 }
 
@@ -19,5 +19,6 @@ logger("com.couchbase",  WARN)
 logger("com.ocdsoft.bacta.soe.connection.SoeUdpMessageBuilder", TRACE)
 logger("com.ocdsoft.bacta.swg.server.game.object.template.server.ServerCreatureObjectTemplateTest", DEBUG)
 logger("com.ocdsoft.bacta.swg.shared.template.ObjectTemplateList", DEBUG)
+logger("com.ocdsoft.bacta.swg.server.game.script", DEBUG)
 
 root(INFO, ["STDOUT"])

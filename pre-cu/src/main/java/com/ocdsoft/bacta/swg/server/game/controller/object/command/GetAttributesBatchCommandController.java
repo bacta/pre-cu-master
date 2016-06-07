@@ -2,6 +2,7 @@ package com.ocdsoft.bacta.swg.server.game.controller.object.command;
 
 import com.google.common.collect.ImmutableList;
 import com.google.inject.Inject;
+import com.ocdsoft.bacta.engine.service.object.ObjectService;
 import com.ocdsoft.bacta.soe.connection.SoeUdpConnection;
 import com.ocdsoft.bacta.swg.server.game.controller.object.CommandQueueController;
 import com.ocdsoft.bacta.swg.server.game.controller.object.QueuesCommand;
@@ -21,10 +22,10 @@ import java.util.List;
 public final class GetAttributesBatchCommandController implements CommandQueueController {
     private static Logger LOGGER = LoggerFactory.getLogger(GetAttributesBatchCommandController.class);
 
-    private final ServerObjectService serverObjectService;
+    private final ObjectService<ServerObject> serverObjectService;
 
     @Inject
-    public GetAttributesBatchCommandController(final ServerObjectService serverObjectService) {
+    public GetAttributesBatchCommandController(final ObjectService<ServerObject> serverObjectService) {
         this.serverObjectService = serverObjectService;
     }
 
