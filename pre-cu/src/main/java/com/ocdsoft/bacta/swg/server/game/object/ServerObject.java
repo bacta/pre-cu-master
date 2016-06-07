@@ -18,10 +18,12 @@ import com.ocdsoft.bacta.swg.server.game.object.tangible.creature.CreatureObject
 import com.ocdsoft.bacta.swg.server.game.object.template.server.ServerObjectTemplate;
 import com.ocdsoft.bacta.swg.server.game.object.template.shared.SharedObjectTemplate;
 import com.ocdsoft.bacta.swg.server.game.object.universe.group.GroupObject;
+import com.ocdsoft.bacta.swg.server.game.script.ScriptService;
 import com.ocdsoft.bacta.swg.server.game.service.container.ContainerTransferService;
 import com.ocdsoft.bacta.swg.server.game.synchronizedui.ServerSynchronizedUi;
 import com.ocdsoft.bacta.swg.shared.container.*;
 import com.ocdsoft.bacta.swg.shared.localization.StringId;
+import com.ocdsoft.bacta.swg.shared.math.Transform;
 import com.ocdsoft.bacta.swg.shared.object.GameObject;
 import com.ocdsoft.bacta.swg.shared.portal.PortalProperty;
 import com.ocdsoft.bacta.swg.shared.template.ObjectTemplateList;
@@ -30,10 +32,8 @@ import lombok.Setter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.Set;
+import javax.annotation.Nullable;
+import java.util.*;
 
 
 public abstract class ServerObject extends GameObject {
@@ -68,6 +68,12 @@ public abstract class ServerObject extends GameObject {
     @Getter
     @Setter
     protected transient SoeUdpConnection connection;
+
+    //SOE Kept a pointer to the ScriptReference. We are going to try just the String for now.
+    //Notice that this value could be null. It shouldn't be accessed directly.
+    @Getter
+    @Setter
+    private transient Set<String> attachedScripts;
 
     protected transient final Set<SoeUdpConnection> listeners;
 
@@ -226,7 +232,6 @@ public abstract class ServerObject extends GameObject {
         sharedPackageNp.addVariable(authServerProcessId);
         sharedPackageNp.addVariable(descriptionStringId);
     }
-
 
     public final boolean getLocalFlag(final int flag) {
         return (localFlags & (1 << flag)) != 0;

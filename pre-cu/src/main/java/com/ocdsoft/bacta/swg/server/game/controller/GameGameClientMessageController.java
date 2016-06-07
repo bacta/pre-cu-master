@@ -1,6 +1,7 @@
 package com.ocdsoft.bacta.swg.server.game.controller;
 
 import com.google.inject.Inject;
+import com.ocdsoft.bacta.engine.service.object.ObjectService;
 import com.ocdsoft.bacta.soe.connection.ConnectionRole;
 import com.ocdsoft.bacta.soe.connection.SoeUdpConnection;
 import com.ocdsoft.bacta.soe.controller.ConnectionRolesAllowed;
@@ -31,12 +32,12 @@ public final class GameGameClientMessageController implements GameNetworkMessage
 
     private final GameNetworkMessageSerializer serializer;
     private final GameClientMessageDispatcher dispatcher;
-    private final ServerObjectService serverObjectService;
+    private final ObjectService<ServerObject> serverObjectService;
 
     @Inject
     public GameGameClientMessageController(final GameNetworkMessageSerializer serializer,
                                            final GameClientMessageDispatcher dispatcher,
-                                           final ServerObjectService serverObjectService) {
+                                           final ObjectService<ServerObject> serverObjectService) {
         this.serializer = serializer;
         this.dispatcher = dispatcher;
         this.serverObjectService = serverObjectService;

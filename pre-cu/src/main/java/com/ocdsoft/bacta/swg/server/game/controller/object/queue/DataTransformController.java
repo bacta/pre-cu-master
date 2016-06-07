@@ -1,6 +1,7 @@
 package com.ocdsoft.bacta.swg.server.game.controller.object.queue;
 
 import com.google.inject.Inject;
+import com.ocdsoft.bacta.engine.service.object.ObjectService;
 import com.ocdsoft.bacta.soe.connection.SoeUdpConnection;
 import com.ocdsoft.bacta.swg.server.game.controller.object.GameControllerMessage;
 import com.ocdsoft.bacta.swg.server.game.controller.object.MessageQueueController;
@@ -19,11 +20,11 @@ import org.slf4j.LoggerFactory;
 public class DataTransformController implements MessageQueueController<MessageQueueDataTransform> {
     private static final Logger LOGGER = LoggerFactory.getLogger(DataTransformController.class);
 
-    private final ServerObjectService serverObjectService;
+    private final ObjectService<ServerObject> serverObjectService;
     private final CreatureObjectService creatureObjectService;
 
     @Inject
-    public DataTransformController(final ServerObjectService serverObjectService,
+    public DataTransformController(final ObjectService<ServerObject> serverObjectService,
                                    final CreatureObjectService creatureObjectService) {
         this.serverObjectService = serverObjectService;
         this.creatureObjectService = creatureObjectService;

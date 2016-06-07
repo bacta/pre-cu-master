@@ -16,9 +16,9 @@ import java.util.Map;
  * Created by crush on 3/28/14.
  */
 @Singleton
-public class StartingLocations implements SharedFileLoader {
-    private static final String dataTableName = "datatables/creation/starting_locations.iff";
-    private static final Logger logger = LoggerFactory.getLogger(StartingLocations.class);
+public final class StartingLocations {
+    private static final Logger LOGGER = LoggerFactory.getLogger(StartingLocations.class);
+    private static final String DATA_TABLE_NAME = "datatables/creation/starting_locations.iff";
 
     private final Map<String, StartingLocationInfo> startingLocations = new HashMap<>();
     private final DataTableManager dataTableManager;
@@ -42,47 +42,35 @@ public class StartingLocations implements SharedFileLoader {
     }
 
     private void load() {
-        logger.trace("Loading starting locations.");
+        LOGGER.trace("Loading starting locations.");
 
-        final DataTable dataTable = dataTableManager.getTable(dataTableName, true);
+        final DataTable dataTable = dataTableManager.getTable(DATA_TABLE_NAME, true);
 
-        for (int row = 0; row < dataTable.getNumRows(); ++row) {
-            final StartingLocationInfo locationInfo = new StartingLocationInfo(dataTable, row);
-            startingLocations.put(locationInfo.location, locationInfo);
+        if (dataTable != null) {
+            for (int row = 0; row < dataTable.getNumRows(); ++row) {
+                final StartingLocationInfo locationInfo = new StartingLocationInfo(dataTable, row);
+                startingLocations.put(locationInfo.location, locationInfo);
+            }
+
+            dataTableManager.close(DATA_TABLE_NAME);
+        } else {
+            LOGGER.error("Could not open starting locations datatable for processing.");
         }
 
-        dataTableManager.close(dataTableName);
-
-        logger.debug(String.format("Loaded %d starting locations.", startingLocations.size()));
+        LOGGER.debug(String.format("Loaded %d starting locations.", startingLocations.size()));
     }
 
-    public void reload() {
-        synchronized (this) {
-            startingLocations.clear();
-            load();
-        }
-    }
-
+    @Getter
     public static final class StartingLocationInfo {
-        @Getter
         private final String location;
-        @Getter
         private final String planet;
-        @Getter
         private final float x;
-        @Getter
         private final float y;
-        @Getter
         private final float z;
-        @Getter
         private final String cellId;
-        @Getter
         private final String image;
-        @Getter
         private final String description;
-        @Getter
         private final float radius;
-        @Getter
         private final float heading;
 
         public StartingLocationInfo(final DataTable dataTable, final int row) {
