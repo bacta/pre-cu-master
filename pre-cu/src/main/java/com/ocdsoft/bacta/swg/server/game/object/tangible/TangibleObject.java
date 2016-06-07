@@ -51,17 +51,14 @@ public class TangibleObject extends ServerObject implements SteerSubject<Vec3> {
         return 0x54414E4F;
     } //'TANO'
 
-    public static transient ImmutableSet<TangibleObject> NO_NEAR_OBJECTS = ImmutableSet.copyOf(new TangibleObject[0]);
+    public static transient ImmutableSet<TangibleObject> NO_NEAR_OBJECTS = ImmutableSet.of();
 
     private transient ImmutableSet<TangibleObject> nearObjects = NO_NEAR_OBJECTS;
-    @Setter
-    @Getter
-    protected transient Zone zone = null;
-    @Getter
-    protected String zoneName = "";
+
     @Getter
     @Setter
     private transient int movementCounter = 0;
+
     @Getter
     @Setter
     private transient boolean inert = true;
@@ -71,7 +68,6 @@ public class TangibleObject extends ServerObject implements SteerSubject<Vec3> {
 
     @Getter
     private long ownerId;
-    //private List<PvpEnemy> pvpEnemies;
 
     @Getter
     private boolean hidden;
@@ -241,19 +237,19 @@ public class TangibleObject extends ServerObject implements SteerSubject<Vec3> {
     }
 
     public void clearZone() {
-        zone = null;
+        //zone = null;
         nearObjects = NO_NEAR_OBJECTS;
     }
 
     private ImmutableSet<TangibleObject> getUpdatedNearObjects() {
-        if (zone == null) {
+        //if (zone == null) {
             return NO_NEAR_OBJECTS;
-        }
+        //}
 
-        final UpdateTransformCallback updateTransformCallback = new UpdateTransformCallback(this);
-        zone.contains(getPositionInParent(), 160.f, Integer.MAX_VALUE, 1, updateTransformCallback);
+        //final UpdateTransformCallback updateTransformCallback = new UpdateTransformCallback(this);
+        //zone.contains(getPositionInParent(), 160.f, Integer.MAX_VALUE, 1, updateTransformCallback);
 
-        return updateTransformCallback.getNearObjects();
+        //return updateTransformCallback.getNearObjects();
     }
 
     public void updateNearObjects() {

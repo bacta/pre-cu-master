@@ -19,7 +19,7 @@ import com.ocdsoft.bacta.swg.server.game.message.scene.CmdStartScene;
 import com.ocdsoft.bacta.swg.server.game.object.ServerObject;
 import com.ocdsoft.bacta.swg.server.game.object.tangible.creature.CreatureObject;
 import com.ocdsoft.bacta.swg.server.game.scene.Scene;
-import com.ocdsoft.bacta.swg.server.game.scene.UniverseSceneService;
+import com.ocdsoft.bacta.swg.server.game.scene.UniverseService;
 import com.ocdsoft.bacta.swg.server.game.service.AccountSecurityService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -39,7 +39,7 @@ public final class SelectCharacterController implements GameNetworkMessageContro
     private final GameServerState serverState;
     private final GameChatService chatService;
     private final PublisherService publisherService;
-    private final UniverseSceneService universeSceneService;
+    private final UniverseService universeService;
 
     @Inject
     public SelectCharacterController(final AccountSecurityService accountSecurityService,
@@ -48,14 +48,14 @@ public final class SelectCharacterController implements GameNetworkMessageContro
                                      final GameServerState serverState,
                                      final GameChatService chatService,
                                      final PublisherService publisherService,
-                                     final UniverseSceneService universeSceneService) {
+                                     final UniverseService universeService) {
 
         this.accountSecurityService = accountSecurityService;
         this.objectService = objectService;
         this.guildService = guildService;
         this.chatService = chatService;
         this.serverState = serverState;
-        this.universeSceneService = universeSceneService;
+        this.universeService = universeService;
         this.publisherService = publisherService;
     }
 
@@ -76,7 +76,7 @@ public final class SelectCharacterController implements GameNetworkMessageContro
                 chatService.connectAvatar(character);
 
                 //TODO: Load the actual scene they are on.
-                final Scene scene = universeSceneService.getDefaultScene();
+                final Scene scene = universeService.getDefaultScene();
 
                 final CmdStartScene start = new CmdStartScene(
                         false,

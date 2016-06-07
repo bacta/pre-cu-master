@@ -4,6 +4,7 @@ import bacta.iff.Iff;
 import com.google.common.collect.ImmutableList;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
+import com.ocdsoft.bacta.engine.service.object.ObjectService;
 import com.ocdsoft.bacta.soe.connection.SoeUdpConnection;
 import com.ocdsoft.bacta.swg.server.game.controller.object.ObjControllerBuilder;
 import com.ocdsoft.bacta.swg.server.game.message.object.GameControllerMessageType;
@@ -57,11 +58,11 @@ public class SpatialChatService {
     private final int defaultChatType = 1;
 
     private final TreeFile treeFile;
-    private final ServerObjectService serverObjectService;
+    private final ObjectService<ServerObject> serverObjectService;
 
     @Inject
     public SpatialChatService(final TreeFile treeFile,
-                              final ServerObjectService serverObjectService) {
+                              final ObjectService<ServerObject> serverObjectService) {
         this.treeFile = treeFile;
         this.serverObjectService = serverObjectService;
 

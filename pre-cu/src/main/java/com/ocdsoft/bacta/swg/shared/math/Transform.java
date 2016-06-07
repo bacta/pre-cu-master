@@ -5,6 +5,7 @@ import lombok.Data;
 
 import java.nio.ByteBuffer;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -716,6 +717,24 @@ public final class Transform implements ByteBufferWritable {
             out[2][2] = left[2][0] * right[0][2] + left[2][1] * right[1][2] + left[2][2] * right[2][2];
             out[2][3] = left[2][0] * right[0][3] + left[2][1] * right[1][3] + left[2][2] * right[2][3] + left[2][3];
         }
+    }
+
+    @Override
+    public boolean equals(Object obj)
+    {
+        if (this == obj)
+            return true;
+        if ((obj == null) || (obj.getClass() != this.getClass()))
+            return false;
+
+        final Transform transform = (Transform)obj;
+
+        return Arrays.deepEquals(matrix, transform.matrix);
+    }
+
+    @Override
+    public int hashCode() {
+        return Arrays.deepHashCode(matrix);
     }
 
     @Override

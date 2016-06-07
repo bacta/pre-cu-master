@@ -6,6 +6,7 @@ import com.google.common.io.Files;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import com.ocdsoft.bacta.engine.conf.BactaConfiguration;
+import com.ocdsoft.bacta.engine.service.object.ObjectService;
 import com.ocdsoft.bacta.engine.utils.StringUtil;
 import com.ocdsoft.bacta.soe.connection.SoeUdpConnection;
 import com.ocdsoft.bacta.soe.util.SOECRC32;
@@ -66,7 +67,7 @@ public final class CharacterCreationService {
     private static final String BANK_TEMPLATE = "object/tangible/bank/character_bank.iff";
     private static final String APPEARANCE_TEMPLATE = "object/tangible/inventory/appearance_inventory.iff";
 
-    private final ServerObjectService serverObjectService;
+    private final ObjectService<ServerObject> serverObjectService;
     private final ProfessionDefaultsService professionDefaultsService;
     private final ObjectTemplateService templateService;
     private final NameService nameService;
@@ -87,7 +88,7 @@ public final class CharacterCreationService {
     private final Set<String> disabledProfessions;
 
     @Inject
-    public CharacterCreationService(final ServerObjectService serverObjectService,
+    public CharacterCreationService(final ObjectService<ServerObject> serverObjectService,
                                     final ProfessionDefaultsService professionDefaultsService,
                                     final NameService nameService,
                                     final ObjectTemplateService templateService,

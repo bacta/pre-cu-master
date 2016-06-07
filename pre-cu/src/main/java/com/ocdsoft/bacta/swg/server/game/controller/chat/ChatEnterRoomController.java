@@ -1,6 +1,7 @@
 package com.ocdsoft.bacta.swg.server.game.controller.chat;
 
 import com.google.inject.Inject;
+import com.ocdsoft.bacta.engine.service.object.ObjectService;
 import com.ocdsoft.bacta.soe.connection.ConnectionRole;
 import com.ocdsoft.bacta.soe.connection.SoeUdpConnection;
 import com.ocdsoft.bacta.soe.controller.ConnectionRolesAllowed;
@@ -25,11 +26,11 @@ public final class ChatEnterRoomController implements GameNetworkMessageControll
 
     private static final Logger LOGGER = LoggerFactory.getLogger(ChatEnterRoomController.class);
 
-    private final ServerObjectService serverObjectService;
+    private final ObjectService<ServerObject> serverObjectService;
     private final GameChatService chatService;
 
     @Inject
-    public ChatEnterRoomController(final ServerObjectService serverObjectService,
+    public ChatEnterRoomController(final ObjectService<ServerObject> serverObjectService,
                                    final GameChatService chatService) {
         this.serverObjectService = serverObjectService;
         this.chatService = chatService;

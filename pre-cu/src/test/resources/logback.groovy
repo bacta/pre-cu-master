@@ -19,5 +19,6 @@ logger("com.couchbase",  WARN)
 logger("com.ocdsoft.bacta.soe.connection.SoeUdpMessageBuilder", TRACE)
 logger("com.ocdsoft.bacta.swg.server.game.object.template.server.ServerCreatureObjectTemplateTest", DEBUG)
 logger("com.ocdsoft.bacta.swg.shared.template.ObjectTemplateList", DEBUG)
+logger("com.ocdsoft.bacta.swg.server.game.script", DEBUG)
 
 root(INFO, ["STDOUT"])

@@ -3,6 +3,7 @@ package com.ocdsoft.bacta.swg.shared.dispatch;
 import com.google.inject.Inject;
 import com.google.inject.Injector;
 import com.google.inject.Singleton;
+import com.ocdsoft.bacta.engine.service.object.ObjectService;
 import com.ocdsoft.bacta.soe.connection.SoeUdpConnection;
 import com.ocdsoft.bacta.soe.util.SOECRC32;
 import com.ocdsoft.bacta.swg.server.game.controller.object.CommandQueueController;
@@ -29,13 +30,13 @@ public final class CommandQueueDispatcher {
     private static final Logger LOGGER = LoggerFactory.getLogger(MessageQueueDispatcher.class);
 
     private final Injector injector;
-    private final ServerObjectService serverObjectService;
+    private final ObjectService<ServerObject> serverObjectService;
     private final TIntObjectMap<String> knownCommandNames;
     private final TIntObjectMap<CommandQueueController> controllers;
 
     @Inject
     public CommandQueueDispatcher(final Injector injector,
-                                  final ServerObjectService serverObjectService) {
+                                  final ObjectService<ServerObject> serverObjectService) {
         this.injector = injector;
         this.serverObjectService = serverObjectService;
         this.knownCommandNames = new TIntObjectHashMap<>();

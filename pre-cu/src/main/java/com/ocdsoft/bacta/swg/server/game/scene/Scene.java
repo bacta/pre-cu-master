@@ -1,5 +1,6 @@
 package com.ocdsoft.bacta.swg.server.game.scene;
 
+import com.ocdsoft.bacta.swg.server.game.message.scene.SceneDestroyObject;
 import com.ocdsoft.bacta.swg.server.game.object.ServerObject;
 import com.ocdsoft.bacta.swg.server.game.object.tangible.TangibleObject;
 import com.ocdsoft.bacta.swg.shared.math.Vector;
@@ -18,9 +19,8 @@ import java.util.Set;
  * <p>
  * Represents a single Scene. Equivalent to ServerWorld.
  */
-public abstract class Scene {
+public final class Scene {
     private static final Logger LOGGER = LoggerFactory.getLogger(Scene.class);
-    private static final String TERRAIN_FILENAME_FORMAT = "terrain/%s.trn";
 
     private static final Vec3 EXTENT_MIN = new Vec3(-8192, -1000, -8192);
     private static final Vec3 EXTENT_MAX = new Vec3(-8192, 1000, 8192);
@@ -30,22 +30,58 @@ public abstract class Scene {
 
     private final SpatialDatabase<Vec3> spatialDatabase;
     @Getter
-    private final boolean spaceScene;
-    @Getter
     private final String sceneId;
     @Getter
     private final String terrainFileName;
+    @Getter
+    private final SceneType sceneType;
 
     private final WeatherGenerator weatherGenerator;
 
-    public Scene(final String sceneId, boolean spaceScene) {
+    public Scene(final String sceneId, final String terrainFileName, final SceneType sceneType, final int weatherUpdateInterval) {
         this.spatialDatabase = new SpatialQuadTree<>(EXTENT_MIN, EXTENT_MAX, DESIRED_LEAF_SIZE, REFRESH_THRESHOLD);
-        this.spaceScene = spaceScene;
+        this.sceneType = sceneType;
         this.sceneId = sceneId;
-        this.terrainFileName = String.format(TERRAIN_FILENAME_FORMAT, sceneId);
-
-        this.weatherGenerator = new WeatherGenerator(900); //TODO: Config this value.
+        this.terrainFileName = terrainFileName;
+        this.weatherGenerator = new WeatherGenerator(weatherUpdateInterval);
     }
+
+//
+//
+//
+//    @Override
+//    public void add(TangibleObject obj) {
+//
+//        Zone currentZone = obj.getZone();
+//        if (currentZone != null) {
+//            currentZone.remove(obj);
+//        }
+//
+//        if(obj.getZone() == this) {
+//            return;
+//        }
+//
+//        obj.setZone(this);
+//        obj.setPosition(obj.getTransformObjectToParent(), false);
+//        obj.setInert(false);
+//
+//        spatialDatabase.add(obj);
+//        int count = spatialDatabase.refresh();
+//        logger.debug("Add " + obj.getNetworkId() + " to "  + terrainName + " Now has " + count + " objects");
+//        obj.updateZone();
+//
+//        planetMap.addObject(this, obj);
+//    }
+//
+//    @Override
+//    public void remove(TangibleObject obj) {
+//        obj.broadcastMessage(new SceneDestroyObject(obj.getNetworkId(), false));
+//        obj.setInert(true);
+//        int count = spatialDatabase.refresh();
+//        logger.debug("Remove " + obj.getNetworkId() + " to "  + terrainName + " Now has " + count + " objects");
+//        obj.clearZone();
+//        planetMap.removeObject(this, obj);
+//    }
 
     public void add(final ServerObject obj) {
         //flag the obj as in world.

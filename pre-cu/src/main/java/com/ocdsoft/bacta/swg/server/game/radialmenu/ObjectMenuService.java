@@ -2,6 +2,7 @@ package com.ocdsoft.bacta.swg.server.game.radialmenu;
 
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
+import com.ocdsoft.bacta.engine.service.object.ObjectService;
 import com.ocdsoft.bacta.soe.connection.SoeUdpConnection;
 import com.ocdsoft.bacta.swg.server.game.controller.object.ObjControllerBuilder;
 import com.ocdsoft.bacta.swg.server.game.message.object.GameControllerMessageType;
@@ -37,14 +38,14 @@ public final class ObjectMenuService {
     private static final int COL_COMMAND_NAME = 2;
     private static final int COL_USE_RADIAL_TARGET = 3;
 
-    private final ServerObjectService serverObjectService;
+    private final ObjectService<ServerObject> serverObjectService;
     private final PlayerObjectService playerObjectService;
     private final TShortObjectMap<RadialMenuInfo> indexLookup;
     private final TObjectShortMap<String> nameLookup;
 
     @Inject
     public ObjectMenuService(final DataTableManager dataTableManager,
-                             final ServerObjectService serverObjectService,
+                             final ObjectService<ServerObject> serverObjectService,
                              final PlayerObjectService playerObjectService) {
         this.indexLookup = new TShortObjectHashMap<>();
         this.nameLookup = new TObjectShortHashMap<>();

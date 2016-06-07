@@ -2,6 +2,7 @@ package com.ocdsoft.bacta.swg.server.game.player;
 
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
+import com.ocdsoft.bacta.engine.service.object.ObjectService;
 import com.ocdsoft.bacta.swg.server.game.chat.GameChatService;
 import com.ocdsoft.bacta.swg.server.game.object.ServerObject;
 import com.ocdsoft.bacta.swg.server.game.object.intangible.player.PlayerObject;
@@ -29,7 +30,7 @@ public final class PlayerObjectService {
     private final SlotIdManager slotIdManager;
     private final GameChatService chatService;
     private final SlottedContainerService slottedContainerService;
-    private final ServerObjectService serverObjectService;
+    private final ObjectService<ServerObject> serverObjectService;
 
     private final int playerSlotId;
 
@@ -37,7 +38,7 @@ public final class PlayerObjectService {
     public PlayerObjectService(final SlotIdManager slotIdManager,
                                final GameChatService chatService,
                                final SlottedContainerService slottedContainerService,
-                               final ServerObjectService serverObjectService) {
+                               final ObjectService<ServerObject> serverObjectService) {
         this.slotIdManager = slotIdManager;
         this.chatService = chatService;
         this.slottedContainerService = slottedContainerService;

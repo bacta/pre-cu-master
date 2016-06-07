@@ -7,7 +7,14 @@ import com.ocdsoft.bacta.engine.data.GameDatabaseConnector;
 import com.ocdsoft.bacta.engine.service.object.ObjectService;
 import com.ocdsoft.bacta.engine.service.objectfactory.NetworkObjectFactory;
 import com.ocdsoft.bacta.swg.archive.OnDirtyCallbackBase;
+import com.ocdsoft.bacta.swg.server.game.object.GuiceObjectInitializerProvider;
+import com.ocdsoft.bacta.swg.server.game.object.ObjectInitializer;
+import com.ocdsoft.bacta.swg.server.game.object.ObjectInitializerProvider;
 import com.ocdsoft.bacta.swg.server.game.object.ServerObject;
+import com.ocdsoft.bacta.swg.server.game.object.tangible.TangibleObject;
+import com.ocdsoft.bacta.swg.server.game.object.tangible.TangibleObjectInitializer;
+import com.ocdsoft.bacta.swg.server.game.object.tangible.creature.CreatureObject;
+import com.ocdsoft.bacta.swg.server.game.object.tangible.creature.CreatureObjectInitializer;
 import com.ocdsoft.bacta.swg.server.game.object.template.server.ServerObjectTemplate;
 import com.ocdsoft.bacta.swg.server.game.service.container.ContainerTransferService;
 import com.ocdsoft.bacta.swg.server.game.service.data.ObjectTemplateService;
@@ -20,6 +27,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.Collections;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -36,6 +45,7 @@ public final class ServerObjectService implements ObjectService<ServerObject> {
     private final Set<ServerObject> dirtyList = Collections.newSetFromMap(new ConcurrentHashMap<>());
 
     private final NetworkObjectFactory networkObjectFactory;
+    private final ObjectInitializerProvider objectInitializerProvider;
     private final DeltaNetworkDispatcher deltaDispatcher;
     private final GameDatabaseConnector databaseConnector;
     private final ObjectTemplateService objectTemplateService;
@@ -45,12 +55,14 @@ public final class ServerObjectService implements ObjectService<ServerObject> {
 
     @Inject
     public ServerObjectService(final BactaConfiguration configuration,
+                               final ObjectInitializerProvider objectInitializerProvider,
                                final NetworkObjectFactory networkObjectFactory,
                                final GameDatabaseConnector databaseConnector,
                                final ObjectTemplateService objectTemplateService,
                                final SlotIdManager slotIdManager,
                                final ContainerTransferService containerTransferService) {
 
+        this.objectInitializerProvider = objectInitializerProvider;
         this.networkObjectFactory = networkObjectFactory;
         this.deltaUpdateInterval = configuration.getIntWithDefault("Bacta/GameServer", "DeltaUpdateInterval", 50);
         this.databaseConnector = databaseConnector;
@@ -69,12 +81,49 @@ public final class ServerObjectService implements ObjectService<ServerObject> {
 
     @Override
     public <T extends ServerObject> T createObject(final String templatePath, final ServerObject parent) {
+        final T object = internalCreateObject(templatePath);
 
-        final ServerObjectTemplate template = objectTemplateService.getObjectTemplate(templatePath);
-        final Class<T> objectClass = objectTemplateService.getClassForTemplate(template);
-        final T newObject = (T) networkObjectFactory.createNetworkObject(objectClass, template);
+        if (object != null && parent != null) {
+            final ContainerResult containerResult = new ContainerResult();
+            if (!containerTransferService.transferItemToGeneralContainer(parent, object, null, containerResult))
+                LOGGER.error("Unable to transfer object {} to parent object {} during creation. Error: {}",
+                        object.getNetworkId(), parent.getNetworkId(), containerResult.getError());
+        }
 
-        newObject.setOnDirtyCallback(new ServerObjectServiceOnDirtyCallback(newObject));
+        return object;
+    }
+
+    public <T extends ServerObject> T createObjectInSlot(final String templatePath, final ServerObject parent, final int slotId) {
+        final T object = internalCreateObject(templatePath);
+
+        if (object != null && parent != null) {
+            final ContainerResult containerResult = new ContainerResult();
+            if (!containerTransferService.transferItemToSlottedContainerSlotId(parent, object, null, slotId, containerResult)) {
+                LOGGER.error("Unable to transfer object {} to parent object {} in slot {} during creation. Error: {}",
+                        object.getNetworkId(), parent.getNetworkId(), slotId, containerResult.getError());
+            }
+        }
+
+        return object;
+    }
+
+    private <T extends ServerObject> T internalCreateObject(final String templatePath) {
+        try {
+            final ServerObjectTemplate serverObjectTemplate = objectTemplateService.getObjectTemplate(templatePath);
+            final Class<T> objectClass = objectTemplateService.getClassForTemplate(serverObjectTemplate);
+            final ObjectInitializer<T> objectInitializer = objectInitializerProvider.get(objectClass);
+
+            //Create the object
+            final T newObject = (T) networkObjectFactory.createNetworkObject(objectClass, serverObjectTemplate);
+
+            //Initialize the object
+            if (objectInitializer != null) {
+                objectInitializer.initializeFirstTimeObject(newObject);
+            } else {
+                LOGGER.warn("No initializer is bound for class {}.", objectClass.getName());
+            }
+
+            newObject.setOnDirtyCallback(new ServerObjectServiceOnDirtyCallback(newObject));
 
         internalMap.put(newObject.getNetworkId(), newObject);
         databaseConnector.createNetworkObject(newObject);
@@ -87,7 +136,11 @@ public final class ServerObjectService implements ObjectService<ServerObject> {
             }
         }
 
-        return newObject;
+            return newObject;
+        } catch (final Exception ex) {
+            LOGGER.error("Exception creating object {}. Message: {}", templatePath, ex.getMessage());
+            return null;
+        }
     }
 
     @Override

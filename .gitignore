@@ -17,3 +17,8 @@ hs_err_pid*
 
 #Ignore the generated git*.properties files.
 git-*.properties
+
+conf/
+target/
+
+*.DS_Store
