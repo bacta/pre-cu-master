@@ -157,7 +157,7 @@ public final class ScriptService {
 
     private boolean loadScript(final String scriptName) {
         try {
-            RT.loadResourceScript(scriptName + ".clj");
+            RT.loadResourceScript(scriptName);
 
             if (!validateScript(scriptName))
                 return false;
