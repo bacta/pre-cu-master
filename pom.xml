@@ -53,10 +53,6 @@
         <spockVersion>1.0-groovy-2.4</spockVersion>
         <cglibVersion>3.2.2</cglibVersion>
 
-	<clojure.source.dir>scripts/main/clojure</clojure.source.dir>
-	<clojure.testSource.dir>scripts/test/clojure</clojure.testSource.dir>
-	<clojure.warnOnReflection>false</clojure.warnOnReflection>
-
 	<mainClass>com.ocdsoft.bacta.swg.server.PreCuServer</mainClass>
         <final.build.location>${project.basedir}/build</final.build.location>
     </properties>
@@ -264,13 +260,6 @@
 		    <version>1.8.1</version>
 		    <extensions>true</extensions>
 		    <configuration>
-			<warnOnReflection>${clojure.warnOnReflection}</warnOnReflection>
-			<sourceDirectories>
-			    <sourceDirectory>${clojure.source.dir}</sourceDirectory>
-			</sourceDirectories>
-			<testSourceDirectories>
-			    <testSourceDirectory>${clojure.testSource.dir}</testSourceDirectory>
-			</testSourceDirectories>
 		    </configuration>
 		</plugin>
             </plugins>
