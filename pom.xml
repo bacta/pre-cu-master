@@ -53,6 +53,10 @@
         <spockVersion>1.0-groovy-2.4</spockVersion>
         <cglibVersion>3.2.2</cglibVersion>
 
+	<clojure.source.dir>scripts/main/clojure</clojure.source.dir>
+	<clojure.testSource.dir>scripts/test/clojure</clojure.testSource.dir>
+	<clojure.warnOnReflection>false</clojure.warnOnReflection>
+
 	<mainClass>com.ocdsoft.bacta.swg.server.PreCuServer</mainClass>
     </properties>
 
@@ -254,18 +258,73 @@
                     </configuration>
                 </plugin>
 		<plugin>
+		    <groupId>org.codehaus.mojo</groupId>
+		    <artifactId>build-helper-maven-plugin</artifactId>
+		    <version>1.5</version>
+		    <executions>
+			<execution>
+			    <id>add-clojure-source-dirs</id>
+			    <phase>generate-sources</phase>
+			    <goals>
+				<goal>add-source</goal>
+				<goal>add-resource</goal>
+			    </goals>
+			    <configuration>
+				<sources>
+				    <source>${clojure.source.dir}</source>
+				</sources>
+				<resources>
+				    <resource>
+					<directory>${clojure.source.dir}</directory>
+				    </resource>
+				</resources>
+			    </configuration>
+			</execution>
+			<execution>
+			    <id>add-clojure-test-source-dirs</id>
+			    <phase>generate-sources</phase>
+			    <goals>
+				<goal>add-test-source</goal>
+				<goal>add-test-resource</goal>
+			    </goals>
+			    <configuration>
+				<sources>
+				    <source>${clojure.testSource.dir}</source>
+				</sources>
+				<resources>
+				    <resource>
+					<directory>${clojure.testSource.dir}</directory>
+				    </resource>
+				</resources>
+			    </configuration>
+			</execution>
+		    </executions>
+		</plugin>
+		<plugin>
 		    <groupId>com.theoryinpractise</groupId>
 		    <artifactId>clojure-maven-plugin</artifactId>
 		    <version>1.8.1</version>
 		    <extensions>true</extensions>
 		    <configuration>
-			<sourceDirectories>
-			    <sourceDirectory>scripts/main/clojure</sourceDirectory>
-			</sourceDirectories>
-			<testSourceDirectories>
-			    <testSourceDirectory>scripts/test/clojure</testSourceDirectory>
-			</testSourceDirectories>
+			<warnOnReflection>${clojure.warnOnReflection}</warnOnReflection>
+			<temporaryOutputDirectory>true</temporaryOutputDirectory>
 		    </configuration>
+		    <executions>
+			<execution>
+			    <id>clojure-compile</id>
+			    <phase>compile</phase>
+			    <goals>
+				<goal>compile</goal>
+			    </goals>
+			</execution>
+			<execution>
+			    <id>clojure-test</id>
+			    <phase>test</phase>
+			    <goals>
+				<goal>test</goal>
+			    </goals>
+			</execution>
+		    </executions>
 		</plugin>
             </plugins>
         </pluginManagement>
