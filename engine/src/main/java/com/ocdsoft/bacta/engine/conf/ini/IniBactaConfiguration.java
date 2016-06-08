@@ -3,7 +3,7 @@ package com.ocdsoft.bacta.engine.conf.ini;
 import com.google.inject.Singleton;
 import com.ocdsoft.bacta.engine.conf.BactaConfiguration;
 
-import java.io.File;
+import java.io.*;
 import java.net.URISyntaxException;
 import java.nio.file.Paths;
 import java.util.Collection;
@@ -16,8 +16,8 @@ public class IniBactaConfiguration implements BactaConfiguration {
     private final IniFile iniFile;
 
     public IniBactaConfiguration() throws URISyntaxException {
-        File file = new File(IniBactaConfiguration.class.getResource("/conf/config.ini").toURI());
-        iniFile = new IniFile(file.getPath());
+        BufferedReader reader = new BufferedReader(new InputStreamReader(IniBactaConfiguration.class.getResourceAsStream("/conf/config.ini")));
+        iniFile = new IniFile(reader);
     }
 
     @Override

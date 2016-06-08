@@ -35,7 +35,6 @@ public final class PreCuServer {
 
     public static void main(String[] args) throws IllegalAccessException, InstantiationException, IOException {
 
-
         Set<String> argSet = new HashSet<>();
         for(String arg : args) {
             argSet.add(arg.toLowerCase());
