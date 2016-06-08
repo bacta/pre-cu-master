@@ -340,7 +340,7 @@ public final class SoeTransceiver extends UdpTransceiver<SoeUdpConnection>  {
                         for (InetSocketAddress inetSocketAddress : deadClients) {
                             final SoeUdpConnection connection = accountCache.remove(inetSocketAddress);
                             if(connection != null) {
-                                publisherService.onEvent(new DisconnectEvent(connection));
+                                publisherService.triggerEvent(new DisconnectEvent(connection));
                                 if (!networkConfiguration.isDisableInstrumentation()) {
                                     try {
                                         mBeanServer.unregisterMBean(connection.getBeanName());

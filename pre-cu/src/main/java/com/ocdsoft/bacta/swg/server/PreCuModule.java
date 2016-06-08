@@ -17,7 +17,9 @@ import com.ocdsoft.bacta.engine.service.scheduler.TaskSchedulerService;
 import com.ocdsoft.bacta.soe.dispatch.SoeDevMessageDispatcher;
 import com.ocdsoft.bacta.soe.dispatch.SoeMessageDispatcher;
 import com.ocdsoft.bacta.soe.serialize.GameNetworkMessageSerializer;
+import com.ocdsoft.bacta.soe.service.PublisherService;
 import com.ocdsoft.bacta.soe.service.SessionKeyService;
+import com.ocdsoft.bacta.swg.server.game.service.PublisherServiceImpl;
 import com.ocdsoft.bacta.swg.server.login.object.SoeAccount;
 import com.ocdsoft.bacta.swg.server.login.service.SWGSessionKeyService;
 import com.ocdsoft.bacta.swg.shared.serialize.GameNetworkMessageSerializerImpl;
@@ -39,6 +41,7 @@ public class PreCuModule extends AbstractModule implements Module {
         bind(SessionKeyService.class).to(SWGSessionKeyService.class);
         bind(SoeMessageDispatcher.class).to(SoeDevMessageDispatcher.class);
         bind(GameNetworkMessageSerializer.class).to(GameNetworkMessageSerializerImpl.class);
+        bind(PublisherService.class).to(PublisherServiceImpl.class);
 
 
         // SWG Level Bindings

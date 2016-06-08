@@ -198,5 +198,21 @@
             <artifactId>quasar-core</artifactId>
             <classifier>jdk8</classifier>
         </dependency>
+        <dependency>
+            <groupId>org.clojure</groupId>
+            <artifactId>clojure</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>reply</groupId>
+            <artifactId>reply</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.clojure</groupId>
+            <artifactId>tools.nrepl</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>cider</groupId>
+            <artifactId>cider-nrepl</artifactId>
+        </dependency>
     </dependencies>
 </project>

@@ -105,7 +105,7 @@ public class LoginClientIdController implements GameNetworkMessageController<Log
         connection.sendMessage(characters);
 
         connection.addRole(ConnectionRole.AUTHENTICATED);
-        publisherService.onEvent(new ConnectEvent(connection));
+        publisherService.triggerEvent(new ConnectEvent(connection));
     }
 
     private boolean isRequiredVersion(String clientVersion) {

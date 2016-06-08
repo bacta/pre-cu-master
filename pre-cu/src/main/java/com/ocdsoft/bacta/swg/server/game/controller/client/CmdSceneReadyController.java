@@ -8,11 +8,13 @@ import com.ocdsoft.bacta.soe.controller.ConnectionRolesAllowed;
 import com.ocdsoft.bacta.soe.controller.GameNetworkMessageController;
 import com.ocdsoft.bacta.soe.controller.MessageHandled;
 import com.ocdsoft.bacta.soe.event.ConnectEvent;
+import com.ocdsoft.bacta.soe.service.PublisherService;
 import com.ocdsoft.bacta.swg.server.game.GameServerState;
 import com.ocdsoft.bacta.swg.server.game.chat.GameChatService;
+import com.ocdsoft.bacta.swg.server.game.event.PlayerOnlineEvent;
 import com.ocdsoft.bacta.swg.server.game.message.client.CmdSceneReady;
 import com.ocdsoft.bacta.swg.server.game.object.ServerObject;
-import com.ocdsoft.bacta.swg.server.game.script.ScriptService;
+import com.ocdsoft.bacta.swg.server.game.object.tangible.creature.CreatureObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -25,17 +27,17 @@ public class CmdSceneReadyController implements GameNetworkMessageController<Cmd
     private final GameChatService chatService;
     private final GameServerState serverState;
     private final ObjectService<ServerObject> objectService;
-    private final ScriptService scriptService;
+    private final PublisherService publisherService;
 
     @Inject
     public CmdSceneReadyController(final GameChatService chatService,
                                    final GameServerState serverState,
                                    final ObjectService<ServerObject> objectService,
-                                   final ScriptService scriptService) {
+                                   final PublisherService publisherService) {
         this.chatService = chatService;
         this.serverState = serverState;
         this.objectService = objectService;
-        this.scriptService = scriptService;
+        this.publisherService = publisherService;
     }
 
     @Override
@@ -57,10 +59,11 @@ public class CmdSceneReadyController implements GameNetworkMessageController<Cmd
 
         //TEMPORARY HACK - Remove ASAP
         LOGGER.debug("Sending connected event to script service trigger.");
-        final ServerObject serverObject = objectService.get(connection.getCurrentNetworkId());
+        final CreatureObject serverObject = objectService.get(connection.getCurrentNetworkId());
 
         if (serverObject != null) {
-            scriptService.triggerScript(serverObject, "bacta/player/base/base_player.clj", new ConnectEvent(connection));
+            publisherService.triggerEvent(new PlayerOnlineEvent(serverObject));
+            //scriptService.triggerScript(serverObject, "bacta/player/base/base_player.clj", new ConnectEvent(connection));
         }
         else {
             LOGGER.error("Cant send event because server object is null.");

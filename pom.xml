@@ -47,6 +47,9 @@
         <steerioVersion>1.0.0</steerioVersion>
         <sshdVersion>1.2.0</sshdVersion>
         <gitcommitVersion>2.1.11</gitcommitVersion>
+        <clojureVersion>1.8.0</clojureVersion>
+        <replyVersion>0.1.0-beta9</replyVersion>
+        <toolsnreplVersion>0.2.12</toolsnreplVersion>
 
         <logbackVersion>1.1.5</logbackVersion>
         <junitVersion>4.12</junitVersion>
@@ -99,7 +102,7 @@
     <!--</distributionManagement>-->
 
     <prerequisites>
-        <maven>3.0.4</maven>
+        <maven>3.3</maven>
     </prerequisites>
 
     <repositories>
@@ -114,11 +117,18 @@
             </snapshots>
             <url>${project.baseUri}../repo</url>
         </repository>
-	<repository>
-	    <id>clojars</id>
-	    <name>Clojars</name>
-	    <url>http://clojars.org/repo/</url>
-	</repository>
+        <repository>
+            <id>clojars</id>
+            <name>Clojars</name>
+            <url>http://clojars.org/repo/</url>
+            <releases>
+                <enabled>true</enabled>
+                <checksumPolicy>ignore</checksumPolicy>
+            </releases>
+            <snapshots>
+                <enabled>true</enabled>
+            </snapshots>
+        </repository>
     </repositories>
 
     <modules>
@@ -452,30 +462,30 @@
                 <artifactId>steerio</artifactId>
                 <version>${steerioVersion}</version>
             </dependency>
+            <dependency>
+                <groupId>org.clojure</groupId>
+                <artifactId>clojure</artifactId>
+                <version>${clojureVersion}</version>
+            </dependency>
+            <dependency>
+                <groupId>reply</groupId>
+                <artifactId>reply</artifactId>
+                <version>${replyVersion}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.clojure</groupId>
+                <artifactId>tools.nrepl</artifactId>
+                <version>${toolsnreplVersion}</version>
+            </dependency>
+            <dependency>
+                <groupId>cider</groupId>
+                <artifactId>cider-nrepl</artifactId>
+                <version>0.13.0-SNAPSHOT</version>
+            </dependency>
         </dependencies>
     </dependencyManagement>
 
     <dependencies>
-	<dependency>
-	    <groupId>org.clojure</groupId>
-	    <artifactId>clojure</artifactId>
-	    <version>1.8.0</version>
-	</dependency>
-	<dependency>
-	    <groupId>reply</groupId>
-	    <artifactId>reply</artifactId>
-	    <version>0.1.0-beta9</version>
-	</dependency>
-	<dependency>
-	    <groupId>org.clojure</groupId>
-	    <artifactId>tools.nrepl</artifactId>
-	    <version>0.2.12</version>
-	</dependency>
-	<dependency>
-	    <groupId>cider</groupId>
-	    <artifactId>cider-nrepl</artifactId>
-	    <version>0.13.0-SNAPSHOT</version>
-	</dependency>
         <dependency>
             <groupId>org.slf4j</groupId>
             <artifactId>slf4j-api</artifactId>

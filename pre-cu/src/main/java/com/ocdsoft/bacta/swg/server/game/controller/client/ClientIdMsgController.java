@@ -63,7 +63,7 @@ public class ClientIdMsgController implements GameNetworkMessageController<Clien
         connection.setAccountUsername(account.getUsername());
         connection.addRole(ConnectionRole.AUTHENTICATED);
 
-        publisherService.onEvent(new ConnectEvent(connection));
+        publisherService.triggerEvent(new ConnectEvent(connection));
 
         // TODO: Actually implement permissions
         ClientPermissionsMessage cpm = new ClientPermissionsMessage(true, true, true, false);

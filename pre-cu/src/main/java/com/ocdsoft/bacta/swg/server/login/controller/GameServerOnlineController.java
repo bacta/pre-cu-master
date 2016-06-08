@@ -11,8 +11,6 @@ import com.ocdsoft.bacta.soe.service.PublisherService;
 import com.ocdsoft.bacta.swg.server.login.event.GameServerOnlineEvent;
 import com.ocdsoft.bacta.swg.server.game.message.GameServerOnline;
 
-import java.util.Set;
-
 /**
  * Created by kburkhardt on 1/31/15.
  */
@@ -29,6 +27,6 @@ public class GameServerOnlineController implements GameNetworkMessageController<
 
     @Override
     public void handleIncoming(SoeUdpConnection connection, GameServerOnline message) throws Exception {
-        publisherService.onEvent(new GameServerOnlineEvent(message.getClusterServer()));
+        publisherService.triggerEvent(new GameServerOnlineEvent(message.getClusterServer()));
     }
 }

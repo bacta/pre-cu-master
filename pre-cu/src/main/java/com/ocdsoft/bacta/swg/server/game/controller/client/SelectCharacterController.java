@@ -108,8 +108,6 @@ public final class SelectCharacterController implements GameNetworkMessageContro
 
                 character.sendCreateAndBaselinesTo(user);
 
-                publisherService.onEvent(new PlayerOnlineEvent(character));
-
             } else {
                 LOGGER.error("Unable to lookup character {} ", message.getCharacterId());
             }
