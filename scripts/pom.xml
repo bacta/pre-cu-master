@@ -25,16 +25,18 @@
         <developerConnection>scm:git:git@github.com:bacta/iff.git</developerConnection>
     </scm>
 
-    <plugins>
-	<plugin>
-	    <groupId>com.theoryinpractise</groupId>
-	    <artifactId>clojure-maven-plugin</artifactId>
-	    <version>1.8.1</version>
-	    <extensions>true</extensions>
-	    <configuration>
-	    </configuration>
-	</plugin>
-    </plugins>
+    <build>
+	<plugins>
+	    <plugin>
+		<groupId>com.theoryinpractise</groupId>
+		<artifactId>clojure-maven-plugin</artifactId>
+		<version>1.8.1</version>
+		<extensions>true</extensions>
+		<configuration>
+		</configuration>
+	    </plugin>
+	</plugins>
+    </build>
 
 
 </project>
