@@ -111,7 +111,7 @@
             <snapshots>
                 <enabled>true</enabled>
             </snapshots>
-            <url>${project.baseUri}repo</url>
+            <url>${project.baseUri}../repo</url>
         </repository>
     </repositories>
 
