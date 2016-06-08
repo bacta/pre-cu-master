@@ -233,6 +233,10 @@ public abstract class ServerObject extends GameObject {
         sharedPackageNp.addVariable(descriptionStringId);
     }
 
+    public boolean isScriptAttached(final String scriptName) {
+        return attachedScripts != null && attachedScripts.contains(scriptName);
+    }
+
     public final boolean getLocalFlag(final int flag) {
         return (localFlags & (1 << flag)) != 0;
     }

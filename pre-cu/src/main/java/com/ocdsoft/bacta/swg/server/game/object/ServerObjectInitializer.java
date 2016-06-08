@@ -45,8 +45,11 @@ public final class ServerObjectInitializer implements ObjectInitializer<ServerOb
 
         final int scriptsCount = serverObjectTemplate.getScriptsCount();
 
-        for (int i = 0; i < scriptsCount; ++i)
-            scriptService.attachScript(serverObjectTemplate.getScripts(i), serverObject);
+        //TEMPORARY HACK. Converting script names.
+        for (int i = 0; i < scriptsCount; ++i) {
+            final String scriptName = String.format("bacta/%s.clj", serverObjectTemplate.getScripts(i).replace('.', '/'));
+            scriptService.attachScript(scriptName, serverObject);
+        }
     }
 
     @Override

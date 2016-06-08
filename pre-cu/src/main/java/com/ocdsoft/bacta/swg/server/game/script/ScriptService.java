@@ -1,9 +1,14 @@
 package com.ocdsoft.bacta.swg.server.game.script;
 
+import clojure.java.api.Clojure;
+import clojure.lang.*;
+import clojure.lang.Compiler;
+import com.google.common.collect.*;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import com.ocdsoft.bacta.engine.conf.BactaConfiguration;
 import com.ocdsoft.bacta.engine.io.FileSystemWatcher;
+import com.ocdsoft.bacta.soe.event.Event;
 import com.ocdsoft.bacta.swg.conf.ConfigSections;
 import com.ocdsoft.bacta.swg.server.game.object.ServerObject;
 import org.slf4j.Logger;
@@ -11,6 +16,7 @@ import org.slf4j.LoggerFactory;
 
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.Collection;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
@@ -22,18 +28,48 @@ import java.util.concurrent.ConcurrentHashMap;
 @Singleton
 public final class ScriptService {
     private static final Logger LOGGER = LoggerFactory.getLogger(ScriptService.class);
+    private static final String BACTA_CORE = "bacta/core";
 
     private final Map<String, ScriptReference> scriptReferences;
+    private final Multimap<Class<? extends Event>, IFn> subscribedFunctions;
     private final FileSystemWatcher scriptWatcherService;
     private final Path scriptsPath;
 
     @Inject
-    public ScriptService(final BactaConfiguration configuration) {
+    public ScriptService(final BactaConfiguration configuration) throws Exception {
         this.scriptReferences = new ConcurrentHashMap<>();
         this.scriptsPath = Paths.get(System.getProperty("user.dir"), configuration.getString(ConfigSections.GAME_SERVER_SCRIPTS, "path"));
+        this.subscribedFunctions =  Multimaps.synchronizedSetMultimap(HashMultimap.create());
         this.scriptWatcherService = new FileSystemWatcher(scriptsPath, this::onScriptCreated, this::onScriptDeleted, this::onScriptModified);
 
         initialize();
+    }
+
+    /**
+     * Subscribes a clojure function to an event type.
+     * @param eventType The type of event for which to subscribe.
+     * @param scriptFunction The function to be executed when the event is published.
+     */
+    public void subscribe(final Class<? extends Event> eventType, final IFn scriptFunction) {
+        this.subscribedFunctions.put(eventType, scriptFunction);
+    }
+
+    /**
+     * Removes a clojure function's subscription to an event type.
+     * @param eventType The type of event from which to unsubscribe.
+     * @param scriptFunction The function which was subscribed.
+     */
+    public void unsubscribe(final Class<? extends Event> eventType, final IFn scriptFunction) {
+        this.subscribedFunctions.remove(eventType, scriptFunction);
+    }
+
+    private <T extends Event> void notifySubscribers(final T event) {
+        final Collection<IFn> scriptFunctions = this.subscribedFunctions.get(event.getClass());
+
+        if (scriptFunctions != null) {
+            for (final IFn scriptFunction : scriptFunctions)
+                scriptFunction.invoke(event);
+        }
     }
 
     /**
@@ -55,8 +91,6 @@ public final class ScriptService {
 
         final ScriptReference scriptReference = scriptReferences.get(scriptName);
         scriptReference.attachObject(object);
-
-        //TODO: See reference counting question in detachScript.
     }
 
     /**
@@ -80,7 +114,35 @@ public final class ScriptService {
         final ScriptReference scriptReference = scriptReferences.get(scriptName);
         scriptReference.detachObject(object);
 
-        //TODO: Do we want to reference count, and remove the reference from the map when its no longer being used?
+        //TODO: If attached objects == 0 after detaching, we should depersist the script reference, and unload it from memory.
+    }
+
+    public <T extends Event> void triggerScript(final String scriptName, final T event) {
+        final IFn trigger = Clojure.var(scriptName, "trigger");
+        trigger.invoke(event);
+    }
+
+    public <T extends Event> void triggerScripts(final T event) {
+        notifySubscribers(event);
+    }
+
+    public <T extends Event> void triggerScript(final ServerObject serverObject, final String scriptName, final T event) {
+        final ScriptReference scriptReference = scriptReferences.get(scriptName);
+
+        //Make sure that the object is attached to the script, and that the script exists.
+        if (scriptReference == null || !scriptReference.containsAttachedObject(serverObject)) {
+            LOGGER.debug("Tried to trigger script [{}] for object [{}], but was not attached.", scriptName, serverObject.getNetworkId());
+            return;
+        }
+
+        LOGGER.debug("Triggering script {}", scriptName);
+
+        final IFn trigger = Clojure.var(scriptName, "trigger");
+        trigger.invoke(event, serverObject);
+    }
+
+    public <T extends Event> void triggerScripts(final ServerObject serverObject, final T event) {
+        //invoke all scripts that are attached to this server object and handle the event.
     }
 
     /**
@@ -94,16 +156,23 @@ public final class ScriptService {
     }
 
     private boolean loadScript(final String scriptName) {
-        if (!validateScript(scriptName))
+        try {
+            clojure.lang.RT.loadResourceScript(scriptName);
+
+            if (!validateScript(scriptName))
+                return false;
+
+            //The script is valid. All we need to do is create a new reference for it, and plug it into our map.
+            LOGGER.debug("Loading script [{}]", scriptName);
+
+            final ScriptReference scriptReference = new ScriptReference(scriptName);
+            scriptReferences.put(scriptName, scriptReference);
+
+            return true;
+        } catch (Exception ex) {
+            LOGGER.error("Unhandled exception loading script [{}]. Message: {}", scriptName, ex.getMessage());
             return false;
-
-        //The script is valid. All we need to do is create a new reference for it, and plug it into our map.
-        LOGGER.debug("Loading script [{}]", scriptName);
-
-        final ScriptReference scriptReference = new ScriptReference(scriptName);
-        scriptReferences.put(scriptName, scriptReference);
-
-        return true;
+        }
     }
 
     /**
@@ -126,13 +195,19 @@ public final class ScriptService {
             object.setAttachedScripts(new HashSet<>());
     }
 
-    private void initialize() {
+    private void initialize() throws Exception {
         LOGGER.debug("Initializing script service.");
 
         //Monitor for changes to scripts.
         this.scriptWatcherService.start();
 
         //Should we validate all scripts now, or wait for them to be lazy loaded? I guess it depends on speed.
+
+        //Bind script service in bacta.core namespace.
+        RT.loadResourceScript(BACTA_CORE + ".clj");
+
+        final Var scriptService = Var.find(Symbol.intern(BACTA_CORE, "script-service"));
+        scriptService.bindRoot(this);
     }
 
     /**
