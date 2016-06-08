@@ -20,5 +20,7 @@ git-*.properties
 
 conf/
 target/
+build/
 
 *.DS_Store
+

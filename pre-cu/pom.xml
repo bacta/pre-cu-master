@@ -25,6 +25,10 @@
         <developerConnection>scm:git:git@github.com:bacta/pre-cu.git</developerConnection>
     </scm>
 
+    <properties>
+        <final.build.location>${project.parent.basedir}/build</final.build.location>
+    </properties>
+
     <build>
         <plugins>
             <plugin>
@@ -53,7 +57,7 @@
                             <goal>copy-dependencies</goal>
                         </goals>
                         <configuration>
-                            <outputDirectory>${project.build.directory}/build/lib</outputDirectory>
+                            <outputDirectory>${final.build.location}/lib</outputDirectory>
                             <overWriteIfNewer>true</overWriteIfNewer>
                         </configuration>
                     </execution>
@@ -71,7 +75,7 @@
                             <goal>copy-resources</goal>
                         </goals>
                         <configuration>
-                            <outputDirectory>${project.build.directory}/build</outputDirectory>
+                            <outputDirectory>${final.build.location}</outputDirectory>
                             <resources>
                                 <resource>
                                     <directory>${project.basedir}/../bin</directory>
@@ -87,7 +91,7 @@
                             <goal>copy-resources</goal>
                         </goals>
                         <configuration>
-                            <outputDirectory>${project.build.directory}/build/conf</outputDirectory>
+                            <outputDirectory>${final.build.location}/conf</outputDirectory>
                             <resources>
                                 <resource>
                                     <directory>${project.basedir}/../conf</directory>
@@ -102,7 +106,7 @@
                 <artifactId>maven-jar-plugin</artifactId>
                 <version>2.3.1</version>
                 <configuration>
-                    <outputDirectory>${project.build.directory}/build</outputDirectory>
+                    <outputDirectory>${final.build.location}</outputDirectory>
                 </configuration>
             </plugin>
         </plugins>
