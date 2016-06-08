@@ -7,8 +7,7 @@ import com.ocdsoft.bacta.soe.message.GameNetworkMessage;
 import com.ocdsoft.bacta.soe.message.Subscribable;
 
 import java.util.*;
-
-import clojure.lang.IFn;
+import java.util.function.Consumer;
 
 /**
  * Created by kyle on 5/21/2016.
@@ -16,41 +15,41 @@ import clojure.lang.IFn;
 @Singleton
 public class PublisherService {
 
-    private final Map<Class, Set<IFn>> eventCallbacks;
+    private final Map<Class, Set<Consumer>> eventConsumers;
 
     public PublisherService() {
-        eventCallbacks = Collections.synchronizedMap(new HashMap<>());
+        eventConsumers = Collections.synchronizedMap(new HashMap<>());
     }
 
-    public final <T extends Event> boolean subscribe(Class<T> eventClass, IFn handleMethod) {
+    public final <T extends Event> boolean subscribe(Class<T> eventClass, Consumer<T> handleMethod) {
 
-        Set<IFn> callbacks = eventCallbacks.get(eventClass);
-        if(callbacks == null) {
-            callbacks = Collections.synchronizedSet(new HashSet<>());
-            eventCallbacks.put(eventClass, callbacks);
+        Set<Consumer> consumers = eventConsumers.get(eventClass);
+        if(consumers == null) {
+            consumers = Collections.synchronizedSet(new HashSet<>());
+            eventConsumers.put(eventClass, consumers);
         }
 
-        return callbacks.add(handleMethod);
+        return consumers.add(handleMethod);
     }
 
-    public final <T extends Event> boolean unsubscribe(Class<T> eventClass, IFn handleMethod) {
-        Set<IFn> callbacks = eventCallbacks.get(eventClass);
-        if (callbacks == null) {
+    public final <T extends Event> boolean unsubscribe(Class<T> eventClass, Consumer<T> handleMethod) {
+        Set<Consumer> consumers = eventConsumers.get(eventClass);
+        if (consumers == null) {
             return true;
         }
 
-        boolean result = callbacks.remove(handleMethod);
-        if(callbacks.isEmpty()) {
-            eventCallbacks.remove(eventClass);
+        boolean result = consumers.remove(handleMethod);
+        if(consumers.isEmpty()) {
+            eventConsumers.remove(eventClass);
         }
         return result;
     }
 
     public final <T extends Event> void onEvent(final T event) {
-        final Set<IFn> callbacks = eventCallbacks.get(event.getClass());
-        if(callbacks != null) {
-            for(IFn f : callbacks) {
-                f.invoke(event);
+        final Set<Consumer> consumers = eventConsumers.get(event.getClass());
+        if(consumers != null) {
+            for(Consumer consumer : consumers) {
+                consumer.accept(event);
             }
         }
     }
