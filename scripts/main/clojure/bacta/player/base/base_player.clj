@@ -1,7 +1,10 @@
 (ns bacta.player.base.base-player
-  (:use bacta.core))
+  (:use bacta.core)
+  (:import [com.ocdsoft.bacta.soe.event ConnectEvent]))
 
 (defn on-login
-  [event])
+  [^ConnectEvent event]
+  (let [connection (.-connection event)]
+    ))
 
-(subscribe :event/login on-login)
+(subscribe ConnectEvent on-login)
