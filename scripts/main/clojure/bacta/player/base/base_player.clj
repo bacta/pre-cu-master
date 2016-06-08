@@ -2,5 +2,6 @@
   (:use bacta.core))
 
 (defn on-login
-  "Log in or log not, there is no try."
-  [self])
+  [event])
+
+(subscribe :event/login on-login)
