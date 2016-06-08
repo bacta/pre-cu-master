@@ -7,9 +7,7 @@
   ([^ConnectEvent event]
    (on-login event nil))
   ([^ConnectEvent event ^ServerObject object]
-   (let [connection (.-connection event)]
-     (println :event event
-              :object object
-              :connection connection))))
+   (println :event event
+            :object object)))
 
 (subscribe ConnectEvent on-login)
