@@ -49,6 +49,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-jar-plugin</artifactId>
+                <version>3.0.0</version>
                 <configuration>
                     <archive>
                         <manifest>
@@ -57,7 +58,7 @@
                             <mainClass>com.ocdsoft.bacta.swg.server.PreCuServer</mainClass>
                         </manifest>
                         <manifestEntries>
-                            <Class-Path>../conf/lib/couchbase-connector-1.0.0-SNAPSHOT.jar</Class-Path>
+                            <Class-Path>../conf/lib/</Class-Path>
                         </manifestEntries>
                     </archive>
                 </configuration>
@@ -83,6 +84,22 @@
                         <argument>chat</argument>
                     </arguments>
                 </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-shade-plugin</artifactId>
+                <version>2.4.3</version>
+                <executions>
+                    <execution>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>shade</goal>
+                        </goals>
+                        <configuration>
+                            <minimizeJar>true</minimizeJar>
+                        </configuration>
+                    </execution>
+                </executions>
             </plugin>
         </plugins>
     </build>
