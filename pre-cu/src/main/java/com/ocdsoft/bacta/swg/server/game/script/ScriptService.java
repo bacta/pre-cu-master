@@ -157,7 +157,7 @@ public final class ScriptService {
 
     private boolean loadScript(final String scriptName) {
         try {
-            clojure.lang.RT.loadResourceScript(scriptName);
+            RT.loadResourceScript(scriptName + ".clj");
 
             if (!validateScript(scriptName))
                 return false;
@@ -206,7 +206,7 @@ public final class ScriptService {
         //Bind script service in bacta.core namespace.
         RT.loadResourceScript(BACTA_CORE + ".clj");
 
-        final Var scriptService = Var.find(Symbol.intern(BACTA_CORE, "script-service"));
+        final Var scriptService = Var.find(Symbol.intern("bacta.core", "script-service"));
         scriptService.bindRoot(this);
     }
 
