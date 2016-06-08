@@ -264,12 +264,11 @@
 		    <extensions>true</extensions>
 		    <configuration>
 			<warnOnReflection>${clojure.warnOnReflection}</warnOnReflection>
-			<temporaryOutputDirectory>true</temporaryOutputDirectory>
 			<sourceDirectories>
-			    <sourceDirectory>scripts/main/clojure</sourceDirectory>
+			    <sourceDirectory>${clojure.source.dir}</sourceDirectory>
 			</sourceDirectories>
 			<testSourceDirectories>
-			    <testSourceDirectory>scripts/test/clojure</testSourceDirectory>
+			    <testSourceDirectory>${clojure.testSource.dir}</testSourceDirectory>
 			</testSourceDirectories>
 		    </configuration>
 		</plugin>
