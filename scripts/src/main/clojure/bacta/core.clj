@@ -6,6 +6,6 @@
 
 (defn subscribe
   "Subscribes callback function `f` to event."
-  [^Event event f]
-  (.subscribe script-service f))
+  [event f]
+  (.subscribe script-service event f))
 
