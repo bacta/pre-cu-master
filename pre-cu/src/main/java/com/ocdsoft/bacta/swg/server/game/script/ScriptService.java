@@ -72,6 +72,15 @@ public final class ScriptService {
         }
     }
 
+    private <T extends Event> void notifySubscribers(final T event, final ServerObject object) {
+        final Collection<IFn> scriptFunctions = this.subscribedFunctions.get(event.getClass());
+
+        if (scriptFunctions != null) {
+            for (final IFn scriptFunction : scriptFunctions)
+                scriptFunction.invoke(event, object);
+        }
+    }
+
     /**
      * Attaches a script to the specified object.
      *
@@ -118,8 +127,7 @@ public final class ScriptService {
     }
 
     public <T extends Event> void triggerScript(final String scriptName, final T event) {
-        final IFn trigger = Clojure.var(scriptName, "trigger");
-        trigger.invoke(event);
+        notifySubscribers(event);
     }
 
     public <T extends Event> void triggerScripts(final T event) {
@@ -137,8 +145,7 @@ public final class ScriptService {
 
         LOGGER.debug("Triggering script {}", scriptName);
 
-        final IFn trigger = Clojure.var(scriptName, "trigger");
-        trigger.invoke(event, serverObject);
+        notifySubscribers(event, serverObject);
     }
 
     public <T extends Event> void triggerScripts(final ServerObject serverObject, final T event) {
