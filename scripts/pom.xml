@@ -69,22 +69,6 @@
             <groupId>com.ocdsoft.bacta</groupId>
             <artifactId>pre-cu</artifactId>
         </dependency>
-        <dependency>
-            <groupId>com.ocdsoft.bacta</groupId>
-            <artifactId>soe</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>com.ocdsoft.bacta</groupId>
-            <artifactId>iff</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>com.ocdsoft.bacta</groupId>
-            <artifactId>tre</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>com.ocdsoft.bacta</groupId>
-            <artifactId>engine</artifactId>
-        </dependency>
     </dependencies>
 
 </project>
