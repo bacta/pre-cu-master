@@ -255,14 +255,6 @@
                         </gitDescribe>
                     </configuration>
                 </plugin>
-		<plugin>
-		    <groupId>com.theoryinpractise</groupId>
-		    <artifactId>clojure-maven-plugin</artifactId>
-		    <version>1.8.1</version>
-		    <extensions>true</extensions>
-		    <configuration>
-		    </configuration>
-		</plugin>
             </plugins>
         </pluginManagement>
         <plugins>
