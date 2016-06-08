@@ -3,32 +3,24 @@ package com.ocdsoft.bacta.swg.server.game.service.object;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import com.ocdsoft.bacta.engine.conf.BactaConfiguration;
-import com.ocdsoft.bacta.engine.data.GameDatabaseConnector;
+import com.ocdsoft.bacta.swg.server.game.data.GameDatabaseConnector;
 import com.ocdsoft.bacta.engine.service.object.ObjectService;
 import com.ocdsoft.bacta.engine.service.objectfactory.NetworkObjectFactory;
 import com.ocdsoft.bacta.swg.archive.OnDirtyCallbackBase;
-import com.ocdsoft.bacta.swg.server.game.object.GuiceObjectInitializerProvider;
 import com.ocdsoft.bacta.swg.server.game.object.ObjectInitializer;
 import com.ocdsoft.bacta.swg.server.game.object.ObjectInitializerProvider;
 import com.ocdsoft.bacta.swg.server.game.object.ServerObject;
-import com.ocdsoft.bacta.swg.server.game.object.tangible.TangibleObject;
-import com.ocdsoft.bacta.swg.server.game.object.tangible.TangibleObjectInitializer;
-import com.ocdsoft.bacta.swg.server.game.object.tangible.creature.CreatureObject;
-import com.ocdsoft.bacta.swg.server.game.object.tangible.creature.CreatureObjectInitializer;
 import com.ocdsoft.bacta.swg.server.game.object.template.server.ServerObjectTemplate;
 import com.ocdsoft.bacta.swg.server.game.service.container.ContainerTransferService;
 import com.ocdsoft.bacta.swg.server.game.service.data.ObjectTemplateService;
 import com.ocdsoft.bacta.swg.shared.container.ContainerResult;
 import com.ocdsoft.bacta.swg.shared.container.SlotIdManager;
-import com.ocdsoft.bacta.swg.shared.foundation.CrcString;
 import gnu.trove.map.TLongObjectMap;
 import gnu.trove.map.hash.TLongObjectHashMap;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.Collections;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -115,6 +107,7 @@ public final class ServerObjectService implements ObjectService<ServerObject> {
 
             //Create the object
             final T newObject = (T) networkObjectFactory.createNetworkObject(objectClass, serverObjectTemplate);
+           // databaseConnector.persist(newObject);
 
             //Initialize the object
             if (objectInitializer != null) {
@@ -139,7 +132,7 @@ public final class ServerObjectService implements ObjectService<ServerObject> {
         T object = (T) internalMap.get(key);
 
         if(object == null) {
-            object = databaseConnector.getNetworkObject(key);
+           // object = databaseConnector.get(key);
             if(object != null) {
                 //ObjectTemplate template = objectTemplateService.getObjectTemplate(object.getTemplatePath());
                 //object.setTemplate(template); //TODO: Fix this!!!!!!
@@ -158,8 +151,9 @@ public final class ServerObjectService implements ObjectService<ServerObject> {
 
     @Override
     public <T extends ServerObject> void updateObject(T object) {
-        databaseConnector.updateNetworkObject(object);
+        //databaseConnector.persist(object);
     }
+
 
     // Executor?
     private class DeltaNetworkDispatcher implements Runnable {

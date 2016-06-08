@@ -3,7 +3,7 @@ package com.ocdsoft.bacta.swg.server.game.message;
 import com.ocdsoft.bacta.soe.message.GameNetworkMessage;
 import com.ocdsoft.bacta.soe.message.Priority;
 import com.ocdsoft.bacta.soe.message.Subscribable;
-import com.ocdsoft.bacta.swg.server.login.object.ClusterServer;
+import com.ocdsoft.bacta.swg.shared.object.ClusterData;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
@@ -17,10 +17,10 @@ import java.nio.ByteBuffer;
 @AllArgsConstructor
 public class GameServerOnline extends GameNetworkMessage implements Subscribable {
 
-    private final ClusterServer clusterServer;
+    private final ClusterData clusterServer;
 
     public GameServerOnline(final ByteBuffer buffer) {
-        clusterServer = new ClusterServer(buffer);
+        clusterServer = new ClusterData(buffer);
     }
 
     @Override

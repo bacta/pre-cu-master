@@ -6,7 +6,7 @@ import com.ocdsoft.bacta.soe.io.udp.GameNetworkConfiguration
 import com.ocdsoft.bacta.soe.util.SOECRC32
 import com.ocdsoft.bacta.swg.server.PreCuGameServerState
 import com.ocdsoft.bacta.swg.server.login.message.LoginEnumCluster
-import com.ocdsoft.bacta.swg.server.login.object.ClusterServer
+import com.ocdsoft.bacta.swg.shared.object.ClusterData
 import com.ocdsoft.bacta.swg.shared.serialize.GameNetworkMessageSerializerImpl
 import spock.lang.Specification
 

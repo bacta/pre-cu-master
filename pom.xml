@@ -373,6 +373,11 @@
                 <version>${bactaVersion}</version>
             </dependency>
             <dependency>
+                <groupId>com.ocdsoft.bacta</groupId>
+                <artifactId>pre-cu</artifactId>
+                <version>${bactaVersion}</version>
+            </dependency>
+            <dependency>
                 <groupId>com.ocdsoft.bacta.data.couchbase</groupId>
                 <artifactId>couchbase-connector</artifactId>
                 <version>${bactaVersion}</version>

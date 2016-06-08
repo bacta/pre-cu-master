@@ -10,7 +10,7 @@ import com.ocdsoft.bacta.soe.controller.GameNetworkMessageController;
 import com.ocdsoft.bacta.soe.controller.MessageHandled;
 import com.ocdsoft.bacta.soe.event.ConnectEvent;
 import com.ocdsoft.bacta.soe.io.udp.NetworkConfiguration;
-import com.ocdsoft.bacta.soe.io.udp.PublisherService;
+import com.ocdsoft.bacta.soe.service.PublisherService;
 import com.ocdsoft.bacta.swg.server.login.object.SoeAccount;
 import com.ocdsoft.bacta.swg.server.login.message.*;
 import com.ocdsoft.bacta.swg.server.login.service.ClusterService;

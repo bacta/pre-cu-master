@@ -2,7 +2,7 @@ package com.ocdsoft.bacta.soe.data.couchbase;
 
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
-import com.ocdsoft.bacta.engine.data.GameDatabaseConnector;
+import com.ocdsoft.bacta.swg.server.game.data.GameDatabaseConnector;
 import com.ocdsoft.bacta.engine.object.NetworkIdGenerator;
 
 /**

@@ -6,7 +6,7 @@ import com.ocdsoft.bacta.soe.io.udp.GameNetworkConfiguration
 import com.ocdsoft.bacta.soe.util.SOECRC32
 import com.ocdsoft.bacta.swg.server.PreCuGameServerState
 import com.ocdsoft.bacta.swg.server.login.message.LoginEnumCluster
-import com.ocdsoft.bacta.swg.server.login.object.ClusterServer
+import com.ocdsoft.bacta.swg.shared.object.ClusterData
 import com.ocdsoft.bacta.swg.shared.serialize.GameNetworkMessageSerializerImpl
 import spock.lang.Specification
 
@@ -26,15 +26,15 @@ class FragmentSpec extends Specification {
         def clusterIdField = GameNetworkConfiguration.class.getDeclaredField("clusterId")
         clusterIdField.setAccessible(true)
 
-        def clusterName = ClusterServer.class.getDeclaredField("name")
+        def clusterName = ClusterData.class.getDeclaredField("name")
         clusterName.setAccessible(true)
 
-        Set<ClusterServer> clusterEntries = new HashSet<>()
+        Set<ClusterData> clusterEntries = new HashSet<>()
 
         for(int i = 0; i < clusterSize; ++i)  {
             clusterIdField.set(networkConfiguration, 2 + i)
             assert 2 + i == networkConfiguration.getClusterId()
-            def clusterServer = new ClusterServer(bactaConfig, networkConfiguration, gameState)
+            def clusterServer = new ClusterData(bactaConfig, networkConfiguration, gameState)
             clusterName.set(clusterServer, "Bacta")
             clusterEntries.add(clusterServer)
         }

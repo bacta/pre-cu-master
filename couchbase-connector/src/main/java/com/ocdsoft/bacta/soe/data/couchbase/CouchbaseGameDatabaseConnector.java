@@ -2,12 +2,12 @@ package com.ocdsoft.bacta.soe.data.couchbase;
 
 import com.couchbase.client.CouchbaseClient;
 import com.couchbase.client.CouchbaseConnectionFactory;
-import com.google.gson.Gson;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import com.ocdsoft.bacta.engine.conf.BactaConfiguration;
-import com.ocdsoft.bacta.engine.data.GameDatabaseConnector;
+import com.ocdsoft.bacta.swg.server.game.data.GameDatabaseConnector;
 import com.ocdsoft.bacta.engine.object.NetworkObject;
+import com.ocdsoft.bacta.swg.shared.object.GameObject;
 import net.spy.memcached.ConnectionObserver;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -24,18 +24,14 @@ import java.util.Properties;
 @Singleton
 public final class CouchbaseGameDatabaseConnector implements GameDatabaseConnector {
 
-    private static final Logger logger = LoggerFactory.getLogger(CouchbaseGameDatabaseConnector.class);
-
-    private final CouchbaseTranscoder transcoder;
+    private static final Logger LOGGER = LoggerFactory.getLogger(CouchbaseGameDatabaseConnector.class);
+    private final CouchbaseGameObjectTranscoder<GameObject> transcoder;
 
     private CouchbaseClient client;
-    private final Gson gson;
 
     @Inject
-    public CouchbaseGameDatabaseConnector(BactaConfiguration configuration, CouchbaseTranscoder transcoder) throws Exception {
+    public CouchbaseGameDatabaseConnector(final BactaConfiguration configuration, final CouchbaseGameObjectTranscoder<GameObject> transcoder) throws Exception {
         this.transcoder = transcoder;
-
-        gson = new Gson();
 
         Properties systemProperties = System.getProperties();
         systemProperties.put("net.spy.log.LoggerImpl", "net.spy.memcached.compat.log.SLF4JLogger");
@@ -46,10 +42,10 @@ public final class CouchbaseGameDatabaseConnector implements GameDatabaseConnect
                 configuration.getInt("Bacta/Database/Couchbase", "Port"),
                 configuration.getString("Bacta/Database/Couchbase", "GameObjectsBucket"));
 
-        init(configuration);
+        init();
     }
 
-    private void init(BactaConfiguration configuration) {
+    private void init() {
 
         try {
             if (client.get("NetworkId") == null) {
@@ -58,7 +54,7 @@ public final class CouchbaseGameDatabaseConnector implements GameDatabaseConnect
 
         } catch(Exception e) {
 
-            logger.error("Unable to initialize database", e);
+            LOGGER.error("Unable to initialize database", e);
             System.exit(1);
         }
     }
@@ -84,12 +80,12 @@ public final class CouchbaseGameDatabaseConnector implements GameDatabaseConnect
         client.addObserver(new ConnectionObserver() {
 
             public void connectionLost(SocketAddress sa) {
-                logger.debug("Connection lost to " + sa.toString() + " '" + bucket + "'");
+                LOGGER.debug("Connection lost to " + sa.toString() + " '" + bucket + "'");
             }
 
             public void connectionEstablished(SocketAddress sa, int reconnectCount) {
-                logger.debug("Connection established with " + sa.toString() + " '" + bucket + "'");
-                logger.debug("Reconnected count: " + reconnectCount);
+                LOGGER.debug("Connection established with " + sa.toString() + " '" + bucket + "'");
+                LOGGER.debug("Reconnected count: " + reconnectCount);
             }
         });
 
@@ -102,23 +98,17 @@ public final class CouchbaseGameDatabaseConnector implements GameDatabaseConnect
     }
 
     @Override
-    public <T extends NetworkObject> T getNetworkObject(String key) {
+    public <T extends GameObject> T get(String key) {
         return (T) client.get(key, transcoder);
     }
 
     @Override
-    public <T extends NetworkObject> T getNetworkObject(long key) {
-        return getNetworkObject(String.valueOf(key));
-    }
-
-
-    @Override
-    public <T extends NetworkObject> void createNetworkObject(T object) {
-        client.add(String.valueOf(object.getNetworkId()), 0, object, transcoder);
+    public <T extends GameObject> T get(long key) {
+        return get(String.valueOf(key));
     }
 
     @Override
-    public <T extends NetworkObject> void updateNetworkObject(T object) {
+    public <T extends GameObject> void persist(T object) {
         client.set(String.valueOf(object.getNetworkId()), 0, object, transcoder);
     }
 }

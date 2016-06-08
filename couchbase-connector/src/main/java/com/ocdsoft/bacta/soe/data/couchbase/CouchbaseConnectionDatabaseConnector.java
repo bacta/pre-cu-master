@@ -10,6 +10,9 @@ import com.google.inject.Singleton;
 import com.ocdsoft.bacta.engine.conf.BactaConfiguration;
 import com.ocdsoft.bacta.engine.data.ConnectionDatabaseConnector;
 import com.ocdsoft.bacta.engine.object.account.Account;
+import com.ocdsoft.bacta.soe.data.couchbase.serializer.ClusterServerSerializer;
+import com.ocdsoft.bacta.soe.data.couchbase.serializer.InetSocketAddressSerializer;
+import com.ocdsoft.bacta.swg.shared.object.ClusterData;
 import net.spy.memcached.ConnectionObserver;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -27,8 +30,6 @@ public final class CouchbaseConnectionDatabaseConnector implements ConnectionDat
 
     private static final Logger logger = LoggerFactory.getLogger(CouchbaseConnectionDatabaseConnector.class);
 
-    private final CouchbaseTranscoder transcoder;
-
     private CouchbaseClient client;
     private final Gson gson;
 
@@ -37,8 +38,7 @@ public final class CouchbaseConnectionDatabaseConnector implements ConnectionDat
     private View characterNamesView;
 
     @Inject
-    public CouchbaseConnectionDatabaseConnector(BactaConfiguration configuration, CouchbaseTranscoder transcoder) throws Exception {
-        this.transcoder = transcoder;
+    public CouchbaseConnectionDatabaseConnector(BactaConfiguration configuration) throws Exception {
 
         gson = registerSerializers();
 
@@ -57,6 +57,7 @@ public final class CouchbaseConnectionDatabaseConnector implements ConnectionDat
     private Gson registerSerializers() {
         GsonBuilder gsonBuilder = new GsonBuilder();
         gsonBuilder.registerTypeAdapter(InetSocketAddress.class, new InetSocketAddressSerializer());
+        gsonBuilder.registerTypeAdapter(ClusterData.class, new ClusterServerSerializer());
 
         return gsonBuilder.create();
     }

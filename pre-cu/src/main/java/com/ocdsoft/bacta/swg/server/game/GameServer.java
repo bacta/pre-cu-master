@@ -9,7 +9,7 @@ import com.ocdsoft.bacta.soe.event.ConnectEvent;
 import com.ocdsoft.bacta.soe.event.DisconnectEvent;
 import com.ocdsoft.bacta.swg.server.game.event.PlayerOnlineEvent;
 import com.ocdsoft.bacta.soe.io.udp.GameNetworkConfiguration;
-import com.ocdsoft.bacta.soe.io.udp.PublisherService;
+import com.ocdsoft.bacta.soe.service.PublisherService;
 import com.ocdsoft.bacta.soe.io.udp.SoeTransceiver;
 import com.ocdsoft.bacta.soe.service.OutgoingConnectionService;
 import com.ocdsoft.bacta.swg.server.game.message.GameServerOnline;

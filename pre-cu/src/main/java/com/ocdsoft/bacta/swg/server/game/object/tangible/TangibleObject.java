@@ -15,7 +15,6 @@ import com.ocdsoft.bacta.swg.archive.delta.set.AutoDeltaLongSet;
 import com.ocdsoft.bacta.swg.server.game.message.scene.UpdatePvpStatusMessage;
 import com.ocdsoft.bacta.swg.server.game.message.scene.UpdateTransformMessage;
 import com.ocdsoft.bacta.swg.server.game.object.ServerObject;
-import com.ocdsoft.bacta.swg.server.game.object.UpdateTransformCallback;
 import com.ocdsoft.bacta.swg.server.game.object.tangible.creature.CreatureObject;
 import com.ocdsoft.bacta.swg.server.game.object.template.server.ServerObjectTemplate;
 import com.ocdsoft.bacta.swg.server.game.object.template.server.ServerTangibleObjectTemplate;
@@ -44,6 +43,7 @@ import java.util.stream.Collectors;
 public class TangibleObject extends ServerObject implements SteerSubject<Vec3> {
     private static final transient Logger LOGGER = LoggerFactory.getLogger(TangibleObject.class);
 
+
     @Override
     public int getObjectType() {
         return 0x54414E4F;
@@ -62,6 +62,7 @@ public class TangibleObject extends ServerObject implements SteerSubject<Vec3> {
     private transient boolean inert = true;
 
     private String customAppearance;
+    //private LocationData locationTargets
 
     @Getter
     private long ownerId;
