@@ -132,6 +132,7 @@
         <module>tre</module>
         <module>couchbase-connector</module>
         <module>pre-cu</module>
+        <module>scripts</module>
     </modules>
 
     <build>
