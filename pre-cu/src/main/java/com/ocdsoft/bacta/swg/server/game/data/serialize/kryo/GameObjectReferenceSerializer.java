@@ -4,6 +4,7 @@ import com.esotericsoftware.kryo.Kryo;
 import com.esotericsoftware.kryo.Serializer;
 import com.esotericsoftware.kryo.io.Input;
 import com.esotericsoftware.kryo.io.Output;
+import com.google.inject.Inject;
 import com.ocdsoft.bacta.engine.service.object.ObjectService;
 import com.ocdsoft.bacta.swg.server.game.object.ServerObject;
 import com.ocdsoft.bacta.swg.shared.object.GameObject;
@@ -19,6 +20,7 @@ public class GameObjectReferenceSerializer extends Serializer<GameObject> {
 
     private final ObjectService<ServerObject> serverObjectService;
 
+    @Inject
     public GameObjectReferenceSerializer(final ObjectService<ServerObject> serverObjectService) {
         this.serverObjectService = serverObjectService;
     }

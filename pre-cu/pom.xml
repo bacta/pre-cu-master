@@ -62,49 +62,30 @@
                     </archive>
                 </configuration>
             </plugin>
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>exec-maven-plugin</artifactId>
+                <version>1.5.0</version>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>java</goal>
+                        </goals>
+                    </execution>
+                </executions>
+                <configuration>
+                    <mainClass>
+                        com.ocdsoft.bacta.swg.server.PreCuServer
+                    </mainClass>
+                    <arguments>
+                        <argument>game</argument>
+                        <argument>login</argument>
+                        <argument>chat</argument>
+                    </arguments>
+                </configuration>
+            </plugin>
         </plugins>
     </build>
-  <build>
-    <plugins>
-      <plugin>
-	<groupId>org.codehaus.mojo</groupId>
-	<artifactId>exec-maven-plugin</artifactId>
-	<version>1.5.0</version>
-	<executions>
-	  <execution>
-	    <goals>
-	      <goal>java</goal>
-	    </goals>
-	  </execution>
-	</executions>
-	<configuration>
-	  <mainClass>
-	    com.ocdsoft.bacta.swg.server.PreCuServer
-	  </mainClass>
-	  <arguments>
-	    <argument>game</argument>
-	    <argument>login</argument>
-	    <argument>chat</argument>
-	  </arguments>
-	</configuration>
-      </plugin>
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-dependency-plugin</artifactId>
-      </plugin>
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-antrun-plugin</artifactId>
-      </plugin>
-      <plugin>
-        <groupId>pl.project13.maven</groupId>
-        <artifactId>git-commit-id-plugin</artifactId>
-        <configuration>
-          <generateGitPropertiesFilename>src/main/resources/git-swg.properties</generateGitPropertiesFilename>
-        </configuration>
-      </plugin>
-    </plugins>
-  </build>
 
     <dependencies>
         <dependency>
@@ -149,47 +130,4 @@
             <classifier>jdk8</classifier>
         </dependency>
     </dependencies>
-  <dependencies>
-    <dependency>
-      <groupId>com.ocdsoft.bacta</groupId>
-      <artifactId>engine</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>com.ocdsoft.bacta</groupId>
-      <artifactId>soe</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>com.ocdsoft.bacta</groupId>
-      <artifactId>iff</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>steerio</groupId>
-      <artifactId>steerio</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>com.ocdsoft.bacta.data.couchbase</groupId>
-      <artifactId>couchbase-connector</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>org.igniterealtime.smack</groupId>
-      <artifactId>smack-core</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>com.ocdsoft.bacta</groupId>
-      <artifactId>tre</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>org.igniterealtime.smack</groupId>
-      <artifactId>smack-tcp</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>org.apache.velocity</groupId>
-      <artifactId>velocity</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>co.paralleluniverse</groupId>
-      <artifactId>quasar-core</artifactId>
-      <classifier>jdk8</classifier>
-    </dependency>
-  </dependencies>
 </project>

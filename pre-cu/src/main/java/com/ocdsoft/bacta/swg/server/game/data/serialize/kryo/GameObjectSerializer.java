@@ -5,6 +5,7 @@ import com.esotericsoftware.kryo.Registration;
 import com.esotericsoftware.kryo.Serializer;
 import com.esotericsoftware.kryo.io.Input;
 import com.esotericsoftware.kryo.io.Output;
+import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import com.ocdsoft.bacta.engine.object.NetworkObject;
 import com.ocdsoft.bacta.swg.server.game.object.GameObjectConstructorMap;
@@ -43,7 +44,7 @@ public final class GameObjectSerializer extends Serializer<GameObject> {
 
     private final Map<Class<? extends NetworkObject>, List<Field>> serializableFieldsMap;
 
-
+    @Inject
     public GameObjectSerializer(final ObjectTemplateList objectTemplateList,
                                 final SlotIdManager slotIdManager,
                                 final GameObjectConstructorMap constructorMap,

@@ -4,6 +4,7 @@ import com.esotericsoftware.kryo.Kryo;
 import com.esotericsoftware.kryo.Serializer;
 import com.esotericsoftware.kryo.io.Input;
 import com.esotericsoftware.kryo.io.Output;
+import com.google.inject.Inject;
 import com.ocdsoft.bacta.engine.service.object.ObjectService;
 import com.ocdsoft.bacta.swg.server.game.object.ServerObject;
 import com.ocdsoft.bacta.swg.server.game.object.template.server.ServerObjectTemplate;
@@ -22,6 +23,7 @@ public class ObjectTemplateSerializer extends Serializer<ObjectTemplate> {
 
     private final ObjectTemplateService objectTemplateService;
 
+    @Inject
     public ObjectTemplateSerializer(final ObjectTemplateService objectTemplateService) {
         this.objectTemplateService = objectTemplateService;
     }

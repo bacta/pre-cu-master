@@ -3,6 +3,7 @@ package com.ocdsoft.bacta.soe.data.couchbase;
 import com.google.inject.Inject;
 import com.ocdsoft.bacta.engine.object.NetworkObject;
 import com.ocdsoft.bacta.swg.server.game.data.serialize.GameObjectByteSerializer;
+import com.ocdsoft.bacta.swg.shared.object.GameObject;
 import net.spy.memcached.CachedData;
 import net.spy.memcached.transcoders.BaseSerializingTranscoder;
 import net.spy.memcached.transcoders.Transcoder;
@@ -13,7 +14,7 @@ import org.slf4j.LoggerFactory;
  * Created by kburkhardt on 7/25/14.
  */
 
-public class CouchbaseGameObjectTranscoder extends BaseSerializingTranscoder implements Transcoder<NetworkObject> {
+public class CouchbaseGameObjectTranscoder<T extends GameObject> extends BaseSerializingTranscoder implements Transcoder<T> {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(CouchbaseGameObjectTranscoder.class);
     private final GameObjectByteSerializer serializer;
@@ -26,7 +27,7 @@ public class CouchbaseGameObjectTranscoder extends BaseSerializingTranscoder imp
     }
 
     @Override
-    public CachedData encode(final NetworkObject networkObject) {
+    public CachedData encode(final T networkObject) {
         LOGGER.trace("Serializing type: {}", networkObject.getClass());
 
         int flags = 0;
@@ -38,9 +39,9 @@ public class CouchbaseGameObjectTranscoder extends BaseSerializingTranscoder imp
     }
 
     @Override
-    public NetworkObject decode(CachedData d) {
+    public T decode(CachedData d) {
 
-        final NetworkObject object = serializer.deserialize(d.getData());
+        final T object = serializer.deserialize(d.getData());
 
         LOGGER.trace("Deserializing type: {}", object.getClass());
 
