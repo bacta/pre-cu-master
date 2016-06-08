@@ -53,11 +53,15 @@
         <spockVersion>1.0-groovy-2.4</spockVersion>
         <cglibVersion>3.2.2</cglibVersion>
 
+<<<<<<< HEAD
 	<clojure.source.dir>scripts/main/clojure</clojure.source.dir>
 	<clojure.testSource.dir>scripts/test/clojure</clojure.testSource.dir>
 	<clojure.warnOnReflection>false</clojure.warnOnReflection>
 
 	<mainClass>com.ocdsoft.bacta.swg.server.PreCuServer</mainClass>
+=======
+        <final.build.location>${project.basedir}/build</final.build.location>
+>>>>>>> d186f1d13eec38775daaa83b2efb4951912a0a28
     </properties>
 
     <issueManagement>
@@ -115,7 +119,7 @@
             <snapshots>
                 <enabled>true</enabled>
             </snapshots>
-            <url>${project.baseUri}repo</url>
+            <url>${project.baseUri}../repo</url>
         </repository>
 	<repository>
 	    <id>clojars</id>

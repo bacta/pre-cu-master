@@ -3,6 +3,7 @@ package com.ocdsoft.bacta.engine.conf.ini;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
+import java.io.InputStreamReader;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.*;
@@ -27,6 +28,11 @@ public class IniFile implements IniReader {
         baseDirectory = file.getParent();
 
         load(file.getName());
+    }
+
+    public IniFile(final BufferedReader reader) {
+        baseDirectory = "";
+        load(reader);
     }
 
     @Override
@@ -598,10 +604,19 @@ public class IniFile implements IniReader {
                 return;
             }
 
-            String line;
-            while ((line = reader.readLine()) != null)
-                parseLine(line);
+            load(reader);
 
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void load(final BufferedReader reader) {
+        try {
+            String line;
+            while ((line = reader.readLine()) != null) {
+                parseLine(line);
+            }
         } catch (Exception e) {
             e.printStackTrace();
         }

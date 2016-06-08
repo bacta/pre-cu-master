@@ -21,6 +21,7 @@ git-*.properties
 
 conf/
 target/
+build/
 
 *.DS_Store
 
@@ -28,4 +29,3 @@ target/
 GPATH
 GRTAGS
 GTAGS
-

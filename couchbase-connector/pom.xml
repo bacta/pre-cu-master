@@ -26,6 +26,10 @@
         <developerConnection>scm:git:git@github.com:bacta/couchbase-connector.git</developerConnection>
     </scm>
 
+    <properties>
+        <final.build.location>${project.parent.basedir}/build</final.build.location>
+    </properties>
+
     <build>
         <plugins>
             <plugin>
@@ -74,7 +78,7 @@
                                     <type>${project.packaging}</type>
                                 </artifactItem>
                             </artifactItems>
-                            <outputDirectory>${project.basedir}/../conf/lib</outputDirectory>
+                            <outputDirectory>${final.build.location}/lib</outputDirectory>
                             <overWriteReleases>true</overWriteReleases>
                             <overWriteSnapshots>true</overWriteSnapshots>
                         </configuration>

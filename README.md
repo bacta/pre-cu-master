@@ -1,1 +1,1 @@
-# SWG
+# SWG [![Develop Build Status](https://travis-ci.org/bacta/swg.svg?branch=develop)](https://travis-ci.org/bacta/swg) [![Master Build Status](https://travis-ci.org/bacta/swg.svg?branch=master)](https://travis-ci.org/bacta/swg)
