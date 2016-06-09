@@ -35,7 +35,7 @@
 (defn attach-script
   [namespace object]
   (println :attach-script namespace object)
-  (namespace-to-filename namespace))
+  (load-file (namespace-to-filename namespace)))
 
 (defn detach-script
   [ns object]
