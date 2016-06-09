@@ -8,5 +8,7 @@
   "Subscribes callback function `f` to event."
   [event f]
   (when script-service
+    (println *ns*)
     (.subscribe script-service event f)))
+
 
