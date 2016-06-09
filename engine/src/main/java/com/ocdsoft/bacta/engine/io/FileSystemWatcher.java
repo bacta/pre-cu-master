@@ -6,6 +6,9 @@ import org.slf4j.LoggerFactory;
 import java.nio.file.*;
 import java.util.function.Consumer;
 
+import static com.ocdsoft.bacta.engine.io.FileSystemWatcherEventType.CREATE;
+import static com.ocdsoft.bacta.engine.io.FileSystemWatcherEventType.DELETE;
+import static com.ocdsoft.bacta.engine.io.FileSystemWatcherEventType.MODIFY;
 import static java.nio.file.StandardWatchEventKinds.*;
 
 /**
@@ -18,6 +21,7 @@ public final class FileSystemWatcher {
     private final Consumer<Path> createCallback;
     private final Consumer<Path> deleteCallback;
     private final Consumer<Path> modifyCallback;
+    private final Consumer<FileSystemWatcherEvent> genericCallback;
     private volatile boolean watching;
 
     /**
@@ -33,11 +37,13 @@ public final class FileSystemWatcher {
     public FileSystemWatcher(final Path filePath,
                              final Consumer<Path> createCallback,
                              final Consumer<Path> deleteCallback,
-                             final Consumer<Path> modifyCallback) {
+                             final Consumer<Path> modifyCallback,
+                             final Consumer<FileSystemWatcherEvent> genericCallback) {
         this.filePath = filePath;
         this.createCallback = createCallback;
         this.deleteCallback = deleteCallback;
         this.modifyCallback = modifyCallback;
+        this.genericCallback = genericCallback;
         this.watching = false;
     }
 
@@ -71,13 +77,28 @@ public final class FileSystemWatcher {
                         final WatchEvent<Path> watchEvent = (WatchEvent<Path>) event;
                         final Path filePath = watchEvent.context();
 
-                        if (StandardWatchEventKinds.ENTRY_CREATE.equals(kind) && createCallback != null) {
-                            createCallback.accept(filePath);
-                        } else if (StandardWatchEventKinds.ENTRY_DELETE.equals(kind) && deleteCallback != null) {
-                            deleteCallback.accept(filePath);
-                        } else if (StandardWatchEventKinds.ENTRY_MODIFY.equals(kind) && modifyCallback != null) {
-                            modifyCallback.accept(filePath);
+                        final FileSystemWatcherEvent fileSystemWatcherEvent;
+
+                        //It has to be one of these three events.
+                        if (StandardWatchEventKinds.ENTRY_CREATE.equals(kind)) {
+                            fileSystemWatcherEvent = new FileSystemWatcherEvent(CREATE, filePath.toString());
+                        } else if (StandardWatchEventKinds.ENTRY_DELETE.equals(kind)) {
+                            fileSystemWatcherEvent = new FileSystemWatcherEvent(DELETE, filePath.toString());
+                        } else {
+                            fileSystemWatcherEvent = new FileSystemWatcherEvent(MODIFY, filePath.toString());
                         }
+
+
+
+                        if (genericCallback != null)
+                            genericCallback.accept(fileSystemWatcherEvent);
+
+                        if (CREATE.equals(fileSystemWatcherEvent.getEventType()) && createCallback != null)
+                            createCallback.accept(filePath);
+                        else if (DELETE.equals(fileSystemWatcherEvent.getEventType()) && deleteCallback != null)
+                            deleteCallback.accept(filePath);
+                        else if (MODIFY.equals(fileSystemWatcherEvent.getEventType()) && modifyCallback != null)
+                            modifyCallback.accept(filePath);
                     }
 
                     final boolean valid = watchKey.reset();

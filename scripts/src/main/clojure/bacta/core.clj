@@ -1,22 +1,42 @@
 (ns bacta.core
-  (:import [com.ocdsoft.bacta.soe.event Event]
-           [com.ocdsoft.bacta.swg.server.game.script ScriptService]))
+  (:require [clojure.string :as str] [clojure.main :as main])
+  (:import (com.ocdsoft.bacta.soe.service PublisherService)
+           (com.ocdsoft.bacta.swg.server.game.script ScriptService)))
 
 (defonce ^ScriptService script-service nil)
+(defonce ^PublisherService publisher-service nil)
 
 (defn subscribe
   "Subscribes callback function `f` to event."
   [event f]
-  (when script-service
-    (.subscribe script-service event f)))
+  (when publisher-service
+    (.subscribe publisher-service event f)))
+
+
+(defn filename-to-namespace
+  [filename]
+  (-> filename
+      (str/replace "/" ".")
+      (str/replace "_" "-")))
+
+;;How to prepend bacta/ if it's not already on the front?
+(defn namespace-to-filename
+  [namespace]
+  (-> namespace
+      (str/replace "." "/")
+      (str/replace "-" "_")))
 
 (defn track-event
   [filename]
   (println :track-event filename))
 
+;;Hacked in the bacta/ prepend - belongs in the namespace-to-filename func
+;;This still doesn't resolve the script. Not sure how it's trying to resolve it. Need to investigate.
 (defn attach-script
-  [ns object]
-  (println :attach-script ns object))
+  [namespace object]
+  (println :attach-script namespace object)
+  (main/load-script
+    (str/join ["bacta/" (namespace-to-filename namespace) ".clj"])))
 
 (defn detach-script
   [ns object]
@@ -33,6 +53,5 @@
    (println :trigger-scripts event))
   ([event object]
    (println :trigger-scripts event object)))
-
 
 

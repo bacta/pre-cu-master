@@ -6,10 +6,11 @@ import com.google.common.collect.Multimaps;
 import com.google.inject.Singleton;
 import com.ocdsoft.bacta.soe.event.Event;
 import com.ocdsoft.bacta.soe.service.PublisherService;
-import com.ocdsoft.bacta.swg.server.game.script.ScriptService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.inject.Inject;
-import java.util.*;
+import java.util.Collection;
 import java.util.function.Consumer;
 
 /**
@@ -17,14 +18,13 @@ import java.util.function.Consumer;
  */
 @Singleton
 public class PublisherServiceImpl implements PublisherService {
+    private static final Logger LOGGER = LoggerFactory.getLogger(PublisherServiceImpl.class);
 
     private final Multimap<Class, Consumer> eventConsumers;
-    private final ScriptService scriptService;
 
     @Inject
-    public PublisherServiceImpl(final ScriptService scriptService) {
+    public PublisherServiceImpl() {
         eventConsumers = Multimaps.synchronizedSetMultimap(HashMultimap.create());
-        this.scriptService = scriptService;
     }
 
     @Override
@@ -40,11 +40,10 @@ public class PublisherServiceImpl implements PublisherService {
     @Override
     public final <T extends Event> void triggerEvent(final T event) {
         final Collection<Consumer> consumers = eventConsumers.get(event.getClass());
-        if(consumers != null) {
-            for(Consumer consumer : consumers) {
+        if (consumers != null) {
+            for (Consumer consumer : consumers) {
                 consumer.accept(event);
             }
         }
-        //scriptService.triggerScripts(event);
     }
 }
