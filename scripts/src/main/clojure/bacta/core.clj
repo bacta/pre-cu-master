@@ -8,7 +8,24 @@
   "Subscribes callback function `f` to event."
   [event f]
   (when script-service
-    (println *ns*)
     (.subscribe script-service event f)))
+
+(defn track-event
+  [filename])
+
+(defn attach-script
+  [ns object])
+
+(defn detach-script
+  [ns object])
+
+(defn trigger-script
+  ([event ns])
+  ([event ns object]))
+
+(defn trigger-scripts
+  ([event])
+  ([event object]))
+
 
 
