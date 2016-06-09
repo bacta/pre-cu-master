@@ -12,19 +12,19 @@
   (when publisher-service
     (.subscribe publisher-service event f)))
 
-
 (defn filename-to-namespace
   [filename]
   (-> filename
       (str/replace "/" ".")
       (str/replace "_" "-")))
 
-;;How to prepend bacta/ if it's not already on the front?
 (defn namespace-to-filename
   [namespace]
-  (-> namespace
+  (-> (cond->> namespace
+        (not (str/starts-with? namespace "bacta")) (str "bacta/"))
       (str/replace "." "/")
-      (str/replace "-" "_")))
+      (str/replace "-" "_")
+      (str ".clj")))
 
 (defn track-event
   [filename]
@@ -35,8 +35,7 @@
 (defn attach-script
   [namespace object]
   (println :attach-script namespace object)
-  (main/load-script
-    (str/join ["bacta/" (namespace-to-filename namespace) ".clj"])))
+  (namespace-to-filename namespace))
 
 (defn detach-script
   [ns object]
