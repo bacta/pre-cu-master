@@ -11,21 +11,28 @@
     (.subscribe script-service event f)))
 
 (defn track-event
-  [filename])
+  [filename]
+  (println :track-event filename))
 
 (defn attach-script
-  [ns object])
+  [ns object]
+  (println :attach-script ns object))
 
 (defn detach-script
-  [ns object])
+  [ns object]
+  (println :detach-script ns object))
 
 (defn trigger-script
-  ([event ns])
-  ([event ns object]))
+  ([event ns]
+   (println :trigger-script event ns))
+  ([event ns object]
+   (println :trigger-script event ns object)))
 
 (defn trigger-scripts
-  ([event])
-  ([event object]))
+  ([event]
+   (println :trigger-scripts event))
+  ([event object]
+   (println :trigger-scripts event object)))
 
 
 
