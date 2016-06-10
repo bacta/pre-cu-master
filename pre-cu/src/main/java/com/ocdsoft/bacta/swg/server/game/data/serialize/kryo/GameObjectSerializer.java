@@ -181,8 +181,8 @@ public final class GameObjectSerializer extends Serializer<GameObject> {
                 assert registration.getType() == field.getType() : String.format("Registration does not match (%s) (%s)",
                         registration.getType().getSimpleName(), field.getType().getSimpleName());
 
-                LOGGER.trace("Field: {} of type {} setting value [{}]", field.getName(), field.getType(), field.get(newObject));
                 field.set(newObject, kryo.readObject(input, field.getType()));
+                LOGGER.trace("Field: {} of type {} setting value [{}]", field.getName(), field.getType(), field.get(newObject));
 
             } catch (Exception e) {
                 LOGGER.error("Unable to deserialize {} {}", field.getName(), field.getType(), e);

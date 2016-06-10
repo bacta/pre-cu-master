@@ -107,7 +107,7 @@ public final class ServerObjectService implements ObjectService<ServerObject> {
 
             //Create the object
             final T newObject = (T) networkObjectFactory.createNetworkObject(objectClass, serverObjectTemplate);
-           // databaseConnector.persist(newObject);
+            databaseConnector.persist(newObject);
 
             //Initialize the object
             if (objectInitializer != null) {
@@ -132,10 +132,8 @@ public final class ServerObjectService implements ObjectService<ServerObject> {
         T object = (T) internalMap.get(key);
 
         if(object == null) {
-           // object = databaseConnector.get(key);
+           object = databaseConnector.get(key);
             if(object != null) {
-                //ObjectTemplate template = objectTemplateService.getObjectTemplate(object.getTemplatePath());
-                //object.setTemplate(template); //TODO: Fix this!!!!!!
                 internalMap.put(key, object);
             }
         }
@@ -151,7 +149,7 @@ public final class ServerObjectService implements ObjectService<ServerObject> {
 
     @Override
     public <T extends ServerObject> void updateObject(T object) {
-        //databaseConnector.persist(object);
+        databaseConnector.persist(object);
     }
 
 

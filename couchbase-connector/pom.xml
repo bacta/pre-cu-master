@@ -112,7 +112,6 @@
       <dependency>
           <groupId>com.ocdsoft.bacta</groupId>
           <artifactId>pre-cu</artifactId>
-          <scope>provided</scope>
       </dependency>
       <dependency>
           <groupId>com.couchbase.client</groupId>

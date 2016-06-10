@@ -1,6 +1,7 @@
 package com.ocdsoft.bacta.swg.server.game.data.serialize.kryo;
 
 import com.esotericsoftware.kryo.Kryo;
+import com.esotericsoftware.kryo.Registration;
 import com.esotericsoftware.kryo.Serializer;
 import com.esotericsoftware.kryo.io.Input;
 import com.esotericsoftware.kryo.io.Output;
@@ -39,6 +40,8 @@ public class GameObjectReferenceSerializer extends Serializer<GameObject> {
     @Override
     public GameObject read(Kryo kryo, Input input, Class<GameObject> type) {
 
+        final Registration registration = kryo.readClass(input);
+        assert registration.getType() == Long.TYPE;
         final long networkId = kryo.readObject(input, Long.TYPE);
         if (networkId >= 0) {
             return  serverObjectService.get(networkId);

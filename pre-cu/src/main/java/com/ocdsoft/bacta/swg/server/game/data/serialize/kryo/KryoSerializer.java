@@ -5,6 +5,7 @@ import com.esotericsoftware.kryo.Registration;
 import com.esotericsoftware.kryo.io.Input;
 import com.esotericsoftware.kryo.io.UnsafeInput;
 import com.esotericsoftware.kryo.io.UnsafeOutput;
+import com.esotericsoftware.kryo.serializers.CollectionSerializer;
 import com.esotericsoftware.kryo.serializers.MapSerializer;
 import com.google.inject.Inject;
 import com.google.inject.Injector;
@@ -19,6 +20,7 @@ import de.javakaffee.kryoserializers.BitSetSerializer;
 import gnu.trove.TIntCollection;
 import gnu.trove.list.array.TIntArrayList;
 import gnu.trove.map.hash.THashMap;
+import org.reflections.Reflections;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -57,13 +59,24 @@ public final class KryoSerializer implements GameObjectByteSerializer {
 
     private void registerTypes(final Kryo kryo, final Injector injector) {
 
-        kryo.register(BitSet.class, new BitSetSerializer());
+        final GameObjectReferenceSerializer gameObjectReferenceSerializer = injector.getInstance(GameObjectReferenceSerializer.class);
+        kryo.register(GameObject.class, gameObjectReferenceSerializer);
 
-        kryo.register(GameObject.class, injector.getInstance(GameObjectReferenceSerializer.class));
-        kryo.register(ServerObjectTemplate.class, injector.getInstance(ObjectTemplateSerializer.class));
-//        kryo.register(ServerObject.class, serializerFactory.create(ServerObject.class));
-//        kryo.register(TangibleObject.class, serializerFactory.create(TangibleObject.class));
-//        kryo.register(PlayerObject.class, serializerFactory.create(PlayerObject.class));
+        final Reflections reflections = new Reflections();
+        final Set<Class<? extends GameObject>> subTypes = reflections.getSubTypesOf(GameObject.class);
+        subTypes.forEach(clazz -> {
+            kryo.register(clazz, gameObjectReferenceSerializer);
+        });
+
+        ObjectTemplateSerializer objectTemplateSerializer = injector.getInstance(ObjectTemplateSerializer.class);
+        kryo.register(ServerObjectTemplate.class, objectTemplateSerializer);
+
+        final Set<Class<? extends ServerObjectTemplate>> templateSubTypes = reflections.getSubTypesOf(ServerObjectTemplate.class);
+        templateSubTypes.forEach(clazz -> {
+            kryo.register(clazz, objectTemplateSerializer);
+        });
+
+        kryo.register(BitSet.class, new BitSetSerializer());
 
         kryo.register(THashMap.class, new MapSerializer() {
             @Override
@@ -76,6 +89,13 @@ public final class KryoSerializer implements GameObjectByteSerializer {
             @Override
             protected TIntCollection create(Kryo kryo, Input input, Class<TIntCollection> type) {
                 return new TIntArrayList();
+            }
+        });
+
+        kryo.register(ArrayList.class, new CollectionSerializer() {
+            @Override
+            protected Collection create(Kryo kryo, Input input, Class<Collection> type) {
+                return new ArrayList();
             }
         });
     }
