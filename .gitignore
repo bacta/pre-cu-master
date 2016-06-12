@@ -18,7 +18,7 @@ hs_err_pid*
 #Ignore the generated git*.properties files.
 git-*.properties
 
-conf/
+/conf/
 target/
 build/
 dist/
