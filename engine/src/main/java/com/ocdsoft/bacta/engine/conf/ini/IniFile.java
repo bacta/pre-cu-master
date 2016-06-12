@@ -31,7 +31,7 @@ public class IniFile implements IniReader {
     }
 
     public IniFile(final BufferedReader reader) {
-        baseDirectory = "";
+        baseDirectory = System.getProperty("user.dir");
         load(reader);
     }
 
@@ -600,6 +600,8 @@ public class IniFile implements IniReader {
                 reader = new BufferedReader(new FileReader(filePath));
             } else if (Files.exists(Paths.get(baseDirectory + File.separator + filePath))){
                 reader = new BufferedReader(new FileReader(baseDirectory + File.separator + filePath));
+            } else if (Files.exists(Paths.get(baseDirectory + File.separator + "../" + filePath))){
+                reader = new BufferedReader(new FileReader(baseDirectory + File.separator + "../" + filePath));
             } else {
                 return;
             }

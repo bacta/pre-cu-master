@@ -13,7 +13,6 @@ import lombok.Getter;
 
 import java.net.InetSocketAddress;
 import java.nio.ByteBuffer;
-import java.util.Map;
 
 @Getter
 public class ClusterData implements ByteBufferWritable, Comparable<ClusterData> {

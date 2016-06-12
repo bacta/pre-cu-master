@@ -1,0 +1,8 @@
+rootProject.name = 'swg'
+include ':engine'
+include ':soe'
+include ':iff'
+include ':tre'
+include ':couchbase-connector'
+include ':pre-cu'
+

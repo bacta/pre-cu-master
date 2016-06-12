@@ -1,0 +1,38 @@
+
+plugins {
+  id 'org.ajoberstar.grgit' version '1.5.0'
+}
+description = 'soe'
+
+dependencies {
+  compile project(':engine')
+    compile group: 'io.netty', name: 'netty-all', version:'4.0.24.Final'
+    compile group: 'com.jcraft', name: 'jzlib', version:'1.1.3'
+    compile group: 'com.lmax', name: 'disruptor', version:'3.3.4'
+    compile group: 'org.apache.velocity', name: 'velocity', version:'1.7'
+    compile group: 'io.dropwizard.metrics', name: 'metrics-core', version:'3.1.2'
+    compile group: 'io.dropwizard.metrics', name: 'metrics-annotation', version:'3.1.2'
+    compile group: 'io.dropwizard.metrics', name: 'metrics-healthchecks', version:'3.1.2'
+    compile group: 'commons-modeler', name: 'commons-modeler', version:'2.0.1'
+    compile group: 'co.paralleluniverse', name: 'quasar-core', version:'0.7.5'
+    compile group: 'co.paralleluniverse', name: 'quasar-actors', version:'0.7.5'
+}
+
+task writeGitProperties(dependsOn:[processResources]) {
+  File file = file('./build/resources/main/git-soe.properties')
+  if (file.exists())
+    file.delete()
+
+  Properties props = new Properties()
+  props.put("git.commit.id.abbrev", grgit.head().abbreviatedId)
+  props.put("git.commit.id", grgit.head().id)
+  props.put("git.commit.user.name", grgit.head().committer.name)
+  props.put("git.commit.message.short", grgit.head().shortMessage)
+  props.put("git.commit.time", String.valueOf(grgit.head().time))
+
+  file.getParentFile().mkdirs()
+  file.createNewFile()
+  props.store(new FileOutputStream(file), "SOE Git Properties")
+}
+
+processResources.finalizedBy writeGitProperties

@@ -2,7 +2,8 @@ package com.ocdsoft.bacta.swg.server.game.controller.client;
 
 import com.google.inject.Inject;
 import com.ocdsoft.bacta.engine.conf.BactaConfiguration;
-import com.ocdsoft.bacta.engine.service.AccountService;
+import com.ocdsoft.bacta.swg.shared.database.AccountService;
+import com.ocdsoft.bacta.swg.shared.identity.CharacterInfo;
 import com.ocdsoft.bacta.soe.connection.ConnectionRole;
 import com.ocdsoft.bacta.soe.connection.SoeUdpConnection;
 import com.ocdsoft.bacta.soe.controller.ConnectionRolesAllowed;
@@ -13,8 +14,7 @@ import com.ocdsoft.bacta.swg.server.game.message.creation.ClientCreateCharacter;
 import com.ocdsoft.bacta.swg.server.game.message.creation.ClientCreateCharacterFailed;
 import com.ocdsoft.bacta.swg.server.game.name.NameService;
 import com.ocdsoft.bacta.swg.server.game.player.creation.CharacterCreationService;
-import com.ocdsoft.bacta.swg.server.login.object.CharacterInfo;
-import com.ocdsoft.bacta.swg.server.login.object.SoeAccount;
+import com.ocdsoft.bacta.swg.shared.identity.SoeAccount;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -23,13 +23,13 @@ import org.slf4j.LoggerFactory;
 public final class ClientCreateCharacterController implements GameNetworkMessageController<ClientCreateCharacter> {
     private static final Logger LOGGER = LoggerFactory.getLogger(ClientCreateCharacterController.class);
 
-    private final AccountService<SoeAccount> accountService;
+    private final AccountService accountService;
     private final CharacterCreationService characterCreationService;
 
     private final int secondsBetweenCreation;
 
     @Inject
-    public ClientCreateCharacterController(final AccountService<SoeAccount> accountService,
+    public ClientCreateCharacterController(final AccountService accountService,
                                            final CharacterCreationService characterCreationService,
                                            final BactaConfiguration bactaConfiguration) {
 

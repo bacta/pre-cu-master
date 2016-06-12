@@ -1,0 +1,130 @@
+
+plugins {
+  id 'org.ajoberstar.grgit' version '1.5.0'
+}
+
+def RUN_GROUP = 'Run'
+
+description = 'pre-cu'
+dependencies {
+  compile project(':engine')
+  compile project(':soe')
+  compile project(':iff')
+    compile group: 'steerio', name: 'steerio', version:'1.0.0'
+    compile group: 'org.igniterealtime.smack', name: 'smack-core', version:'4.0.1'
+  compile project(':tre')
+    compile group: 'org.igniterealtime.smack', name: 'smack-tcp', version:'4.0.1'
+    compile group: 'org.apache.velocity', name: 'velocity', version:'1.7'
+    compile group: 'commons-codec', name: 'commons-codec', version:'1.10'
+    compile group: 'co.paralleluniverse', name: 'quasar-core', version:'0.7.5', classifier:'jdk8'
+
+  String dbType = allprojects.getProperties().get("database")
+  if (dbType == null || dbType.equalsIgnoreCase("couchbase")) {
+    runtime fileTree(dir: '../couchbase-connector/build/libs')
+    runtime fileTree(dir: '../couchbase-connector/build/depends')
+  }
+}
+
+task runLogin(type: JavaExec) {
+  group = RUN_GROUP
+  classpath = sourceSets.main.runtimeClasspath
+
+  main = 'com.ocdsoft.bacta.swg.server.PreCuServer'
+
+  // arguments to pass to the application
+  args 'login'
+}
+
+task runChat(type: JavaExec) {
+  group = RUN_GROUP
+  classpath = sourceSets.main.runtimeClasspath
+
+  main = 'com.ocdsoft.bacta.swg.server.PreCuServer'
+
+  // arguments to pass to the application
+  args 'chat'
+}
+
+task runGame(type: JavaExec) {
+    group = RUN_GROUP
+    classpath = sourceSets.main.runtimeClasspath
+
+  main = 'com.ocdsoft.bacta.swg.server.PreCuServer'
+
+  // arguments to pass to the application
+  args 'game'
+}
+
+task runSWG(type: JavaExec) {
+  group = RUN_GROUP
+  classpath = sourceSets.main.runtimeClasspath
+
+  main = 'com.ocdsoft.bacta.swg.server.PreCuServer'
+
+  // arguments to pass to the application
+  args 'login','chat','game'
+}
+
+clean << {
+  file('../dist').deleteDir()
+}
+
+// add an action to the build task that creates a startup shell script
+build  << {
+  file('../dist').mkdir()
+  file('../dist/libs').mkdir()
+  file('../dist/scripts').mkdir()
+
+  File bashScript = file('../dist/start.sh')
+  File batScript = file('../dist/start.bat')
+
+  bashScript.withPrintWriter {
+    it.println '#!/bin/sh'
+    it.println "java -cp \"libs/*\" com.ocdsoft.bacta.swg.server.PreCuServer login chat game"
+  }
+
+  batScript.withPrintWriter {
+    it.println "java -cp \"libs/*\" com.ocdsoft.bacta.swg.server.PreCuServer login chat game"
+  }
+
+  // make it executable
+  ant.chmod(file: bashScript.absolutePath, perm: 'u+x')
+}
+
+task copyArtifactsToDist(type: Copy ,dependsOn:[build]) {
+  from "build/libs"
+  into "../dist/libs"
+}
+
+task copyLibToDist(type: Copy ,dependsOn:[build]) {
+  into "../dist/libs"
+  from configurations.runtime
+}
+
+task copyConfToDist(type: Copy ,dependsOn:[build]) {
+  into "../dist/conf"
+  from "../conf"
+}
+
+task writeGitProperties(dependsOn:[processResources]) {
+  File file = file('./build/resources/main/git-soe.properties')
+  if (file.exists())
+    file.delete()
+
+  Properties props = new Properties()
+  props.put("git.commit.id.abbrev", grgit.head().abbreviatedId)
+  props.put("git.commit.id", grgit.head().id)
+  props.put("git.commit.user.name", grgit.head().committer.name)
+  props.put("git.commit.message.short", grgit.head().shortMessage)
+  props.put("git.commit.time", String.valueOf(grgit.head().time))
+
+  file.getParentFile().mkdirs()
+  file.createNewFile()
+  props.store(new FileOutputStream(file), "SOE Git Properties")
+}
+
+
+task copyFiles(dependsOn: [copyArtifactsToDist, copyLibToDist, copyConfToDist])
+
+build.finalizedBy copyFiles
+processResources.finalizedBy writeGitProperties

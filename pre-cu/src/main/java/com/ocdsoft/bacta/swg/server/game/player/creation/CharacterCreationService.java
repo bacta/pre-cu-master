@@ -8,6 +8,7 @@ import com.google.inject.Singleton;
 import com.ocdsoft.bacta.engine.conf.BactaConfiguration;
 import com.ocdsoft.bacta.engine.service.object.ObjectService;
 import com.ocdsoft.bacta.engine.utils.StringUtil;
+import com.ocdsoft.bacta.swg.shared.identity.CharacterInfo;
 import com.ocdsoft.bacta.soe.connection.SoeUdpConnection;
 import com.ocdsoft.bacta.soe.util.SOECRC32;
 import com.ocdsoft.bacta.swg.server.game.GameServerState;
@@ -27,10 +28,8 @@ import com.ocdsoft.bacta.swg.server.game.object.template.server.ServerCreatureOb
 import com.ocdsoft.bacta.swg.server.game.object.template.shared.SharedObjectTemplate;
 import com.ocdsoft.bacta.swg.server.game.service.container.ContainerTransferService;
 import com.ocdsoft.bacta.swg.server.game.service.data.ObjectTemplateService;
-import com.ocdsoft.bacta.swg.server.game.service.object.ServerObjectService;
 import com.ocdsoft.bacta.swg.server.game.util.Gender;
 import com.ocdsoft.bacta.swg.server.game.util.Race;
-import com.ocdsoft.bacta.swg.server.login.object.CharacterInfo;
 import com.ocdsoft.bacta.swg.shared.collision.CollisionProperty;
 import com.ocdsoft.bacta.swg.shared.container.ContainerResult;
 import com.ocdsoft.bacta.swg.shared.foundation.ConstCharCrcLowerString;

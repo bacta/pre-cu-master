@@ -1,7 +1,7 @@
 package com.ocdsoft.bacta.swg.server.login.controller;
 
 import com.google.inject.Inject;
-import com.ocdsoft.bacta.engine.service.AccountService;
+import com.ocdsoft.bacta.swg.shared.database.AccountService;
 import com.ocdsoft.bacta.soe.ServerType;
 import com.ocdsoft.bacta.soe.connection.ConnectionRole;
 import com.ocdsoft.bacta.soe.connection.SoeUdpConnection;
@@ -11,7 +11,7 @@ import com.ocdsoft.bacta.soe.controller.MessageHandled;
 import com.ocdsoft.bacta.soe.event.ConnectEvent;
 import com.ocdsoft.bacta.soe.io.udp.NetworkConfiguration;
 import com.ocdsoft.bacta.soe.service.PublisherService;
-import com.ocdsoft.bacta.swg.server.login.object.SoeAccount;
+import com.ocdsoft.bacta.swg.shared.identity.SoeAccount;
 import com.ocdsoft.bacta.swg.server.login.message.*;
 import com.ocdsoft.bacta.swg.server.login.service.ClusterService;
 import com.ocdsoft.bacta.swg.server.game.message.ErrorMessage;
@@ -27,14 +27,14 @@ public class LoginClientIdController implements GameNetworkMessageController<Log
 
     private final int timezone;
     private final ClusterService clusterService;
-    private final AccountService<SoeAccount> accountService;
+    private final AccountService accountService;
     private final NetworkConfiguration configuration;
     private final PublisherService publisherService;
 
     @Inject
     public LoginClientIdController(final NetworkConfiguration configuration,
                                    final ClusterService clusterService,
-                                   final AccountService<SoeAccount> accountService,
+                                   final AccountService accountService,
                                    final PublisherService publisherService) {
 
         this.clusterService = clusterService;

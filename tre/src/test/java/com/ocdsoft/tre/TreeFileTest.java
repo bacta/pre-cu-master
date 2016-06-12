@@ -10,12 +10,13 @@ import org.junit.rules.ExpectedException;
 
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.nio.file.Paths;
 
 /**
  * Created by crush on 12/16/2014.
  */
 public class TreeFileTest {
-    private static final String resourcesPath = new File(TreeFileTest.class.getResource("/").getFile()).getAbsolutePath();
+    private static final String resourcesPath = new File(Paths.get("build", "resources", "test").toUri()).getAbsolutePath();
 
     @Rule
     public ExpectedException exception = ExpectedException.none();

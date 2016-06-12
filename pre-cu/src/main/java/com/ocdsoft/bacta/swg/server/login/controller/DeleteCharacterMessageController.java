@@ -1,13 +1,13 @@
 package com.ocdsoft.bacta.swg.server.login.controller;
 
 import com.google.inject.Inject;
-import com.ocdsoft.bacta.engine.service.AccountService;
+import com.ocdsoft.bacta.swg.shared.database.AccountService;
 import com.ocdsoft.bacta.soe.ServerType;
 import com.ocdsoft.bacta.swg.server.game.service.AccountSecurityService;
 import com.ocdsoft.bacta.swg.server.login.message.DeleteCharacterReplyMessage;
 import com.ocdsoft.bacta.swg.server.login.message.EnumerateCharacterId;
-import com.ocdsoft.bacta.swg.server.login.object.CharacterInfo;
-import com.ocdsoft.bacta.swg.server.login.object.SoeAccount;
+import com.ocdsoft.bacta.swg.shared.identity.CharacterInfo;
+import com.ocdsoft.bacta.swg.shared.identity.SoeAccount;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -25,11 +25,11 @@ public class DeleteCharacterMessageController implements GameNetworkMessageContr
     private static final Logger LOGGER = LoggerFactory.getLogger(DeleteCharacterMessageController.class);
 
     private final AccountSecurityService accountSecurityService;
-    private final AccountService<SoeAccount> accountService;
+    private final AccountService accountService;
 
     @Inject
     public DeleteCharacterMessageController(final AccountSecurityService accountSecurityService,
-                                            AccountService<SoeAccount> accountService) {
+                                            AccountService accountService) {
         this.accountSecurityService = accountSecurityService;
         this.accountService = accountService;
     }
