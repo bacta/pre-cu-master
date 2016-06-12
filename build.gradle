@@ -7,16 +7,21 @@ allprojects {
   group = 'com.ocdsoft.bacta'
   version = '1.0.0-SNAPSHOT'
 
-  def props = new Properties()
-  new File("build.properties").withInputStream {
-    stream -> props.load(stream)
-  }
-  props.forEach(new BiConsumer<String, String>() {
-    @Override
-    void accept(String key, String value) {
-      properties.put(key, value)
+  def file = new File("build.properties")
+
+  if (file.exists()) {
+
+    def props = new Properties()
+    file.withInputStream {
+      stream -> props.load(stream)
     }
-  })
+    props.forEach(new BiConsumer<String, String>() {
+      @Override
+      void accept(String key, String value) {
+        properties.put(key, value)
+      }
+    })
+  }
 }
 
 subprojects {
