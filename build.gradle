@@ -34,7 +34,7 @@ subprojects {
     mavenLocal()
     mavenCentral()
 
-    maven { url "file:/C:/dev/swg/repo" }
+    maven { url "file:../repo/" }
     maven { url "https://oss.sonatype.org/content/repositories/snapshots" }
   }
 
