@@ -1,25 +1,17 @@
-package com.ocdsoft.bacta.engine.data;
+package com.ocdsoft.bacta.swg.shared.database;
 
-import com.ocdsoft.bacta.engine.object.account.Account;
-
+import com.ocdsoft.bacta.swg.shared.identity.SoeAccount;
 import java.util.Set;
 
 /**
  * Created by kburkhardt on 2/23/14.
  */
 public interface ConnectionDatabaseConnector {
-
     <T> void createObject(String key, T object);
-
     <T> void updateObject(String key, T object);
-
     <T> T getObject(String key, Class<T> clazz);
-
-    <T extends Account> T lookupSession(String authToken, Class<T> clazz);
-
-    public Set<String> getClusterCharacterSet(int clusterId);
-
+    SoeAccount lookupSession(String authToken);
+    Set<String> getClusterCharacterSet(int clusterId);
     int nextClusterId();
-
     int nextAccountId();
 }

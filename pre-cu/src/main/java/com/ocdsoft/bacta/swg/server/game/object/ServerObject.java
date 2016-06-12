@@ -60,7 +60,6 @@ public abstract class ServerObject extends GameObject {
     @Setter
     private boolean playerControlled;
 
-    @Getter
     private transient boolean initialized = false;
 
     protected transient int movementSequenceId = 0;

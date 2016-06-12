@@ -18,11 +18,5 @@ appender("STDOUT", ConsoleAppender) {
 logger("org.reflections",  WARN)
 logger("io.netty",  WARN)
 logger("com.couchbase",  WARN)
-//logger("com.ocdsoft.bacta.soe.controller.MultiController", TRACE)
-logger("com.ocdsoft.bacta.swg.server.game.player.creation", DEBUG)
-logger("com.ocdsoft.bacta.swg.server.game.data.serialize.kryo", TRACE)
-
-logger("com.ocdsoft.bacta.swg.server.game.script", DEBUG)
-logger("com.ocdsoft.bacta.swg.server.game.object.*Initializer", DEBUG)
 
 root(INFO, ["STDOUT"])

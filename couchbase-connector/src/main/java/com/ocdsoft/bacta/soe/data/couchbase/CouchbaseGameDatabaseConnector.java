@@ -4,10 +4,9 @@ import com.couchbase.client.CouchbaseClient;
 import com.couchbase.client.CouchbaseConnectionFactory;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
+import com.ocdsoft.bacta.swg.shared.database.GameDatabaseConnector;
 import com.ocdsoft.bacta.engine.conf.BactaConfiguration;
-import com.ocdsoft.bacta.swg.server.game.data.GameDatabaseConnector;
 import com.ocdsoft.bacta.engine.object.NetworkObject;
-import com.ocdsoft.bacta.swg.shared.object.GameObject;
 import net.spy.memcached.ConnectionObserver;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -25,12 +24,12 @@ import java.util.Properties;
 public final class CouchbaseGameDatabaseConnector implements GameDatabaseConnector {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(CouchbaseGameDatabaseConnector.class);
-    private final CouchbaseGameObjectTranscoder<GameObject> transcoder;
+    private final CouchbaseNetworkObjectTranscoder transcoder;
 
     private CouchbaseClient client;
 
     @Inject
-    public CouchbaseGameDatabaseConnector(final BactaConfiguration configuration, final CouchbaseGameObjectTranscoder<GameObject> transcoder) throws Exception {
+    public CouchbaseGameDatabaseConnector(final BactaConfiguration configuration, final CouchbaseNetworkObjectTranscoder transcoder) throws Exception {
         this.transcoder = transcoder;
 
         Properties systemProperties = System.getProperties();
@@ -97,18 +96,19 @@ public final class CouchbaseGameDatabaseConnector implements GameDatabaseConnect
         return client.incr("NetworkId", 1);
     }
 
+
     @Override
-    public <T extends GameObject> T get(String key) {
+    public <T extends NetworkObject> T get(String key) {
         return (T) client.get(key, transcoder);
     }
 
     @Override
-    public <T extends GameObject> T get(long key) {
+    public <T extends NetworkObject> T get(long key) {
         return get(String.valueOf(key));
     }
 
     @Override
-    public <T extends GameObject> void persist(T object) {
+    public <T extends NetworkObject> void persist(T object) {
         client.set(String.valueOf(object.getNetworkId()), 0, object, transcoder);
     }
 }

@@ -1,0 +1,2 @@
+# Rename to .properties and modify build paramaters as needed
+database=couchbase

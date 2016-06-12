@@ -1,12 +1,12 @@
 package bacta.iff;
 
+import com.google.common.io.ByteSource;
+import com.google.common.io.ByteStreams;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.io.RandomAccessFile;
+import java.io.*;
 
 /**
  * Created by crush on 12/17/2014.
@@ -30,15 +30,9 @@ public class IffTest {
     @Before
     public void before() {
         try {
-            final RandomAccessFile file = new RandomAccessFile(resourcesPath + "human_male.iff", "r");
-            testBytes = new byte[(int) file.length()];
-            file.read(testBytes);
-            file.close();
-        } catch (FileNotFoundException ex) {
-            Assert.fail("Could not find test file in resources.");
-        } catch (IOException ex) {
-            ex.printStackTrace();
-            Assert.fail("Could not open test file for reading.");
+            testBytes = ByteStreams.toByteArray(this.getClass().getResourceAsStream("/human_male.iff"));
+        } catch (IOException e) {
+            e.printStackTrace();
         }
     }
 

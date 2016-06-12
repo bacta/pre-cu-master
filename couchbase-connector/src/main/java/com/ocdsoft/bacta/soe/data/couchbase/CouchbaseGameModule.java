@@ -1,12 +1,10 @@
 package com.ocdsoft.bacta.soe.data.couchbase;
 
-import com.google.inject.TypeLiteral;
-import com.ocdsoft.bacta.engine.data.ConnectionDatabaseConnector;
-import com.ocdsoft.bacta.swg.server.game.data.GameDatabaseConnector;
-import com.ocdsoft.bacta.engine.object.NetworkIdGenerator;
-import com.ocdsoft.bacta.engine.service.AccountService;
+import com.ocdsoft.bacta.swg.shared.database.AccountService;
+import com.ocdsoft.bacta.swg.shared.database.ConnectionDatabaseConnector;
+import com.ocdsoft.bacta.swg.shared.database.GameDatabaseConnector;
+import com.ocdsoft.bacta.swg.shared.database.NetworkIdGenerator;
 import com.ocdsoft.bacta.swg.server.game.GameModule;
-import com.ocdsoft.bacta.swg.server.login.object.SoeAccount;
 
 /**
  * Created by kyle on 6/4/2016.
@@ -16,7 +14,7 @@ public class CouchbaseGameModule extends GameModule {
     protected void configure() {
         bind(GameDatabaseConnector.class).to(CouchbaseGameDatabaseConnector.class);
         bind(NetworkIdGenerator.class).to(CouchbaseNetworkIdGenerator.class);
-        bind(new TypeLiteral<AccountService<SoeAccount>>() {}).to(new TypeLiteral<CouchbaseAccountService<SoeAccount>>() {});
+        bind(AccountService.class).to(CouchbaseAccountService.class);
         bind(ConnectionDatabaseConnector.class).to(CouchbaseConnectionDatabaseConnector.class);
     }
 }

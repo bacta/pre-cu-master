@@ -1,0 +1,48 @@
+group = 'com.ocdsoft.bacta.data.couchbase'
+description = 'couchbase-connector'
+dependencies {
+  compile project(':pre-cu')
+  compile group: 'com.couchbase.client', name: 'couchbase-client', version: '1.4.12'
+  compile group: 'com.google.code.gson', name: 'gson', version: '2.6.2'
+}
+
+task copyDeps(type: Copy, dependsOn: [build]) {
+  from(configurations.runtime) {
+    include 'couchbase-client**.jar'
+    include 'netty-3**.jar'
+    include 'jettison**.jar'
+    include 'stax-api**.jar'
+    include 'spymemcached**.jar'
+    include 'httpcore**.jar'
+    include 'gson**.jar'
+  }
+  into "build/depends"
+}
+
+// Copy if build is for couchbase
+task copyDependsToDist(type: Copy, dependsOn: [build]) {
+  String dbType = allprojects.getProperties().get("database")
+  if (dbType == null || dbType.equalsIgnoreCase("couchbase")) {
+    from("build/depends")
+    into "../dist/libs"
+  }
+}
+
+task copyLibToDist(type: Copy, dependsOn: [build]) {
+  String dbType = allprojects.getProperties().get("database")
+  if (dbType == null || dbType.equalsIgnoreCase("couchbase")) {
+    from("build/libs")
+    into "../dist/libs"
+  }
+}
+
+//create a single Jar with all dependencies
+//task fatJar(type: Jar, dependsOn: [build]) {
+//  baseName = project.name + '-all'
+//  from "build/depends"
+//  with jar
+//}
+
+task copyFiles(dependsOn: [copyDeps, copyDependsToDist, copyLibToDist])
+
+build.finalizedBy copyFiles

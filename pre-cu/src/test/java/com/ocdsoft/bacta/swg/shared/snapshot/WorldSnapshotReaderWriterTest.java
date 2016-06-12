@@ -7,12 +7,13 @@ import org.junit.Before;
 import org.junit.Test;
 
 import java.io.File;
+import java.nio.file.Paths;
 
 /**
  * Created by crush on 6/4/2016.
  */
 public final class WorldSnapshotReaderWriterTest {
-    private static final String resourcesPath = new File(ServerCreatureObjectTemplateTest.class.getResource("/").getFile()).getPath();
+    private static final String resourcesPath = new File(Paths.get("build", "resources", "test").toUri()).getPath();
     private final TreeFile treeFile = new TreeFile();
 
     @Before

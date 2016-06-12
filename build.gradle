@@ -1,0 +1,59 @@
+import java.util.function.BiConsumer
+
+apply plugin: 'idea'
+
+allprojects {
+
+  group = 'com.ocdsoft.bacta'
+  version = '1.0.0-SNAPSHOT'
+
+  def props = new Properties()
+  new File("build.properties").withInputStream {
+    stream -> props.load(stream)
+  }
+  props.forEach(new BiConsumer<String, String>() {
+    @Override
+    void accept(String key, String value) {
+      properties.put(key, value)
+    }
+  })
+}
+
+subprojects {
+  apply plugin: 'java'
+  apply plugin: 'groovy'
+  sourceCompatibility = 1.8
+  targetCompatibility = 1.8
+
+  repositories {
+    mavenLocal()
+    mavenCentral()
+
+    maven { url "file:/C:/dev/swg/repo" }
+    maven { url "https://oss.sonatype.org/content/repositories/snapshots" }
+  }
+
+  dependencies {
+    compile group: 'org.slf4j', name: 'slf4j-api', version: '1.7.21'
+    compile group: 'ch.qos.logback', name: 'logback-core', version: '1.1.5'
+    compile group: 'ch.qos.logback', name: 'logback-classic', version: '1.1.5'
+    compile group: 'org.projectlombok', name: 'lombok', version: '1.16.8'
+    compile group: 'com.google.inject', name: 'guice', version: '4.0'
+    compile group: 'com.google.inject.extensions', name: 'guice-assistedinject', version: '4.0'
+    compile group: 'org.reflections', name: 'reflections', version: '0.9.10'
+    compile group: 'commons-configuration', name: 'commons-configuration', version: '1.10'
+    compile group: 'net.sf.trove4j', name: 'trove4j', version: '3.0.3'
+    compile group: 'org.codehaus.groovy', name: 'groovy-all', version: '2.4.6'
+    compile group: 'commons-lang', name: 'commons-lang', version: '2.6'
+    compile group: 'java3d', name: 'vecmath', version: '1.3.1'
+    compile group: 'joda-time', name: 'joda-time', version: '2.9.3'
+    compile 'org.codehaus.groovy:groovy-all:2.3.11'
+
+    testCompile(
+      'junit:junit:4.12',
+      'org.codehaus.groovy:groovy-all:2.4.4',
+      'org.spockframework:spock-core:1.0-groovy-2.4',
+      'cglib:cglib-nodep:3.2.2'
+    )
+  }
+}

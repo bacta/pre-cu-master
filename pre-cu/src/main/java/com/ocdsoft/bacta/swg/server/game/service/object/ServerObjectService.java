@@ -2,8 +2,8 @@ package com.ocdsoft.bacta.swg.server.game.service.object;
 
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
+import com.ocdsoft.bacta.swg.shared.database.GameDatabaseConnector;
 import com.ocdsoft.bacta.engine.conf.BactaConfiguration;
-import com.ocdsoft.bacta.swg.server.game.data.GameDatabaseConnector;
 import com.ocdsoft.bacta.engine.service.object.ObjectService;
 import com.ocdsoft.bacta.engine.service.objectfactory.NetworkObjectFactory;
 import com.ocdsoft.bacta.swg.archive.OnDirtyCallbackBase;

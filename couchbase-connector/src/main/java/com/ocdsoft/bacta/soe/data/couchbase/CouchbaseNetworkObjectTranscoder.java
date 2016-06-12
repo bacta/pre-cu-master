@@ -2,8 +2,7 @@ package com.ocdsoft.bacta.soe.data.couchbase;
 
 import com.google.inject.Inject;
 import com.ocdsoft.bacta.engine.object.NetworkObject;
-import com.ocdsoft.bacta.swg.server.game.data.serialize.GameObjectByteSerializer;
-import com.ocdsoft.bacta.swg.shared.object.GameObject;
+import com.ocdsoft.bacta.engine.io.NetworkObjectByteSerializer;
 import net.spy.memcached.CachedData;
 import net.spy.memcached.transcoders.BaseSerializingTranscoder;
 import net.spy.memcached.transcoders.Transcoder;
@@ -14,20 +13,20 @@ import org.slf4j.LoggerFactory;
  * Created by kburkhardt on 7/25/14.
  */
 
-public class CouchbaseGameObjectTranscoder<T extends GameObject> extends BaseSerializingTranscoder implements Transcoder<T> {
+public class CouchbaseNetworkObjectTranscoder extends BaseSerializingTranscoder implements Transcoder<NetworkObject> {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(CouchbaseGameObjectTranscoder.class);
-    private final GameObjectByteSerializer serializer;
+    private static final Logger LOGGER = LoggerFactory.getLogger(CouchbaseNetworkObjectTranscoder.class);
+    private final NetworkObjectByteSerializer serializer;
 
     @Inject
-    public CouchbaseGameObjectTranscoder(final GameObjectByteSerializer serializer) {
+    public CouchbaseNetworkObjectTranscoder(final NetworkObjectByteSerializer serializer) {
         super(CachedData.MAX_SIZE);
 
         this.serializer = serializer;
     }
 
     @Override
-    public CachedData encode(final T networkObject) {
+    public CachedData encode(final NetworkObject networkObject) {
         LOGGER.trace("Serializing type: {}", networkObject.getClass());
 
         int flags = 0;
@@ -39,9 +38,9 @@ public class CouchbaseGameObjectTranscoder<T extends GameObject> extends BaseSer
     }
 
     @Override
-    public T decode(CachedData d) {
+    public NetworkObject decode(CachedData d) {
 
-        final T object = serializer.deserialize(d.getData());
+        final NetworkObject object = serializer.deserialize(d.getData());
 
         LOGGER.trace("Deserializing type: {}", object.getClass());
 

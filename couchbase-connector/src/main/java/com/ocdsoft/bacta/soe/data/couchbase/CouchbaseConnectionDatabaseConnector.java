@@ -8,8 +8,8 @@ import com.google.gson.GsonBuilder;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import com.ocdsoft.bacta.engine.conf.BactaConfiguration;
-import com.ocdsoft.bacta.engine.data.ConnectionDatabaseConnector;
-import com.ocdsoft.bacta.engine.object.account.Account;
+import com.ocdsoft.bacta.swg.shared.database.ConnectionDatabaseConnector;
+import com.ocdsoft.bacta.swg.shared.identity.SoeAccount;
 import com.ocdsoft.bacta.soe.data.couchbase.serializer.ClusterServerSerializer;
 import com.ocdsoft.bacta.soe.data.couchbase.serializer.InetSocketAddressSerializer;
 import com.ocdsoft.bacta.swg.shared.object.ClusterData;
@@ -223,7 +223,7 @@ public final class CouchbaseConnectionDatabaseConnector implements ConnectionDat
     }
 
     @Override
-    public <T extends Account> T lookupSession(String authToken, Class<T> clazz) {
+    public SoeAccount lookupSession(String authToken) {
         Query userQuery = new Query();
         userQuery.setIncludeDocs(true);
         userQuery.setKey("\"" + authToken + "\"");
@@ -240,7 +240,7 @@ public final class CouchbaseConnectionDatabaseConnector implements ConnectionDat
         }
 
         String document = response.removeLastElement().getDocument().toString();
-        return gson.fromJson(document, clazz);
+        return gson.fromJson(document, SoeAccount.class);
     }
 
     @Override

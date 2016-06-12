@@ -2,8 +2,7 @@ package com.ocdsoft.bacta.swg.server.game.object.tangible.factory;
 
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
-import com.ocdsoft.bacta.engine.object.NetworkIdGenerator;
-import com.ocdsoft.bacta.engine.object.NetworkObject;
+import com.ocdsoft.bacta.swg.shared.database.NetworkIdGenerator;
 import com.ocdsoft.bacta.engine.service.objectfactory.NetworkObjectFactory;
 import com.ocdsoft.bacta.swg.server.game.object.GameObjectConstructorMap;
 import com.ocdsoft.bacta.swg.server.game.object.template.server.ServerObjectTemplate;

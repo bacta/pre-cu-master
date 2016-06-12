@@ -1,7 +1,7 @@
 package com.ocdsoft.bacta.swg.server.game.controller.client;
 
 import com.google.inject.Inject;
-import com.ocdsoft.bacta.engine.service.AccountService;
+import com.ocdsoft.bacta.swg.shared.database.AccountService;
 import com.ocdsoft.bacta.soe.connection.ConnectionRole;
 import com.ocdsoft.bacta.soe.connection.SoeUdpConnection;
 import com.ocdsoft.bacta.soe.controller.ConnectionRolesAllowed;
@@ -11,7 +11,7 @@ import com.ocdsoft.bacta.soe.event.ConnectEvent;
 import com.ocdsoft.bacta.soe.io.udp.AccountCache;
 import com.ocdsoft.bacta.soe.io.udp.NetworkConfiguration;
 import com.ocdsoft.bacta.soe.service.PublisherService;
-import com.ocdsoft.bacta.swg.server.login.object.SoeAccount;
+import com.ocdsoft.bacta.swg.shared.identity.SoeAccount;
 import com.ocdsoft.bacta.swg.server.game.message.ErrorMessage;
 import com.ocdsoft.bacta.swg.server.game.message.client.ClientIdMsg;
 import com.ocdsoft.bacta.swg.server.game.message.client.ClientPermissionsMessage;
@@ -24,13 +24,13 @@ public class ClientIdMsgController implements GameNetworkMessageController<Clien
 
     private static final Logger LOGGER = LoggerFactory.getLogger(ClientIdMsgController.class);
 
-    private final AccountService<SoeAccount> accountService;
+    private final AccountService accountService;
     private final AccountCache accountCache;
     private final NetworkConfiguration configuration;
     private final PublisherService publisherService;
 
     @Inject
-    public ClientIdMsgController(final AccountService<SoeAccount> accountService,
+    public ClientIdMsgController(final AccountService accountService,
                                  final AccountCache accountCache,
                                  final NetworkConfiguration configuration,
                                  final PublisherService publisherService) {

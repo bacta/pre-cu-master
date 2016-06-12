@@ -10,6 +10,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.File;
+import java.nio.file.Paths;
 
 /**
  * Created by crush on 5/6/2016.
@@ -17,7 +18,7 @@ import java.io.File;
 public class ServerCreatureObjectTemplateTest {
     private static final Logger LOGGER = LoggerFactory.getLogger(ServerCreatureObjectTemplateTest.class);
 
-    private static final String resourcesPath = new File(ServerCreatureObjectTemplateTest.class.getResource("/").getFile()).getPath();
+    private static final String resourcesPath = new File(Paths.get("build", "resources", "test").toUri()).getPath();
 
     private final TreeFile treeFile = new TreeFile();
     private ObjectTemplateList objectTemplateList;

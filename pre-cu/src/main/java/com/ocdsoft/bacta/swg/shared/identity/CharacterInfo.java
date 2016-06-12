@@ -1,38 +1,37 @@
-package com.ocdsoft.bacta.swg.server.login.object;
+package com.ocdsoft.bacta.swg.shared.identity;
 
-import com.ocdsoft.bacta.engine.buffer.ByteBufferWritable;
 import com.ocdsoft.bacta.engine.utils.BufferUtil;
 import lombok.Data;
 
 import java.nio.ByteBuffer;
 
 /**
- * 
-060E51D5   -   human male		
-04FEC8FA   -   trandoshan male	
-32F6307A   -   twilek male		
-9B81AD32   -   bothan male		
-22727757   -   zabrak male		
-CB8F1F9D   -   rodian male		
-79BE87A9   -   moncal male		
-2E3CE884   -   wookiee male		
-1C95F5BC   -   sullstan male		
-D3432345   -   ithorian male		
-D4A72A70   -   human female		
-64C24976   -   trandoshan female	
-6F6EB65D   -   twilek female		
-F6AB978F   -   bothan female		
-421ABB7C   -   zabrak female		
-299DC0DA   -   rodian female		
-73D65B5F   -   moncal female		
-1AAD09FA   -   wookiee female	
-44739CC1   -   sullstan female	
-E7DA1366   -   ithorian female */
+ *
+ 060E51D5   -   human male
+ 04FEC8FA   -   trandoshan male
+ 32F6307A   -   twilek male
+ 9B81AD32   -   bothan male
+ 22727757   -   zabrak male
+ CB8F1F9D   -   rodian male
+ 79BE87A9   -   moncal male
+ 2E3CE884   -   wookiee male
+ 1C95F5BC   -   sullstan male
+ D3432345   -   ithorian male
+ D4A72A70   -   human female
+ 64C24976   -   trandoshan female
+ 6F6EB65D   -   twilek female
+ F6AB978F   -   bothan female
+ 421ABB7C   -   zabrak female
+ 299DC0DA   -   rodian female
+ 73D65B5F   -   moncal female
+ 1AAD09FA   -   wookiee female
+ 44739CC1   -   sullstan female
+ E7DA1366   -   ithorian female */
 
 @Data
-public final class CharacterInfo implements ByteBufferWritable, Comparable<CharacterInfo> {
+public final class CharacterInfo implements Comparable<CharacterInfo> {
 
-	private final String name; //UnicodeString
+    private final String name; //UnicodeString
     private final int objectTemplateId;
     private final long characterId; //NetworkId
     private final int clusterId;
@@ -57,8 +56,7 @@ public final class CharacterInfo implements ByteBufferWritable, Comparable<Chara
         disabled = BufferUtil.getBoolean(buffer);
     }
 
-    @Override
-    public void writeToBuffer(ByteBuffer buffer) {
+    public void writeToBuffer(final ByteBuffer buffer) {
         BufferUtil.putUnicode(buffer, name);
         buffer.putInt(objectTemplateId);
         buffer.putLong(characterId);
@@ -68,7 +66,7 @@ public final class CharacterInfo implements ByteBufferWritable, Comparable<Chara
 
     @Override
     public int compareTo(CharacterInfo o) {
-        return name.compareTo(o.name);
+        return name.compareTo(o.getName());
     }
 
     public enum Type {

@@ -1,6 +1,5 @@
-package com.ocdsoft.bacta.swg.server.login.object;
+package com.ocdsoft.bacta.swg.shared.identity;
 
-import com.ocdsoft.bacta.engine.object.account.Account;
 import lombok.AccessLevel;
 import lombok.Data;
 import lombok.Getter;
@@ -15,7 +14,7 @@ import java.util.stream.Collectors;
  * Created by Kyle on 4/3/14.
  */
 @Data
-public final class SoeAccount implements Account {
+public final class SoeAccount {
 
     @Setter(AccessLevel.NONE)
     private int id;

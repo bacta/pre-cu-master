@@ -2,10 +2,10 @@ package com.ocdsoft.bacta.swg.server.game.service;
 
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
-import com.ocdsoft.bacta.engine.service.AccountService;
+import com.ocdsoft.bacta.swg.shared.database.AccountService;
 import com.ocdsoft.bacta.soe.connection.SoeUdpConnection;
 import com.ocdsoft.bacta.soe.message.TerminateReason;
-import com.ocdsoft.bacta.swg.server.login.object.SoeAccount;
+import com.ocdsoft.bacta.swg.shared.identity.SoeAccount;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -17,10 +17,10 @@ import org.slf4j.LoggerFactory;
 public final class AccountSecurityService {
     private static final Logger LOGGER = LoggerFactory.getLogger(AccountSecurityService.class);
 
-    private final AccountService<SoeAccount> accountService;
+    private final AccountService accountService;
 
     @Inject
-    public AccountSecurityService(final AccountService<SoeAccount> accountService) {
+    public AccountSecurityService(final AccountService accountService) {
         this.accountService = accountService;
     }
 

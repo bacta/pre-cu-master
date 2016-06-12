@@ -3,7 +3,7 @@ package com.ocdsoft.bacta.swg.server.login.service;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import com.ocdsoft.bacta.engine.conf.BactaConfiguration;
-import com.ocdsoft.bacta.engine.data.ConnectionDatabaseConnector;
+import com.ocdsoft.bacta.swg.shared.database.ConnectionDatabaseConnector;
 import com.ocdsoft.bacta.engine.network.client.ServerStatus;
 import com.ocdsoft.bacta.engine.network.client.TcpClient;
 import com.ocdsoft.bacta.engine.network.io.tcp.TcpServer;
@@ -21,8 +21,6 @@ import io.netty.handler.timeout.IdleStateHandler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.lang.reflect.Constructor;
-import java.lang.reflect.InvocationTargetException;
 import java.net.InetSocketAddress;
 import java.util.*;
 import java.util.concurrent.CopyOnWriteArraySet;
