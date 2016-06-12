@@ -17,15 +17,18 @@ dependencies {
   compile group: 'commons-codec', name: 'commons-codec', version: '1.10'
   compile group: 'co.paralleluniverse', name: 'quasar-core', version: '0.7.5', classifier: 'jdk8'
 
+  // Read the database from the optional properties file
   String dbType = allprojects.getProperties().get("database")
   if (dbType == null) {
     dbType = "couchbase"
   }
 
+  // Include the requested libraries in the debug runtime
   runtime fileTree(dir: '../' + dbType + '-connector/build/libs')
   runtime fileTree(dir: '../' + dbType + '-connector/build/depends')
 }
 
+// Build the appropriate database project in case build all wasn't invoked
 task buildDatabaseDepends(type: GradleBuild) {
   String dbType = allprojects.getProperties().get("database")
   if (dbType == null) {
@@ -38,42 +41,29 @@ task buildDatabaseDepends(type: GradleBuild) {
 
 task runLogin(type: JavaExec, dependsOn: [build]) {
   group = RUN_GROUP
-
   classpath = sourceSets.main.runtimeClasspath
-
   main = 'com.ocdsoft.bacta.swg.server.PreCuServer'
-
-  // arguments to pass to the application
   args 'login'
 }
 
 task runChat(type: JavaExec, dependsOn: [build]) {
   group = RUN_GROUP
   classpath = sourceSets.main.runtimeClasspath
-
   main = 'com.ocdsoft.bacta.swg.server.PreCuServer'
-
-  // arguments to pass to the application
   args 'chat'
 }
 
 task runGame(type: JavaExec, dependsOn: [build]) {
   group = RUN_GROUP
   classpath = sourceSets.main.runtimeClasspath
-
   main = 'com.ocdsoft.bacta.swg.server.PreCuServer'
-
-  // arguments to pass to the application
   args 'game'
 }
 
 task runSWG(type: JavaExec, dependsOn: [build]) {
   group = RUN_GROUP
   classpath = sourceSets.main.runtimeClasspath
-
   main = 'com.ocdsoft.bacta.swg.server.PreCuServer'
-
-  // arguments to pass to the application
   args 'login', 'chat', 'game'
 }
 
@@ -81,7 +71,7 @@ clean << {
   file('../dist').deleteDir()
 }
 
-// add an action to the build task that creates a startup shell script
+// build the executables for distribution
 build << {
   file('../dist').mkdir()
   file('../dist/libs').mkdir()
@@ -134,7 +124,6 @@ task writeGitProperties(dependsOn: [processResources]) {
   file.createNewFile()
   props.store(new FileOutputStream(file), "SOE Git Properties")
 }
-
 
 task copyFiles(dependsOn: [copyArtifactsToDist, copyLibToDist, copyConfToDist])
 
