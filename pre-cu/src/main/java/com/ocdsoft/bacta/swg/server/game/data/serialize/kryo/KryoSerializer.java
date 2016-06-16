@@ -71,10 +71,9 @@ public final class KryoSerializer implements NetworkObjectByteSerializer {
             protected Kryo initialValue() {
                 Kryo kryo = new Kryo();
 
-                //kryo.setRegistrationRequired(true);
-
+                // Require explicit registration
+                kryo.setRegistrationRequired(true);
                 registerTypes(kryo, injector);
-
                 return kryo;
             }
         };
@@ -83,65 +82,71 @@ public final class KryoSerializer implements NetworkObjectByteSerializer {
 
     private void registerTypes(final Kryo kryo, final Injector injector) {
 
+        // Kryo uses type 1-8 for java types
+
+        // Reserves types 9-59
         registerSwgObjects(kryo, injector);
+
+        // Reserves types 60-199
         registerSwgTemplates(kryo, injector);
 
-        kryo.register(BitSet.class, new BitSetSerializer());
+        // Types start at 200
+        kryo.register(BitSet.class, new BitSetSerializer(), 200);
 
         kryo.register(THashMap.class, new MapSerializer() {
             @Override
             protected Map create(Kryo kryo, Input input, Class<Map> type) {
                 return new THashMap();
             }
-        });
+        }, 201);
 
         kryo.register(TIntArrayList.class, new TIntCollectionSerializer() {
             @Override
             protected TIntCollection create(Kryo kryo, Input input, Class<TIntCollection> type) {
                 return new TIntArrayList();
             }
-        });
+        }, 202);
 
         kryo.register(ArrayList.class, new CollectionSerializer() {
             @Override
             protected Collection create(Kryo kryo, Input input, Class<Collection> type) {
                 return new ArrayList();
             }
-        });
+        }, 203);
     }
 
     private void registerSwgObjects(final Kryo kryo, final Injector injector) {
 
         final GameObjectReferenceSerializer gameObjectReferenceSerializer = injector.getInstance(GameObjectReferenceSerializer.class);
-        kryo.register(GameObject.class, gameObjectReferenceSerializer);
+        kryo.register(GameObject.class, gameObjectReferenceSerializer, 9);
 
-        kryo.register(BarrierObject.class, gameObjectReferenceSerializer);
-        kryo.register(BuildingObject.class, gameObjectReferenceSerializer);
-        kryo.register(CellObject.class, gameObjectReferenceSerializer);
-        kryo.register(CreatureObject.class, gameObjectReferenceSerializer);
-        kryo.register(DoorObject.class, gameObjectReferenceSerializer);
-        kryo.register(DraftSchematicObject.class, gameObjectReferenceSerializer);
-        kryo.register(FactoryObject.class, gameObjectReferenceSerializer);
-        kryo.register(GroupObject.class, gameObjectReferenceSerializer);
-        kryo.register(GuildObject.class, gameObjectReferenceSerializer);
-        kryo.register(HarvesterInstallationObject.class, gameObjectReferenceSerializer);
-        kryo.register(InstallationObject.class, gameObjectReferenceSerializer);
-        kryo.register(IntangibleObject.class, gameObjectReferenceSerializer);
-        kryo.register(ManufactureInstallationObject.class, gameObjectReferenceSerializer);
-        kryo.register(ManufactureSchematicObject.class, gameObjectReferenceSerializer);
-        kryo.register(MissionObject.class, gameObjectReferenceSerializer);
-        kryo.register(PlanetObject.class, gameObjectReferenceSerializer);
-        kryo.register(PlayerObject.class, gameObjectReferenceSerializer);
-        kryo.register(PlayerQuestObject.class, gameObjectReferenceSerializer);
-        kryo.register(ResourceContainerObject.class, gameObjectReferenceSerializer);
-        kryo.register(ServerObject.class, gameObjectReferenceSerializer);
-        kryo.register(ShipObject.class, gameObjectReferenceSerializer);
-        kryo.register(StaticObject.class, gameObjectReferenceSerializer);
-        kryo.register(TangibleObject.class, gameObjectReferenceSerializer);
-        kryo.register(TerrainObject.class, gameObjectReferenceSerializer);
-        kryo.register(UniverseObject.class, gameObjectReferenceSerializer);
-        kryo.register(VehicleObject.class, gameObjectReferenceSerializer);
-        kryo.register(WeaponObject.class, gameObjectReferenceSerializer);
+        kryo.register(BarrierObject.class, gameObjectReferenceSerializer, 10);
+        kryo.register(BuildingObject.class, gameObjectReferenceSerializer, 11);
+        kryo.register(CellObject.class, gameObjectReferenceSerializer, 12);
+        kryo.register(CreatureObject.class, gameObjectReferenceSerializer, 13);
+        kryo.register(DoorObject.class, gameObjectReferenceSerializer, 14);
+        kryo.register(DraftSchematicObject.class, gameObjectReferenceSerializer, 15);
+        kryo.register(FactoryObject.class, gameObjectReferenceSerializer, 16);
+        kryo.register(GroupObject.class, gameObjectReferenceSerializer, 17);
+        kryo.register(GuildObject.class, gameObjectReferenceSerializer, 18);
+        kryo.register(HarvesterInstallationObject.class, gameObjectReferenceSerializer, 19);
+        kryo.register(InstallationObject.class, gameObjectReferenceSerializer, 20);
+        kryo.register(IntangibleObject.class, gameObjectReferenceSerializer, 21);
+        kryo.register(ManufactureInstallationObject.class, gameObjectReferenceSerializer, 22);
+        kryo.register(ManufactureSchematicObject.class, gameObjectReferenceSerializer, 23);
+        kryo.register(MissionObject.class, gameObjectReferenceSerializer, 24);
+        kryo.register(PlanetObject.class, gameObjectReferenceSerializer, 25);
+        kryo.register(PlayerObject.class, gameObjectReferenceSerializer, 26);
+        kryo.register(PlayerQuestObject.class, gameObjectReferenceSerializer, 27);
+        kryo.register(ResourceContainerObject.class, gameObjectReferenceSerializer, 28);
+        kryo.register(ServerObject.class, gameObjectReferenceSerializer, 29);
+        kryo.register(ShipObject.class, gameObjectReferenceSerializer, 30);
+        kryo.register(StaticObject.class, gameObjectReferenceSerializer, 31);
+        kryo.register(TangibleObject.class, gameObjectReferenceSerializer, 32);
+        kryo.register(TerrainObject.class, gameObjectReferenceSerializer, 33);
+        kryo.register(UniverseObject.class, gameObjectReferenceSerializer, 34);
+        kryo.register(VehicleObject.class, gameObjectReferenceSerializer, 35);
+        kryo.register(WeaponObject.class, gameObjectReferenceSerializer, 36);
 
         final Reflections reflections = new Reflections();
         final Set<Class<? extends GameObject>> subTypes = reflections.getSubTypesOf(GameObject.class);
@@ -155,40 +160,40 @@ public final class KryoSerializer implements NetworkObjectByteSerializer {
     private void registerSwgTemplates(final Kryo kryo, final Injector injector) {
 
         ObjectTemplateSerializer objectTemplateSerializer = injector.getInstance(ObjectTemplateSerializer.class);
-        kryo.register(ServerObjectTemplate.class, objectTemplateSerializer);
+        kryo.register(ServerObjectTemplate.class, objectTemplateSerializer, 60);
 
-        kryo.register(ServerBattlefieldMarkerObjectTemplate.class, objectTemplateSerializer);
-        kryo.register(ServerBuildingObjectTemplate.class, objectTemplateSerializer);
-        kryo.register(ServerCellObjectTemplate.class, objectTemplateSerializer);
-        kryo.register(ServerCityObjectTemplate.class, objectTemplateSerializer);
-        kryo.register(ServerConstructionContractObjectTemplate.class, objectTemplateSerializer);
-        kryo.register(ServerCreatureObjectTemplate.class, objectTemplateSerializer);
-        kryo.register(ServerDraftSchematicObjectTemplate.class, objectTemplateSerializer);
-        kryo.register(ServerFactoryObjectTemplate.class, objectTemplateSerializer);
-        kryo.register(ServerGroupObjectTemplate.class, objectTemplateSerializer);
-        kryo.register(ServerGuildObjectTemplate.class, objectTemplateSerializer);
-        kryo.register(ServerHarvesterInstallationObjectTemplate.class, objectTemplateSerializer);
-        kryo.register(ServerInstallationObjectTemplate.class, objectTemplateSerializer);
-        kryo.register(ServerIntangibleObjectTemplate.class, objectTemplateSerializer);
-        kryo.register(ServerJediManagerObjectTemplate.class, objectTemplateSerializer);
-        kryo.register(ServerManufactureInstallationObjectTemplate.class, objectTemplateSerializer);
-        kryo.register(ServerManufactureSchematicObjectTemplate.class, objectTemplateSerializer);
-        kryo.register(ServerMissionBoardObjectTemplate.class, objectTemplateSerializer);
-        kryo.register(ServerMissionDataObjectTemplate.class, objectTemplateSerializer);
-        kryo.register(ServerMissionListEntryObjectTemplate.class, objectTemplateSerializer);
-        kryo.register(ServerMissionObjectTemplate.class, objectTemplateSerializer);
-        kryo.register(ServerPlanetObjectTemplate.class, objectTemplateSerializer);
-        kryo.register(ServerPlayerObjectTemplate.class, objectTemplateSerializer);
-        kryo.register(ServerPlayerQuestObjectTemplate.class, objectTemplateSerializer);
-        kryo.register(ServerResourceContainerObjectTemplate.class, objectTemplateSerializer);
-        kryo.register(ServerShipObjectTemplate.class, objectTemplateSerializer);
-        kryo.register(ServerStaticObjectTemplate.class, objectTemplateSerializer);
-        kryo.register(ServerTangibleObjectTemplate.class, objectTemplateSerializer);
-        kryo.register(ServerTokenObjectTemplate.class, objectTemplateSerializer);
-        kryo.register(ServerUniverseObjectTemplate.class, objectTemplateSerializer);
-        kryo.register(ServerVehicleObjectTemplate.class, objectTemplateSerializer);
-        kryo.register(ServerWeaponObjectTemplate.class, objectTemplateSerializer);
-        kryo.register(ServerXpManagerObjectTemplate.class, objectTemplateSerializer);
+        kryo.register(ServerBattlefieldMarkerObjectTemplate.class, objectTemplateSerializer, 61);
+        kryo.register(ServerBuildingObjectTemplate.class, objectTemplateSerializer, 62);
+        kryo.register(ServerCellObjectTemplate.class, objectTemplateSerializer, 63);
+        kryo.register(ServerCityObjectTemplate.class, objectTemplateSerializer, 64);
+        kryo.register(ServerConstructionContractObjectTemplate.class, objectTemplateSerializer, 65);
+        kryo.register(ServerCreatureObjectTemplate.class, objectTemplateSerializer, 66);
+        kryo.register(ServerDraftSchematicObjectTemplate.class, objectTemplateSerializer, 67);
+        kryo.register(ServerFactoryObjectTemplate.class, objectTemplateSerializer, 68);
+        kryo.register(ServerGroupObjectTemplate.class, objectTemplateSerializer, 69);
+        kryo.register(ServerGuildObjectTemplate.class, objectTemplateSerializer, 70);
+        kryo.register(ServerHarvesterInstallationObjectTemplate.class, objectTemplateSerializer, 71);
+        kryo.register(ServerInstallationObjectTemplate.class, objectTemplateSerializer, 72);
+        kryo.register(ServerIntangibleObjectTemplate.class, objectTemplateSerializer, 73);
+        kryo.register(ServerJediManagerObjectTemplate.class, objectTemplateSerializer, 74);
+        kryo.register(ServerManufactureInstallationObjectTemplate.class, objectTemplateSerializer, 75);
+        kryo.register(ServerManufactureSchematicObjectTemplate.class, objectTemplateSerializer, 76);
+        kryo.register(ServerMissionBoardObjectTemplate.class, objectTemplateSerializer, 77);
+        kryo.register(ServerMissionDataObjectTemplate.class, objectTemplateSerializer, 78);
+        kryo.register(ServerMissionListEntryObjectTemplate.class, objectTemplateSerializer, 79);
+        kryo.register(ServerMissionObjectTemplate.class, objectTemplateSerializer, 80);
+        kryo.register(ServerPlanetObjectTemplate.class, objectTemplateSerializer, 81);
+        kryo.register(ServerPlayerObjectTemplate.class, objectTemplateSerializer, 82);
+        kryo.register(ServerPlayerQuestObjectTemplate.class, objectTemplateSerializer, 83);
+        kryo.register(ServerResourceContainerObjectTemplate.class, objectTemplateSerializer, 84);
+        kryo.register(ServerShipObjectTemplate.class, objectTemplateSerializer, 85);
+        kryo.register(ServerStaticObjectTemplate.class, objectTemplateSerializer, 86);
+        kryo.register(ServerTangibleObjectTemplate.class, objectTemplateSerializer, 87);
+        kryo.register(ServerTokenObjectTemplate.class, objectTemplateSerializer, 88);
+        kryo.register(ServerUniverseObjectTemplate.class, objectTemplateSerializer, 89);
+        kryo.register(ServerVehicleObjectTemplate.class, objectTemplateSerializer, 90);
+        kryo.register(ServerWeaponObjectTemplate.class, objectTemplateSerializer, 91);
+        kryo.register(ServerXpManagerObjectTemplate.class, objectTemplateSerializer, 92);
 
         final Reflections reflections = new Reflections();
         final Set<Class<? extends ServerObjectTemplate>> templateSubTypes = reflections.getSubTypesOf(ServerObjectTemplate.class);
