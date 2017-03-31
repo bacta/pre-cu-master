@@ -18,7 +18,7 @@ import java.nio.file.Paths;
 public class ServerCreatureObjectTemplateTest {
     private static final Logger LOGGER = LoggerFactory.getLogger(ServerCreatureObjectTemplateTest.class);
 
-    private static final String resourcesPath = new File(Paths.get("build", "resources", "test").toUri()).getPath();
+    private static final String resourcesPath = new File(Paths.get("target", "test-classes").toUri()).getPath();
 
     private final TreeFile treeFile = new TreeFile();
     private ObjectTemplateList objectTemplateList;

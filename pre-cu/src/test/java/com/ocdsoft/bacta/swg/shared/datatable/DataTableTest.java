@@ -14,7 +14,7 @@ import java.nio.file.Paths;
  * Created by crush on 11/21/2015.
  */
 public class DataTableTest {
-    private static final String resourcesPath = new File(Paths.get("build", "resources", "test").toUri()).getAbsolutePath();
+    private static final String resourcesPath = new File(Paths.get("target", "test-classes").toUri()).getPath();
 
     private DataTable commandTableGround;
     private DataTable badgeMap;

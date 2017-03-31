@@ -16,13 +16,15 @@ import java.nio.file.Paths;
  * Created by crush on 12/16/2014.
  */
 public class TreeFileTest {
-    private static final String resourcesPath = new File(Paths.get("build", "resources", "test").toUri()).getAbsolutePath();
+    private static final String resourcesPath = new File(Paths.get("target", "test-classes").toUri()).getPath();
+
 
     @Rule
     public ExpectedException exception = ExpectedException.none();
 
     @Test
     public void shouldExistInTreeFile() throws Exception {
+
         TreeFile treeFile = new TreeFile();
         treeFile.addSearchTree(resourcesPath + "/test.tre", 0);
         Assert.assertNotNull(treeFile.open("does/exist.iff"));
@@ -55,6 +57,6 @@ public class TreeFileTest {
     public void shouldThrowFileNotFoundException() throws Exception {
         TreeFile treeFile = new TreeFile();
         exception.expect(FileNotFoundException.class);
-        treeFile.addSearchTree(resourcesPath + "/non-existing-file.tre", 0);
+        treeFile.addSearchTree(resourcesPath + "/non-existent.tre", 0);
     }
 }

@@ -13,7 +13,8 @@ import java.nio.file.Paths;
  * Created by crush on 6/4/2016.
  */
 public final class WorldSnapshotReaderWriterTest {
-    private static final String resourcesPath = new File(Paths.get("build", "resources", "test").toUri()).getPath();
+    private static final String resourcesPath = new File(Paths.get("target", "test-classes").toUri()).getPath();
+
     private final TreeFile treeFile = new TreeFile();
 
     @Before
