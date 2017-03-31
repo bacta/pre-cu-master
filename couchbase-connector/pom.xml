@@ -27,7 +27,7 @@
   </scm>
 
   <properties>
-    <final.build.location>${project.parent.basedir}/build</final.build.location>
+    <final.build.location>${project.parent.basedir}/target</final.build.location>
   </properties>
 
   <build>
@@ -78,7 +78,7 @@
                   <type>${project.packaging}</type>
                 </artifactItem>
               </artifactItems>
-              <outputDirectory>${project.basedir}/../pre-cu/target/classes/lib</outputDirectory>
+              <outputDirectory>../game-server/target/classes/lib</outputDirectory>
               <overWriteReleases>true</overWriteReleases>
               <overWriteSnapshots>true</overWriteSnapshots>
             </configuration>

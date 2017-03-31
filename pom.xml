@@ -113,7 +113,7 @@
     <module>iff</module>
     <module>tre</module>
     <module>couchbase-connector</module>
-    <module>pre-cu</module>
+    <module>game-server</module>
   </modules>
 
   <build>
