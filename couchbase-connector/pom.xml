@@ -1,0 +1,125 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+
+  <groupId>com.ocdsoft.bacta.data.couchbase</groupId>
+  <artifactId>couchbase-connector</artifactId>
+  <packaging>jar</packaging>
+
+  <parent>
+    <groupId>com.ocdsoft.bacta</groupId>
+    <artifactId>swg</artifactId>
+    <version>1.0.0-SNAPSHOT</version>
+  </parent>
+
+  <name>couchbase-connector</name>
+  <url>https://github.com/bacta/couchbase-connector</url>
+
+  <issueManagement>
+    <url>https://github.com/bacta/couchbase-connector/issues</url>
+    <system>GitHub Issues</system>
+  </issueManagement>
+
+  <scm>
+    <url>https://github.com/bacta/couchbase-connector</url>
+    <connection>scm:git:git://github.com/bacta/couchbase-connector.git</connection>
+    <developerConnection>scm:git:git@github.com:bacta/couchbase-connector.git</developerConnection>
+  </scm>
+
+  <properties>
+    <final.build.location>${project.parent.basedir}/build</final.build.location>
+  </properties>
+
+  <build>
+    <plugins>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-shade-plugin</artifactId>
+        <version>2.4.3</version>
+        <executions>
+          <execution>
+            <phase>package</phase>
+            <goals>
+              <goal>shade</goal>
+            </goals>
+            <configuration>
+              <artifactSet>
+                <includes>
+                  <include>com.couchbase.client:couchbase-client</include>
+                  <include>io.netty:netty</include>
+                  <include>org.codehaus.jettison:jettison</include>
+                  <include>stax:stax-api</include>
+                  <include>net.spy:spymemcached</include>
+                  <include>org.apache.httpcomponents</include>
+                  <include>com.google.code.gson</include>
+                </includes>
+              </artifactSet>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-dependency-plugin</artifactId>
+        <version>2.10</version>
+        <executions>
+          <execution>
+            <id>copy-to-project</id>
+            <phase>package</phase>
+            <goals>
+              <goal>copy</goal>
+            </goals>
+            <configuration>
+              <artifactItems>
+                <artifactItem>
+                  <groupId>${project.groupId}</groupId>
+                  <artifactId>${project.artifactId}</artifactId>
+                  <version>${project.version}</version>
+                  <type>${project.packaging}</type>
+                </artifactItem>
+              </artifactItems>
+              <outputDirectory>${project.basedir}/../pre-cu/target/classes/lib</outputDirectory>
+              <overWriteReleases>true</overWriteReleases>
+              <overWriteSnapshots>true</overWriteSnapshots>
+            </configuration>
+          </execution>
+          <execution>
+            <id>copy-to-build</id>
+            <phase>package</phase>
+            <goals>
+              <goal>copy</goal>
+            </goals>
+            <configuration>
+              <artifactItems>
+                <artifactItem>
+                  <groupId>${project.groupId}</groupId>
+                  <artifactId>${project.artifactId}</artifactId>
+                  <version>${project.version}</version>
+                  <type>${project.packaging}</type>
+                </artifactItem>
+              </artifactItems>
+              <outputDirectory>${project.basedir}/../build/lib</outputDirectory>
+              <overWriteReleases>true</overWriteReleases>
+              <overWriteSnapshots>true</overWriteSnapshots>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+    </plugins>
+  </build>
+
+  <dependencies>
+    <dependency>
+      <groupId>com.ocdsoft.bacta</groupId>
+      <artifactId>pre-cu</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>com.couchbase.client</groupId>
+      <artifactId>couchbase-client</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>com.google.code.gson</groupId>
+      <artifactId>gson</artifactId>
+    </dependency>
+  </dependencies>
+</project>
