@@ -1,0 +1,41 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+
+  <modelVersion>4.0.0</modelVersion>
+
+  <artifactId>quasar</artifactId>
+  <packaging>jar</packaging>
+
+  <parent>
+    <artifactId>swg</artifactId>
+    <groupId>com.ocdsoft.bacta</groupId>
+    <version>1.0.0-SNAPSHOT</version>
+  </parent>
+
+  <name>quasar</name>
+  <url>http://maven.apache.org</url>
+
+  <properties>
+    <final.build.location>${project.parent.basedir}/dist</final.build.location>
+  </properties>
+
+  <dependencies>
+    <dependency>
+      <groupId>junit</groupId>
+      <artifactId>junit</artifactId>
+      <version>3.8.1</version>
+      <scope>test</scope>
+    </dependency>
+
+    <dependency>
+      <groupId>co.paralleluniverse</groupId>
+      <artifactId>quasar-core</artifactId>
+      <classifier>jdk8</classifier>
+    </dependency>
+
+    <dependency>
+      <groupId>co.paralleluniverse</groupId>
+      <artifactId>quasar-actors</artifactId>
+    </dependency>
+  </dependencies>
+</project>

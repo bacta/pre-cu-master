@@ -114,6 +114,7 @@
     <module>tre</module>
     <module>couchbase-connector</module>
     <module>game-server</module>
+    <module>quasar</module>
   </modules>
 
   <build>
@@ -265,6 +266,11 @@
       <dependency>
         <groupId>com.ocdsoft.bacta.swg</groupId>
         <artifactId>netserialize</artifactId>
+        <version>${bactaVersion}</version>
+      </dependency>
+      <dependency>
+        <groupId>com.ocdsoft.bacta.swg</groupId>
+        <artifactId>quasar</artifactId>
         <version>${bactaVersion}</version>
       </dependency>
       <dependency>
